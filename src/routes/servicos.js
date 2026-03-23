@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     res.json(rows);
   } catch (error) {
     logger.error('Servicos GET error:', error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ error: 'Erro interno do servidor', detail: error.message });
   }
 });
 
@@ -20,7 +20,7 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     const { nome, descricao, beneficios, processo, imagem, ordem } = req.body;
     const now = new Date();
-    const id = uuidv4(); // Gera ID automaticamente
+    const id = uuidv4();
     
     await pool.execute(
       'INSERT INTO servicos (id, nome, descricao, beneficios, processo, imagem, ordem, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -29,7 +29,11 @@ router.post('/', authMiddleware, async (req, res) => {
     res.status(201).json({ id, message: 'Criado com sucesso' });
   } catch (error) {
     logger.error('Servicos POST error:', error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ 
+      error: 'Erro interno do servidor',
+      detail: error.message,
+      code: error.code
+    });
   }
 });
 
@@ -50,7 +54,11 @@ router.put('/:id', authMiddleware, async (req, res) => {
     res.json({ message: 'Atualizado com sucesso' });
   } catch (error) {
     logger.error('Servicos PUT error:', error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ 
+      error: 'Erro interno do servidor',
+      detail: error.message,
+      code: error.code
+    });
   }
 });
 
@@ -65,7 +73,11 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
     logger.error('Servicos DELETE error:', error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ 
+      error: 'Erro interno do servidor',
+      detail: error.message,
+      code: error.code
+    });
   }
 });
 
