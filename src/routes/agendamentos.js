@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/mysql.js';
 import { authMiddleware } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
@@ -17,12 +18,28 @@ router.get('/', authMiddleware, async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { id, nome, email, telefone, tipo_servico, mensagem } = req.body;
+    const { nome, email, telefone, tipo_servico, mensagem } = req.body;
+
+    // Validação de campos obrigatórios
+    if (!nome || !email || !telefone) {
+      return res.status(400).json({ error: 'nome, email e telefone são obrigatórios' });
+    }
+
+    // Validação básica de e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'E-mail inválido' });
+    }
+
+    const id = uuidv4(); // ← gerado pelo servidor, não pelo cliente
     const now = new Date();
+
     await pool.execute(
       'INSERT INTO agendamentos (id, nome, email, telefone, tipo_servico, mensagem, lido, created, updated) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)',
-      [id, nome, email, telefone, tipo_servico, mensagem, now, now]
+      [id, nome, email, telefone, tipo_servico || null, mensagem || null, now, now]
     );
+
+    logger.info(`Novo agendamento recebido: ${nome} (${email})`);
     res.status(201).json({ message: 'Agendamento recebido com sucesso' });
   } catch (error) {
     logger.error('Agendamentos POST error:', error.message);
@@ -33,10 +50,16 @@ router.post('/', async (req, res) => {
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
     const { lido } = req.body;
-    await pool.execute(
+
+    const [result] = await pool.execute(
       'UPDATE agendamentos SET lido=?, updated=? WHERE id=?',
-      [lido, new Date(), req.params.id]
+      [lido ? 1 : 0, new Date(), req.params.id]
     );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Agendamento não encontrado' });
+    }
+
     res.json({ message: 'Atualizado com sucesso' });
   } catch (error) {
     logger.error('Agendamentos PUT error:', error.message);
@@ -46,7 +69,12 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    await pool.execute('DELETE FROM agendamentos WHERE id=?', [req.params.id]);
+    const [result] = await pool.execute('DELETE FROM agendamentos WHERE id=?', [req.params.id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Agendamento não encontrado' });
+    }
+
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
     logger.error('Agendamentos DELETE error:', error.message);
