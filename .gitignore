@@ -1,3 +1,17 @@
+# Dependências
 node_modules/
-npm-debug.log
+
+# Variáveis de ambiente (NUNCA subir)
 .env
+.env.*
+
+# Arquivos de upload (ficam só no servidor)
+uploads/
+
+# Logs
+logs/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
