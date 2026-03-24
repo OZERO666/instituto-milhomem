@@ -16,31 +16,42 @@ router.get('/', async (req, res) => {
       if (!FILTROS_VALIDOS.includes(filtro)) {
         return res.status(400).json({ error: 'Filtro inválido' });
       }
+
       const [rows] = await pool.execute(
-        'SELECT * FROM galeria WHERE filtro=? ORDER BY created DESC',
+        'SELECT * FROM galeria WHERE filtro = ? ORDER BY created DESC',
         [filtro]
       );
+
       return res.json(rows);
     }
 
-    const [rows] = await pool.execute('SELECT * FROM galeria ORDER BY created DESC');
+    const [rows] = await pool.execute(
+      'SELECT * FROM galeria ORDER BY created DESC'
+    );
+
     res.json(rows);
   } catch (error) {
-    logger.error('Galeria GET error:', error.message);
+    logger.error('Galeria GET error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const {
-      titulo, descricao, filtro,
-      foto_antes, foto_depois,
-      meses_pos_operatorio, tema_id
-    } = req.body;
+    const body = req.body || {};
+
+    const titulo = body.titulo;
+    const descricao = body.descricao;
+    const filtro = body.filtro;
+    const foto_antes = body.foto_antes;
+    const foto_depois = body.foto_depois;
+    const meses_pos_operatorio = body.meses_pos_operatorio;
+    const tema_id = body.tema_id;
 
     if (!foto_antes || !foto_depois) {
-      return res.status(400).json({ error: 'foto_antes e foto_depois são obrigatórios' });
+      return res.status(400).json({
+        error: 'foto_antes e foto_depois são obrigatórios',
+      });
     }
 
     if (filtro && !FILTROS_VALIDOS.includes(filtro)) {
@@ -52,30 +63,56 @@ router.post('/', authMiddleware, async (req, res) => {
 
     await pool.execute(
       'INSERT INTO galeria (id, titulo, descricao, filtro, foto_antes, foto_depois, meses_pos_operatorio, tema_id, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [id, titulo || null, descricao || null, filtro || 'Geral', foto_antes, foto_depois, meses_pos_operatorio ?? 0, tema_id || null, now, now]
+      [
+        id,
+        titulo || null,
+        descricao || null,
+        filtro || 'Geral',
+        foto_antes,
+        foto_depois,
+        meses_pos_operatorio ?? 0,
+        tema_id || null,
+        now,
+        now,
+      ]
     );
+
     res.status(201).json({ id, message: 'Criado com sucesso' });
   } catch (error) {
-    logger.error('Galeria POST error:', error.message);
+    logger.error('Galeria POST error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
 
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
-    const {
-      titulo, descricao, filtro,
-      foto_antes, foto_depois,
-      meses_pos_operatorio, tema_id
-    } = req.body;
+    const body = req.body || {};
+
+    const titulo = body.titulo;
+    const descricao = body.descricao;
+    const filtro = body.filtro;
+    const foto_antes = body.foto_antes;
+    const foto_depois = body.foto_depois;
+    const meses_pos_operatorio = body.meses_pos_operatorio;
+    const tema_id = body.tema_id;
 
     if (filtro && !FILTROS_VALIDOS.includes(filtro)) {
       return res.status(400).json({ error: 'Filtro inválido' });
     }
 
     const [result] = await pool.execute(
-      'UPDATE galeria SET titulo=?, descricao=?, filtro=?, foto_antes=?, foto_depois=?, meses_pos_operatorio=?, tema_id=?, updated=? WHERE id=?',
-      [titulo || null, descricao || null, filtro || 'Geral', foto_antes || null, foto_depois || null, meses_pos_operatorio ?? 0, tema_id || null, new Date(), req.params.id]
+      'UPDATE galeria SET titulo = ?, descricao = ?, filtro = ?, foto_antes = ?, foto_depois = ?, meses_pos_operatorio = ?, tema_id = ?, updated = ? WHERE id = ?',
+      [
+        titulo || null,
+        descricao || null,
+        filtro || 'Geral',
+        foto_antes || null,
+        foto_depois || null,
+        meses_pos_operatorio ?? 0,
+        tema_id || null,
+        new Date(),
+        req.params.id,
+      ]
     );
 
     if (result.affectedRows === 0) {
@@ -84,14 +121,17 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
     res.json({ message: 'Atualizado com sucesso' });
   } catch (error) {
-    logger.error('Galeria PUT error:', error.message);
+    logger.error('Galeria PUT error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
 
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    const [result] = await pool.execute('DELETE FROM galeria WHERE id=?', [req.params.id]);
+    const [result] = await pool.execute(
+      'DELETE FROM galeria WHERE id = ?',
+      [req.params.id]
+    );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Item não encontrado' });
@@ -99,7 +139,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
-    logger.error('Galeria DELETE error:', error.message);
+    logger.error('Galeria DELETE error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
