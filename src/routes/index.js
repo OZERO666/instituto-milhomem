@@ -11,6 +11,7 @@ import servicosRoutes from './servicos.js';
 import estatisticasRoutes from './estatisticas.js';
 import contatoConfigRoutes from './contato-config.js';
 import auditLogsRoutes from './audit-logs.js';
+import seoRoutes from './seo.js'; //
 
 const router = Router();
 
@@ -27,5 +28,6 @@ export default () => {
   router.use('/estatisticas', estatisticasRoutes);
   router.use('/contato-config', contatoConfigRoutes);
   router.use('/audit-logs', auditLogsRoutes);
+  router.use('/seo-settings', seoRoutes);
   return router;
 };
