@@ -5,17 +5,11 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import routes from './routes/index.js';
 import uploadRoutes from './routes/uploads.js';
 import { errorMiddleware } from './middleware/index.js';
 import logger from './utils/logger.js';
-
-// Necessário para usar __dirname com ESModules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -48,8 +42,7 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Servir arquivos estáticos ANTES das rotas
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// ✅ express.static de uploads removido — arquivos agora no Cloudinary
 
 app.use('/', routes());
 app.use('/upload', uploadRoutes);

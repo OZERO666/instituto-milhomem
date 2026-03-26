@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/index.js';
 
 const router = Router();
 
-const ALLOWED_FOLDERS = ['galeria', 'depoimentos', 'misc'];
+const ALLOWED_FOLDERS = ['galeria', 'depoimentos', 'servicos', 'misc'];
 
 router.post('/:folder', authMiddleware, (req, res) => {
   const { folder } = req.params;
@@ -24,7 +24,8 @@ router.post('/:folder', authMiddleware, (req, res) => {
       return res.status(400).json({ error: 'Nenhum arquivo enviado' });
     }
 
-    const url = `${process.env.API_URL}/uploads/${folder}/${req.file.filename}`;
+    // Cloudinary retorna a URL completa em req.file.path
+    const url = req.file.path;
     res.status(201).json({ url });
   });
 });
