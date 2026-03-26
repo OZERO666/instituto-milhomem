@@ -34,18 +34,22 @@ process.on('SIGTERM', async () => {
 });
 
 app.use(helmet());
+
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+app.options('*', cors()); // ✅ preflight CORS
+
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ express.static de uploads removido — arquivos agora no Cloudinary
-
 app.use('/', routes());
-app.use('/', uploadRouter);
+app.use('/', uploadRoutes); // ✅ nome correto
 
 app.use(errorMiddleware);
 
