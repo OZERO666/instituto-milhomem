@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 // ✅ express.static de uploads removido — arquivos agora no Cloudinary
 
 app.use('/', routes());
-app.use('/upload', uploadRoutes);
+app.use('/', uploadRouter);
 
 app.use(errorMiddleware);
 
