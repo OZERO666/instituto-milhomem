@@ -53,7 +53,7 @@ router.post('/', authMiddleware, async (req, res) => {
     );
     res.status(201).json({ id, message: 'Criado com sucesso' });
   } catch (error) {
-    logger.error('Artigos POST error:', error.message);
+    logger.error('Artigos POST error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
@@ -89,7 +89,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
     res.json({ message: 'Atualizado com sucesso' });
   } catch (error) {
-    logger.error('Artigos PUT error:', error.message);
+    logger.error('Artigos PUT error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
@@ -104,7 +104,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
-    logger.error('Artigos DELETE error:', error.message);
+    logger.error('Artigos DELETE error:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
