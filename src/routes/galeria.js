@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
       SELECT g.*, t.nome AS tema_nome
       FROM galeria g
       LEFT JOIN galeria_temas t ON t.id = g.tema_id
-      ORDER BY g.created_at DESC
+      ORDER BY g.created DESC
     `;
     const params = [];
 
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
         FROM galeria g
         LEFT JOIN galeria_temas t ON t.id = g.tema_id
         WHERE g.tema_id = ?
-        ORDER BY g.created_at DESC
+        ORDER BY g.created DESC
       `;
       params.push(tema_id);
     }
@@ -74,7 +74,7 @@ router.post('/', authMiddleware, async (req, res) => {
     const now = new Date();
 
     await pool.execute(
-      `INSERT INTO galeria (id, titulo, tema_id, meses_pos_operatorio, foto_antes, foto_depois, created_at, updated_at)
+      `INSERT INTO galeria (id, titulo, tema_id, meses_pos_operatorio, foto_antes, foto_depois, created, updated)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [id, titulo, tema_id || null, meses_pos_operatorio || null, foto_antes, foto_depois, now, now]
     );
@@ -100,7 +100,10 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 
     // Busca registro atual para manter fotos se não enviadas
-    const [current] = await pool.execute('SELECT foto_antes, foto_depois FROM galeria WHERE id = ?', [req.params.id]);
+    const [current] = await pool.execute(
+      'SELECT foto_antes, foto_depois FROM galeria WHERE id = ?',
+      [req.params.id]
+    );
     if (current.length === 0) return res.status(404).json({ error: 'Item não encontrado' });
 
     const finalFotoAntes  = foto_antes  || current[0].foto_antes;
@@ -108,7 +111,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
     const [result] = await pool.execute(
       `UPDATE galeria
-       SET titulo = ?, tema_id = ?, meses_pos_operatorio = ?, foto_antes = ?, foto_depois = ?, updated_at = ?
+       SET titulo = ?, tema_id = ?, meses_pos_operatorio = ?, foto_antes = ?, foto_depois = ?, updated = ?
        WHERE id = ?`,
       [titulo, tema_id || null, meses_pos_operatorio || null, finalFotoAntes, finalFotoDepois, new Date(), req.params.id]
     );
@@ -124,7 +127,10 @@ router.put('/:id', authMiddleware, async (req, res) => {
 // DELETE /galeria/:id
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    const [result] = await pool.execute('DELETE FROM galeria WHERE id = ?', [req.params.id]);
+    const [result] = await pool.execute(
+      'DELETE FROM galeria WHERE id = ?',
+      [req.params.id]
+    );
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Item não encontrado' });
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
