@@ -1,148 +1,134 @@
+// src/routes/galeria.js
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 import pool from '../db/mysql.js';
 import { authMiddleware } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
 
 const router = Router();
-const FILTROS_VALIDOS = ['Geral', 'Coroa', 'Entradas', 'Barba'];
 
-// ─── Multer: salva em /uploads/galeria ──────────────────────────────────────
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = 'uploads/galeria';
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  },
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|webp/;
-    cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
-  },
-});
-
-// ─── GET ─────────────────────────────────────────────────────────────────────
+// GET /galeria — lista todas, opcionalmente filtra por tema_id
 router.get('/', async (req, res) => {
   try {
-    const { filtro } = req.query;
-    let rows;
+    const { tema_id } = req.query;
+    let query = `
+      SELECT g.*, t.nome AS tema_nome
+      FROM galeria g
+      LEFT JOIN galeria_temas t ON t.id = g.tema_id
+      ORDER BY g.created_at DESC
+    `;
+    const params = [];
 
-    if (filtro && filtro !== 'Geral') {
-      if (!FILTROS_VALIDOS.includes(filtro)) {
-        return res.status(400).json({ error: 'Filtro inválido' });
-      }
-      [rows] = await pool.execute(
-        'SELECT * FROM galeria WHERE filtro = ? ORDER BY created DESC', [filtro]
-      );
-    } else {
-      [rows] = await pool.execute('SELECT * FROM galeria ORDER BY created DESC');
+    if (tema_id) {
+      query = `
+        SELECT g.*, t.nome AS tema_nome
+        FROM galeria g
+        LEFT JOIN galeria_temas t ON t.id = g.tema_id
+        WHERE g.tema_id = ?
+        ORDER BY g.created_at DESC
+      `;
+      params.push(tema_id);
     }
 
+    const [rows] = await pool.execute(query, params);
     res.json(rows);
   } catch (error) {
-    logger.error('Galeria GET error:', error);
+    logger.error('Galeria GET error:', error.message);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
 
-// ─── POST (com upload) ────────────────────────────────────────────────────────
-router.post(
-  '/',
-  authMiddleware,
-  upload.fields([{ name: 'foto_antes', maxCount: 1 }, { name: 'foto_depois', maxCount: 1 }]),
-  async (req, res) => {
-    try {
-      const { titulo, descricao, filtro, meses_pos_operatorio, tema_id } = req.body;
-
-      const foto_antes  = req.files?.foto_antes?.[0]?.filename  || null;
-      const foto_depois = req.files?.foto_depois?.[0]?.filename || null;
-
-      if (!foto_antes || !foto_depois) {
-        return res.status(400).json({ error: 'foto_antes e foto_depois são obrigatórios' });
-      }
-
-      if (filtro && !FILTROS_VALIDOS.includes(filtro)) {
-        return res.status(400).json({ error: 'Filtro inválido' });
-      }
-
-      const id  = uuidv4();
-      const now = new Date();
-
-      await pool.execute(
-        'INSERT INTO galeria (id, titulo, descricao, filtro, foto_antes, foto_depois, meses_pos_operatorio, tema_id, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [id, titulo || null, descricao || null, filtro || 'Geral', foto_antes, foto_depois, meses_pos_operatorio ?? 0, tema_id || null, now, now]
-      );
-
-      res.status(201).json({ id, foto_antes, foto_depois, message: 'Criado com sucesso' });
-    } catch (error) {
-      logger.error('Galeria POST error:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
-    }
+// GET /galeria/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const [rows] = await pool.execute(
+      `SELECT g.*, t.nome AS tema_nome
+       FROM galeria g
+       LEFT JOIN galeria_temas t ON t.id = g.tema_id
+       WHERE g.id = ?`,
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Item não encontrado' });
+    res.json(rows[0]);
+  } catch (error) {
+    logger.error('Galeria GET/:id error:', error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
-);
+});
 
-// ─── PUT (com upload opcional) ────────────────────────────────────────────────
-router.put(
-  '/:id',
-  authMiddleware,
-  upload.fields([{ name: 'foto_antes', maxCount: 1 }, { name: 'foto_depois', maxCount: 1 }]),
-  async (req, res) => {
-    try {
-      const { titulo, descricao, filtro, meses_pos_operatorio, tema_id } = req.body;
+// POST /galeria
+router.post('/', authMiddleware, async (req, res) => {
+  try {
+    const { titulo, tema_id, meses_pos_operatorio, foto_antes, foto_depois } = req.body;
 
-      // Busca registro atual para manter fotos antigas se não enviar novas
-      const [[current]] = await pool.execute('SELECT * FROM galeria WHERE id = ?', [req.params.id]);
-      if (!current) return res.status(404).json({ error: 'Item não encontrado' });
+    if (!titulo) return res.status(400).json({ error: 'titulo é obrigatório' });
+    if (!foto_antes || !foto_depois) return res.status(400).json({ error: 'foto_antes e foto_depois são obrigatórios' });
 
-      const foto_antes  = req.files?.foto_antes?.[0]?.filename  || current.foto_antes;
-      const foto_depois = req.files?.foto_depois?.[0]?.filename || current.foto_depois;
-
-      if (filtro && !FILTROS_VALIDOS.includes(filtro)) {
-        return res.status(400).json({ error: 'Filtro inválido' });
-      }
-
-      await pool.execute(
-        'UPDATE galeria SET titulo=?, descricao=?, filtro=?, foto_antes=?, foto_depois=?, meses_pos_operatorio=?, tema_id=?, updated=? WHERE id=?',
-        [titulo || null, descricao || null, filtro || 'Geral', foto_antes, foto_depois, meses_pos_operatorio ?? 0, tema_id || null, new Date(), req.params.id]
-      );
-
-      res.json({ message: 'Atualizado com sucesso', foto_antes, foto_depois });
-    } catch (error) {
-      logger.error('Galeria PUT error:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+    // Valida tema_id se fornecido
+    if (tema_id) {
+      const [temas] = await pool.execute('SELECT id FROM galeria_temas WHERE id = ?', [tema_id]);
+      if (temas.length === 0) return res.status(400).json({ error: 'tema_id inválido' });
     }
-  }
-);
 
-// ─── DELETE ───────────────────────────────────────────────────────────────────
+    const id = uuidv4();
+    const now = new Date();
+
+    await pool.execute(
+      `INSERT INTO galeria (id, titulo, tema_id, meses_pos_operatorio, foto_antes, foto_depois, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, titulo, tema_id || null, meses_pos_operatorio || null, foto_antes, foto_depois, now, now]
+    );
+
+    res.status(201).json({ id, message: 'Criado com sucesso' });
+  } catch (error) {
+    logger.error('Galeria POST error:', error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// PUT /galeria/:id
+router.put('/:id', authMiddleware, async (req, res) => {
+  try {
+    const { titulo, tema_id, meses_pos_operatorio, foto_antes, foto_depois } = req.body;
+
+    if (!titulo) return res.status(400).json({ error: 'titulo é obrigatório' });
+
+    // Valida tema_id se fornecido
+    if (tema_id) {
+      const [temas] = await pool.execute('SELECT id FROM galeria_temas WHERE id = ?', [tema_id]);
+      if (temas.length === 0) return res.status(400).json({ error: 'tema_id inválido' });
+    }
+
+    // Busca registro atual para manter fotos se não enviadas
+    const [current] = await pool.execute('SELECT foto_antes, foto_depois FROM galeria WHERE id = ?', [req.params.id]);
+    if (current.length === 0) return res.status(404).json({ error: 'Item não encontrado' });
+
+    const finalFotoAntes  = foto_antes  || current[0].foto_antes;
+    const finalFotoDepois = foto_depois || current[0].foto_depois;
+
+    const [result] = await pool.execute(
+      `UPDATE galeria
+       SET titulo = ?, tema_id = ?, meses_pos_operatorio = ?, foto_antes = ?, foto_depois = ?, updated_at = ?
+       WHERE id = ?`,
+      [titulo, tema_id || null, meses_pos_operatorio || null, finalFotoAntes, finalFotoDepois, new Date(), req.params.id]
+    );
+
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Item não encontrado' });
+    res.json({ message: 'Atualizado com sucesso' });
+  } catch (error) {
+    logger.error('Galeria PUT error:', error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// DELETE /galeria/:id
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    const [[current]] = await pool.execute('SELECT * FROM galeria WHERE id = ?', [req.params.id]);
-    if (!current) return res.status(404).json({ error: 'Item não encontrado' });
-
-    // Remove arquivos físicos
-    ['foto_antes', 'foto_depois'].forEach(field => {
-      if (current[field]) {
-        const filePath = path.join('uploads/galeria', current[field]);
-        fs.unlink(filePath, () => {});
-      }
-    });
-
-    await pool.execute('DELETE FROM galeria WHERE id = ?', [req.params.id]);
+    const [result] = await pool.execute('DELETE FROM galeria WHERE id = ?', [req.params.id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Item não encontrado' });
     res.json({ message: 'Deletado com sucesso' });
   } catch (error) {
-    logger.error('Galeria DELETE error:', error);
+    logger.error('Galeria DELETE error:', error.message);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
