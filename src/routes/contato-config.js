@@ -32,13 +32,16 @@ router.post('/', authMiddleware, async (req, res) => {
       latitude,
       longitude,
       zoom,
+      logo_url,
+      favicon_url,
+      sobre_hero_image,
     } = req.body;
 
     const id = uuidv4(); // ← gerado pelo servidor
     const now = new Date();
 
     await pool.execute(
-      'INSERT INTO contato_config (id, email, telefone, whatsapp, instagram, facebook, mensagem_header, mensagem_whatsapp, endereco, dias_funcionamento, horario, latitude, longitude, zoom, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO contato_config (id, email, telefone, whatsapp, instagram, facebook, mensagem_header, mensagem_whatsapp, endereco, dias_funcionamento, horario, latitude, longitude, zoom, logo_url, favicon_url, sobre_hero_image, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         email || null,
@@ -54,6 +57,9 @@ router.post('/', authMiddleware, async (req, res) => {
         latitude || null,
         longitude || null,
         zoom ?? 17,
+        logo_url || null,
+        favicon_url || null,
+        sobre_hero_image || null,
         now,
         now,
       ]
@@ -81,10 +87,13 @@ router.put('/:id', authMiddleware, async (req, res) => {
       latitude,
       longitude,
       zoom,
+      logo_url,
+      favicon_url,
+      sobre_hero_image,
     } = req.body;
 
     const [result] = await pool.execute(
-      'UPDATE contato_config SET email=?, telefone=?, whatsapp=?, instagram=?, facebook=?, mensagem_header=?, mensagem_whatsapp=?, endereco=?, dias_funcionamento=?, horario=?, latitude=?, longitude=?, zoom=?, updated=? WHERE id=?',
+      'UPDATE contato_config SET email=?, telefone=?, whatsapp=?, instagram=?, facebook=?, mensagem_header=?, mensagem_whatsapp=?, endereco=?, dias_funcionamento=?, horario=?, latitude=?, longitude=?, zoom=?, logo_url=?, favicon_url=?, sobre_hero_image=?, updated=? WHERE id=?',
       [
         email || null,
         telefone || null,
@@ -99,6 +108,9 @@ router.put('/:id', authMiddleware, async (req, res) => {
         latitude || null,
         longitude || null,
         zoom ?? 17,
+        logo_url || null,
+        favicon_url || null,
+        sobre_hero_image || null,
         new Date(),
         req.params.id,
       ]
