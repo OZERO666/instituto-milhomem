@@ -11,11 +11,12 @@ import servicosRoutes from './servicos.js';
 import estatisticasRoutes from './estatisticas.js';
 import contatoConfigRoutes from './contato-config.js';
 import auditLogsRoutes from './audit-logs.js';
-import seoRoutes from './seo.js'; //
-
-const router = Router();
+import seoRoutes from './seo.js';
 
 export default () => {
+  // ✅ router criado DENTRO da factory — novo a cada chamada
+  const router = Router();
+
   router.get('/health', healthCheck);
   router.use('/auth', authRoutes);
   router.use('/galeria', galeriaRoutes);
@@ -29,5 +30,6 @@ export default () => {
   router.use('/contato-config', contatoConfigRoutes);
   router.use('/audit-logs', auditLogsRoutes);
   router.use('/seo-settings', seoRoutes);
+
   return router;
 };
