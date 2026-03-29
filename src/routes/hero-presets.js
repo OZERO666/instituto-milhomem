@@ -6,8 +6,25 @@ import logger from '../utils/logger.js';
 
 const router = Router();
 
+const ensureTable = async () => {
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS hero_presets (
+      id VARCHAR(36) PRIMARY KEY,
+      nome TEXT,
+      titulo TEXT,
+      subtitulo TEXT,
+      cta_texto TEXT,
+      cta_link TEXT,
+      badge TEXT,
+      created_at DATETIME,
+      updated_at DATETIME
+    )
+  `);
+};
+
 router.get('/', async (req, res) => {
   try {
+    await ensureTable();
     const [rows] = await pool.execute('SELECT * FROM hero_presets ORDER BY created_at DESC');
     res.json(Array.isArray(rows) ? rows : []);
   } catch (error) {
@@ -18,6 +35,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
+    await ensureTable();
     const { nome, titulo, subtitulo, cta_texto, cta_link, badge } = req.body;
     const id = uuidv4();
     const now = new Date();
@@ -36,6 +54,7 @@ router.post('/', authMiddleware, async (req, res) => {
 
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
+    await ensureTable();
     const { nome, titulo, subtitulo, cta_texto, cta_link, badge } = req.body;
     const id = req.params.id;
     const now = new Date();
@@ -56,6 +75,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
+    await ensureTable();
     const [result] = await pool.execute('DELETE FROM hero_presets WHERE id = ?', [req.params.id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Preset não encontrado' });
