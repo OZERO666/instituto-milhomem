@@ -7,7 +7,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import heroConfigRoutes from './routes/heroConfig.js';
+import heroConfigRoutes from './routes/hero-config.js';
 import routes from './routes/index.js';
 import uploadRoutes from './routes/uploads.js';
 import { errorMiddleware } from './middleware/index.js';
