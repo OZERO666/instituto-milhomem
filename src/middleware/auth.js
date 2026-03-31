@@ -26,8 +26,8 @@ export const authMiddleware = async (req, res, next) => {
       `SELECT u.id, u.name, u.email, u.role_id, r.name AS role_name, r.description AS role_description,
               p.resource, p.action
        FROM users u
-       LEFT JOIN roles r ON r.id = u.role_id
-       LEFT JOIN role_permissions rp ON rp.role_id = u.role_id
+       LEFT JOIN roles r ON BINARY r.id = BINARY u.role_id
+       LEFT JOIN role_permissions rp ON BINARY rp.role_id = BINARY u.role_id
        LEFT JOIN permissions p ON p.id = rp.permission_id
        WHERE u.id = ?`,
       [decoded.id]

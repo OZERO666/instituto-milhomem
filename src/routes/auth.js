@@ -34,7 +34,7 @@ router.post('/login', loginLimiter, async (req, res) => {
       `SELECT u.id, u.name, u.email, u.password, u.role_id,
               r.name AS role_name, r.description AS role_description
        FROM users u
-       LEFT JOIN roles r ON r.id = u.role_id
+       LEFT JOIN roles r ON BINARY r.id = BINARY u.role_id
        WHERE u.email = ?`,
       [email]
     );

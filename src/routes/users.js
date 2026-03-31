@@ -13,14 +13,14 @@ const getUsersWithPermissions = async () => {
   const [users] = await pool.execute(
     `SELECT u.id, u.name, u.email, u.role_id, r.name AS role_name, r.description AS role_description
      FROM users u
-     LEFT JOIN roles r ON r.id = u.role_id
+      LEFT JOIN roles r ON BINARY r.id = BINARY u.role_id
      ORDER BY u.name ASC`
   );
 
   const [permissionsRows] = await pool.execute(
     `SELECT u.id AS user_id, p.id AS permission_id, p.resource, p.action, p.description
      FROM users u
-     LEFT JOIN role_permissions rp ON rp.role_id = u.role_id
+      LEFT JOIN role_permissions rp ON BINARY rp.role_id = BINARY u.role_id
      LEFT JOIN permissions p ON p.id = rp.permission_id
      WHERE p.id IS NOT NULL
      ORDER BY p.resource ASC, p.action ASC`
@@ -97,7 +97,7 @@ router.put('/:id', authMiddleware, checkPermission('users', 'update'), async (re
     const [users] = await pool.execute(
       `SELECT u.id, u.name, u.email, u.role_id, r.name AS role_name
        FROM users u
-       LEFT JOIN roles r ON r.id = u.role_id
+       LEFT JOIN roles r ON BINARY r.id = BINARY u.role_id
        WHERE u.id = ?
        LIMIT 1`,
       [userId]
@@ -162,7 +162,7 @@ router.delete('/:id', authMiddleware, checkPermission('users', 'delete'), async 
     const [users] = await pool.execute(
       `SELECT u.id, r.name AS role_name
        FROM users u
-       LEFT JOIN roles r ON r.id = u.role_id
+       LEFT JOIN roles r ON BINARY r.id = BINARY u.role_id
        WHERE u.id = ?
        LIMIT 1`,
       [userId]
