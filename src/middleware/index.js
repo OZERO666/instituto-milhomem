@@ -1,23 +1,17 @@
-const { csrfProtection } = require('./auth');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const { sanitizeMiddleware } = require('./auth');
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { sanitizeMiddleware, authMiddleware } from './auth.js';
+import errorMiddleware from './error.js';
 
 // Adicionar cabeçalhos de segurança
-app.use(helmet());
+export const helmetMiddleware = helmet();
 
 // Configurar rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Limite de 100 requisições por IP
 });
-app.use(limiter);
+export const rateLimitMiddleware = limiter;
 
-// Adicionar proteção CSRF globalmente
-app.use(csrfProtection);
-
-// Adicionar middleware de sanitização
-app.use(sanitizeMiddleware);
-
-export { default as errorMiddleware } from './error.js';
-export { authMiddleware } from './auth.js';
+// Exportações consolidadas
+export { sanitizeMiddleware, authMiddleware, errorMiddleware };

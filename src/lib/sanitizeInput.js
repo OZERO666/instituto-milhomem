@@ -1,4 +1,4 @@
-const sanitizeHtml = require('sanitize-html');
+import sanitizeHtml from 'sanitize-html';
 
 function sanitizeInput(input) {
   return sanitizeHtml(input, {
@@ -7,4 +7,4 @@ function sanitizeInput(input) {
   });
 }
 
-module.exports = sanitizeInput;
+export default sanitizeInput;

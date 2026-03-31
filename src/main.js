@@ -47,8 +47,15 @@ const allowedOrigins = [
 const corsOptions = {
   origin: (origin, callback) => {
     // Permite requisições sem Origin (ex: curl, health-check, mobile apps)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (!origin) {
+      logger.info('CORS: Requisição sem origem permitida');
+      return callback(null, true);
+    }
+    if (allowedOrigins.includes(origin)) {
+      logger.info(`CORS: Origem permitida - ${origin}`);
+      return callback(null, true);
+    }
+    logger.warn(`CORS: Origem bloqueada - ${origin}`);
     return callback(new Error(`Origin não permitido pelo CORS: ${origin}`), false);
   },
   credentials: true,
@@ -59,6 +66,14 @@ const corsOptions = {
 // CORS antes do helmet — garante headers mesmo em respostas de erro
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
+
+// Middleware global para garantir cabeçalhos CORS em respostas de erro
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use(helmet());
 

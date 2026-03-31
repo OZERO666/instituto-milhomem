@@ -1,19 +1,17 @@
 import jwt from 'jsonwebtoken';
 import pool from '../db/mysql.js';
 import logger from '../utils/logger.js';
-import csrf from 'csurf';
-const csrfProtection = csrf({ cookie: true });
-const sanitizeInput = require('../lib/sanitizeInput');
+import sanitizeInput from '../lib/sanitizeInput.js';
 
 // Middleware para sanitizar entradas
-function sanitizeMiddleware(req, res, next) {
+export const sanitizeMiddleware = (req, res, next) => {
   if (req.body) {
     for (const key in req.body) {
       req.body[key] = sanitizeInput(req.body[key]);
     }
   }
   next();
-}
+};
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -40,5 +38,3 @@ export const authMiddleware = async (req, res, next) => {
     res.status(401).json({ error: 'Token inválido' });
   }
 };
-
-module.exports = { csrfProtection, sanitizeMiddleware };
