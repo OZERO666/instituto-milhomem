@@ -35,31 +35,32 @@ process.on('SIGTERM', async () => {
   process.exit();
 });
 
-app.use(helmet());
-
 const allowedOrigins = [
   process.env.CORS_ORIGIN,
   'https://www.institutomilhomem.com',
   'https://institutomilhomem.com',
+  // localhost para desenvolvimento
+  'http://localhost:3000',
+  'http://localhost:5173',
 ].filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    // Permite requisições sem Origin (ex: curl, health-check)
+    // Permite requisições sem Origin (ex: curl, health-check, mobile apps)
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error(`Origin não permitido pelo CORS: ${origin}`), false);
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
 
-app.options(/.*/, cors());
+// CORS antes do helmet — garante headers mesmo em respostas de erro
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
+app.use(helmet());
 
 app.use(morgan('combined'));
 app.use(express.json());
