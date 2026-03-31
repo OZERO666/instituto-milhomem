@@ -31,11 +31,41 @@ CREATE TABLE IF NOT EXISTS role_permissions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE users
-  ADD COLUMN IF NOT EXISTS role_id CHAR(36) NULL,
-  ADD CONSTRAINT fk_users_role
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-    ON DELETE RESTRICT ON UPDATE CASCADE;
+  ADD COLUMN IF NOT EXISTS role_id CHAR(36) NULL;
 
-CREATE INDEX idx_users_role_id ON users(role_id);
+SET @fk_exists = (
+  SELECT COUNT(*)
+  FROM information_schema.TABLE_CONSTRAINTS
+  WHERE CONSTRAINT_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'users'
+    AND CONSTRAINT_NAME = 'fk_users_role'
+    AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+);
+
+SET @fk_sql = IF(
+  @fk_exists = 0,
+  'ALTER TABLE users ADD CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE',
+  'SELECT 1'
+);
+PREPARE stmt_fk FROM @fk_sql;
+EXECUTE stmt_fk;
+DEALLOCATE PREPARE stmt_fk;
+
+SET @idx_exists = (
+  SELECT COUNT(*)
+  FROM information_schema.STATISTICS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'users'
+    AND INDEX_NAME = 'idx_users_role_id'
+);
+
+SET @idx_sql = IF(
+  @idx_exists = 0,
+  'CREATE INDEX idx_users_role_id ON users(role_id)',
+  'SELECT 1'
+);
+PREPARE stmt_idx FROM @idx_sql;
+EXECUTE stmt_idx;
+DEALLOCATE PREPARE stmt_idx;
 
 COMMIT;
