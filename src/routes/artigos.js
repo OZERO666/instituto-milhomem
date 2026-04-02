@@ -20,7 +20,22 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.execute('SELECT * FROM artigos ORDER BY data_publicacao DESC');
+    // ?published=1  → apenas publicados (frontend público)
+    // ?status=draft → apenas rascunhos (admin)
+    // sem filtro    → todos (admin pode passar sem flag)
+    let query = 'SELECT * FROM artigos';
+    const params = [];
+
+    if (req.query.published === '1') {
+      query += " WHERE status = 'published' AND (data_publicacao IS NULL OR data_publicacao <= NOW())";
+    } else if (req.query.status) {
+      query += ' WHERE status = ?';
+      params.push(req.query.status);
+    }
+
+    query += ' ORDER BY data_publicacao DESC';
+
+    const [rows] = await pool.execute(query, params);
     res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows);
   } catch (error) {
@@ -33,6 +48,7 @@ router.get('/:slug', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM artigos WHERE slug=?', [req.params.slug]);
     if (!rows[0]) return res.status(404).json({ error: 'Artigo não encontrado' });
+    // Rascunhos só acessíveis via admin (não bloqueamos aqui para o preview do editor)
     res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows[0]);
   } catch (error) {
