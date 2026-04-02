@@ -7,6 +7,17 @@ import logger from '../utils/logger.js';
 
 const router = Router();
 
+// Migração segura: adiciona colunas novas se ainda não existirem
+(async () => {
+  try {
+    await pool.execute(`ALTER TABLE artigos ADD COLUMN IF NOT EXISTS status ENUM('draft','published') NOT NULL DEFAULT 'published'`);
+    await pool.execute(`ALTER TABLE artigos ADD COLUMN IF NOT EXISTS tags TEXT NULL`);
+    logger.info('Artigos: colunas status/tags verificadas');
+  } catch (err) {
+    logger.warn('Artigos migration warning:', err.message);
+  }
+})();
+
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM artigos ORDER BY data_publicacao DESC');
@@ -34,7 +45,8 @@ router.post('/', authMiddleware, checkPermission('blog', 'create'), async (req, 
   try {
     const {
       titulo, slug, autor, categoria, categoria_id,
-      conteudo, resumo, imagem_destaque, data_publicacao
+      conteudo, resumo, imagem_destaque, data_publicacao,
+      status = 'published', tags,
     } = req.body;
 
     if (!titulo || !slug) {
@@ -49,10 +61,11 @@ router.post('/', authMiddleware, checkPermission('blog', 'create'), async (req, 
 
     const id = uuidv4();
     const now = new Date();
+    const tagsJson = Array.isArray(tags) ? JSON.stringify(tags) : (tags || null);
 
     await pool.execute(
-      'INSERT INTO artigos (id, titulo, slug, autor, categoria, categoria_id, conteudo, resumo, imagem_destaque, data_publicacao, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [id, titulo, slug, autor || null, categoria || null, categoria_id || null, conteudo || null, resumo || null, imagem_destaque || null, data_publicacao || now, now, now]
+      'INSERT INTO artigos (id, titulo, slug, autor, categoria, categoria_id, conteudo, resumo, imagem_destaque, data_publicacao, status, tags, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, titulo, slug, autor || null, categoria || null, categoria_id || null, conteudo || null, resumo || null, imagem_destaque || null, data_publicacao || now, status, tagsJson, now, now]
     );
     res.status(201).json({ id, message: 'Criado com sucesso' });
   } catch (error) {
@@ -65,7 +78,8 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
   try {
     const {
       titulo, slug, autor, categoria, categoria_id,
-      conteudo, resumo, imagem_destaque, data_publicacao
+      conteudo, resumo, imagem_destaque, data_publicacao,
+      status, tags,
     } = req.body;
 
     if (!titulo || !slug) {
@@ -81,9 +95,12 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
       return res.status(409).json({ error: 'Já existe um artigo com este slug' });
     }
 
+    const tagsJson = Array.isArray(tags) ? JSON.stringify(tags) : (tags ?? null);
+    const statusVal = ['draft', 'published'].includes(status) ? status : 'published';
+
     const [result] = await pool.execute(
-      'UPDATE artigos SET titulo=?, slug=?, autor=?, categoria=?, categoria_id=?, conteudo=?, resumo=?, imagem_destaque=?, data_publicacao=?, updated=? WHERE id=?',
-      [titulo, slug, autor || null, categoria || null, categoria_id || null, conteudo || null, resumo || null, imagem_destaque || null, data_publicacao || null, new Date(), req.params.id]
+      'UPDATE artigos SET titulo=?, slug=?, autor=?, categoria=?, categoria_id=?, conteudo=?, resumo=?, imagem_destaque=?, data_publicacao=?, status=?, tags=?, updated=? WHERE id=?',
+      [titulo, slug, autor || null, categoria || null, categoria_id || null, conteudo || null, resumo || null, imagem_destaque || null, data_publicacao || null, statusVal, tagsJson, new Date(), req.params.id]
     );
 
     if (result.affectedRows === 0) {
