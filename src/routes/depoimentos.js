@@ -10,6 +10,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM depoimentos ORDER BY created DESC');
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows);
   } catch (error) {
     logger.error('Depoimentos GET error:', error.message);

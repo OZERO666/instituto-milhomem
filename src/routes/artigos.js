@@ -10,6 +10,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM artigos ORDER BY data_publicacao DESC');
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows);
   } catch (error) {
     logger.error('Artigos GET error:', error.message);
@@ -21,6 +22,7 @@ router.get('/:slug', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM artigos WHERE slug=?', [req.params.slug]);
     if (!rows[0]) return res.status(404).json({ error: 'Artigo não encontrado' });
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows[0]);
   } catch (error) {
     logger.error('Artigos GET slug error:', error.message);

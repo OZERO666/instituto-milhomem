@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
       'SELECT * FROM hero_config ORDER BY id LIMIT 1'
     );
     if (!rows.length) return res.json(null);
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     return res.json(rows[0]);
   } catch (err) {
     logger.error('GET /hero-config error', err.message);

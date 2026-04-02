@@ -32,6 +32,7 @@ router.get('/', async (req, res) => {
     }
 
     const [rows] = await pool.execute(query, params);
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows);
   } catch (error) {
     logger.error('Galeria GET error:', error.message);

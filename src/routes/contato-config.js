@@ -10,6 +10,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM contato_config LIMIT 1');
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows[0] || {});
   } catch (error) {
     logger.error('ContatoConfig GET error:', error.message);

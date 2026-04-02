@@ -12,6 +12,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT * FROM servicos ORDER BY ordem ASC');
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows);
   } catch (error) {
     logger.error('Servicos GET error:', error.message);
@@ -31,6 +32,7 @@ router.get('/slug/:slug', async (req, res) => {
       return res.status(404).json({ error: 'Serviço não encontrado' });
     }
 
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(rows[0]);
   } catch (error) {
     logger.error('Servicos GET slug error:', error.message);

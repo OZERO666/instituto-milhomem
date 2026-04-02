@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -62,6 +63,9 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
+// Compressão gzip — deve vir antes de qualquer rota
+app.use(compression());
 
 // CORS antes do helmet — garante headers mesmo em respostas de erro
 app.use(cors(corsOptions));

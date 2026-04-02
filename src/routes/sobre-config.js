@@ -109,6 +109,7 @@ router.get('/', async (req, res) => {
   try {
     await ensureTable();
     const [rows] = await pool.execute('SELECT * FROM sobre_config LIMIT 1');
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     return res.json(normalizeRow(rows[0]));
   } catch (error) {
     logger.error('SobreConfig GET error:', error.message);

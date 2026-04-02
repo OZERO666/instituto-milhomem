@@ -30,7 +30,14 @@ pool.getConnection()
   })
   .catch(err => {
     console.error('❌ Falha ao conectar ao MySQL:', err.message);
-    process.exit(1);
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    } else {
+      console.error('⚠️  Servidor rodando SEM banco de dados — rotas de DB irão falhar.');
+      console.error('    Para corrigir permanentemente, execute no MySQL/phpMyAdmin:');
+      console.error(`    ALTER USER '${process.env.DB_USER}'@'localhost' IDENTIFIED BY '${process.env.DB_PASSWORD}';`);
+      console.error('    FLUSH PRIVILEGES;');
+    }
   });
 
 export default pool;
