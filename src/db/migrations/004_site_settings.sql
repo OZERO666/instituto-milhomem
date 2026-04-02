@@ -15,9 +15,11 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
 -- Valores padrão (IGNORE caso já existam)
 INSERT IGNORE INTO site_settings (setting_key, setting_value, setting_type, description) VALUES
-  ('primary_color',    '#D4AF37', 'string', 'Cor primária (ouro) — botões, destaques, links'),
-  ('secondary_color',  '#0A192F', 'string', 'Cor secundária (marinho) — títulos, header escuro'),
-  ('accent_color',     '#E5C96A', 'string', 'Cor de destaque — hover de botões e badges'),
-  ('background_color', '#FFFFFF', 'string', 'Cor de fundo principal da página'),
-  ('foreground_color', '#1A1A1A', 'string', 'Cor do texto principal'),
-  ('site_name',        'Instituto Milhomem', 'string', 'Nome do site — exibido em títulos e meta tags');
+  ('primary_color',      '#D4AF37', 'string', 'Cor primária (ouro) — botões, destaques, links'),
+  ('secondary_color',    '#0A192F', 'string', 'Cor secundária (marinho) — títulos, header escuro'),
+  ('accent_color',       '#E5C96A', 'string', 'Cor de destaque — hover de botões e badges'),
+  ('background_color',   '#FFFFFF', 'string', 'Cor de fundo principal da página'),
+  ('foreground_color',   '#1A1A1A', 'string', 'Cor do texto principal'),
+  ('site_name',          'Instituto Milhomem', 'string', 'Nome do site — exibido em títulos e meta tags'),
+  ('logo_size_header',   '56',      'number', 'Altura da logo no header em px (padrão: 56)'),
+  ('logo_size_footer',   '48',      'number', 'Altura da logo no footer em px (padrão: 48)');
