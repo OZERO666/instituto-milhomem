@@ -21,13 +21,20 @@ router.get('/resolve-maps', authMiddleware, async (req, res) => {
     return res.status(400).json({ error: 'URL must be a Google Maps link' });
   }
 
+  // Try extracting directly from the URL first (works for full links with coords)
+  const direct = extractCoords(url);
+  if (direct) return res.json({ ...direct, resolvedUrl: url });
+
+  // Short links need server-side redirect following — use GET (HEAD doesn't resolve correctly)
   try {
-    // Follow all redirects to get the final URL
     const response = await fetch(url, {
-      method: 'HEAD',
+      method: 'GET',
       redirect: 'follow',
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      signal: AbortSignal.timeout(8000),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept-Language': 'pt-BR,pt;q=0.9',
+      },
+      signal: AbortSignal.timeout(10000),
     });
 
     const finalUrl = response.url;
