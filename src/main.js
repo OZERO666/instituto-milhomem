@@ -11,7 +11,7 @@ import morgan from 'morgan';
 import heroConfigRoutes from './routes/hero-config.js';
 import routes from './routes/index.js';
 import uploadRoutes from './routes/uploads.js';
-import { errorMiddleware } from './middleware/index.js';
+import { errorMiddleware, rateLimitMiddleware, sanitizeMiddleware } from './middleware/index.js';
 import logger from './utils/logger.js';
 
 const app = express();
@@ -95,6 +95,8 @@ app.get('/robots.txt', (_req, res) => {
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(rateLimitMiddleware);
+app.use(sanitizeMiddleware);
 
 // Rotas principais
 app.use('/', routes());
