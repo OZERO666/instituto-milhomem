@@ -6,12 +6,23 @@ import errorMiddleware from './error.js';
 // Adicionar cabeçalhos de segurança
 export const helmetMiddleware = helmet();
 
-// Configurar rate limiting
-const limiter = rateLimit({
+// GET público — limite alto (scraping/DoS leve)
+export const readLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limite de 100 requisições por IP
+  max: 500,                  // 500 req/IP — suficiente para browsing normal
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas requisições. Tente novamente em alguns minutos.' },
 });
-export const rateLimitMiddleware = limiter;
+
+// POST/PUT/PATCH/DELETE — limite moderado para evitar spam
+export const writeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 60,                   // 60 writes/IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas requisições. Tente novamente em alguns minutos.' },
+});
 
 // Exportações consolidadas
 export { sanitizeMiddleware, authMiddleware, errorMiddleware };
