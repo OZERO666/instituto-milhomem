@@ -79,10 +79,10 @@ INSERT INTO contato_config (
   '',
   'Agende sua consulta gratuita e dê o primeiro passo para transformar sua aparência.',
   'Olá! Gostaria de agendar uma consulta no Instituto Milhomem. Pode me ajudar?',
-  'Goiânia, Goiás, Brasil',
+  'R. T-52, 70 - St. Bueno, Goiânia - GO',
   'Segunda a Sábado',
   '08:00 – 18:00',
-  -16.6869, -49.2648, 15
+  -16.6981381, -49.2703892, 17
 )
 ON DUPLICATE KEY UPDATE
   mensagem_header   = VALUES(mensagem_header),
