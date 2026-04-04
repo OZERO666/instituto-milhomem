@@ -117,8 +117,8 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                 register={register}
                 watch={watch}
                 name="secondary_color"
-                label="Cor Secundária"
-                description="Títulos, header escuro e textos principais"
+                label="Fundo Secundário"
+                description="Fundo escuro: header, painel admin, botões dark e seções escuras"
               />
               <ColorField
                 register={register}
@@ -168,6 +168,13 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                   style={{ backgroundColor: watch('accent_color') || '#FFDEA4', color: isLight(watch('accent_color') || '#FFDEA4') ? '#1A1A1A' : '#fff' }}
                 >
                   Hover / destaque
+                </button>
+                <button
+                  type="button"
+                  className="text-xs font-bold px-3 py-1.5 rounded-lg"
+                  style={{ backgroundColor: watch('secondary_color') || '#181B1E', color: '#fff' }}
+                >
+                  Fundo secundário
                 </button>
               </div>
             </div>
