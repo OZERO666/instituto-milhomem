@@ -275,8 +275,8 @@ const HomePage = () => {
                 </motion.div>
 
                 {/* Título */}
-                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-[4.5rem] font-extrabold text-white
-                               mb-3 md:mb-5 leading-tight md:leading-[1.06] tracking-tight uppercase">
+                <h1 className="text-[clamp(1.25rem,6vw,4.5rem)] font-extrabold text-white
+                               mb-3 md:mb-5 leading-tight tracking-tight uppercase break-words w-full">
                   {heroTitle}
                 </h1>
 
