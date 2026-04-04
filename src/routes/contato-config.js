@@ -37,13 +37,16 @@ router.post('/', authMiddleware, checkPermission('dashboard', 'create'), async (
       logo_url,
       favicon_url,
       sobre_hero_image,
+      maps_embed_url,
+      maps_url,
+      nome_local,
     } = req.body;
 
     const id = uuidv4(); // ← gerado pelo servidor
     const now = new Date();
 
     await pool.execute(
-      'INSERT INTO contato_config (id, email, telefone, whatsapp, instagram, facebook, mensagem_header, mensagem_whatsapp, endereco, dias_funcionamento, horario, latitude, longitude, zoom, logo_url, favicon_url, sobre_hero_image, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO contato_config (id, email, telefone, whatsapp, instagram, facebook, mensagem_header, mensagem_whatsapp, endereco, dias_funcionamento, horario, latitude, longitude, zoom, logo_url, favicon_url, sobre_hero_image, maps_embed_url, maps_url, nome_local, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         email || null,
@@ -62,6 +65,9 @@ router.post('/', authMiddleware, checkPermission('dashboard', 'create'), async (
         logo_url || null,
         favicon_url || null,
         sobre_hero_image || null,
+        maps_embed_url || null,
+        maps_url || null,
+        nome_local || null,
         now,
         now,
       ]
@@ -92,10 +98,13 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
       logo_url,
       favicon_url,
       sobre_hero_image,
+      maps_embed_url,
+      maps_url,
+      nome_local,
     } = req.body;
 
     const [result] = await pool.execute(
-      'UPDATE contato_config SET email=?, telefone=?, whatsapp=?, instagram=?, facebook=?, mensagem_header=?, mensagem_whatsapp=?, endereco=?, dias_funcionamento=?, horario=?, latitude=?, longitude=?, zoom=?, logo_url=?, favicon_url=?, sobre_hero_image=?, updated=? WHERE id=?',
+      'UPDATE contato_config SET email=?, telefone=?, whatsapp=?, instagram=?, facebook=?, mensagem_header=?, mensagem_whatsapp=?, endereco=?, dias_funcionamento=?, horario=?, latitude=?, longitude=?, zoom=?, logo_url=?, favicon_url=?, sobre_hero_image=?, maps_embed_url=?, maps_url=?, nome_local=?, updated=? WHERE id=?',
       [
         email || null,
         telefone || null,
@@ -113,6 +122,9 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
         logo_url || null,
         favicon_url || null,
         sobre_hero_image || null,
+        maps_embed_url || null,
+        maps_url || null,
+        nome_local || null,
         new Date(),
         req.params.id,
       ]

@@ -37,6 +37,7 @@ const ContatoPage = () => {
   const translatedConfig = applyConfigTrad(config);
   const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
   const mapQuery    = config.latitude && config.longitude ? `${config.latitude},${config.longitude}` : (config.nome_local ? encodeURIComponent(config.nome_local) : '-16.6981381,-49.2703892');
+  const mapIframeSrc = config.maps_embed_url || `https://maps.google.com/maps?q=${mapQuery}&z=${config.zoom || '17'}&output=embed`;
   const mapSearchQuery = config.nome_local ? encodeURIComponent(config.nome_local) : (config.endereco ? encodeURIComponent(config.endereco) : 'Instituto+Milhomem+Goiânia');
   const mapLink     = config.maps_url || `https://www.google.com/maps/search/?api=1&query=${mapSearchQuery}`;
 
@@ -386,7 +387,7 @@ const ContatoPage = () => {
 
                   {/* Iframe com filtro quente e suave */}
                   <iframe
-                    src={`https://maps.google.com/maps?q=${mapQuery}&z=${config.zoom || '17'}&output=embed`}
+                    src={mapIframeSrc}
                     width="100%"
                     height="100%"
                     style={{

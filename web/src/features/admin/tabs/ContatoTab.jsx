@@ -23,20 +23,20 @@ const ContatoTab = ({ contactForm, contactConfig, isLoading, onContactSubmit }) 
   const [extractError, setExtractError] = useState(false);
   const [isExtracting, setIsExtracting] = useState(false);
 
-  const mapsUrl = watch('maps_url') || '';
-  const lat     = watch('latitude');
-  const lng     = watch('longitude');
-  const zoom      = watch('zoom') || '17';
-  const nomeLocal  = watch('nome_local') || '';
+  const mapsUrl      = watch('maps_url') || '';
+  const mapsEmbedUrl = watch('maps_embed_url') || '';
+  const lat          = watch('latitude');
+  const lng          = watch('longitude');
+  const zoom         = watch('zoom') || '17';
+  const nomeLocal    = watch('nome_local') || '';
 
   const iframeQuery = lat && lng
     ? `${lat},${lng}`
     : nomeLocal
       ? encodeURIComponent(nomeLocal)
       : null;
-  const iframeSrc = iframeQuery
-    ? `https://maps.google.com/maps?q=${iframeQuery}&z=${zoom}&output=embed`
-    : null;
+  const iframeSrc = mapsEmbedUrl
+    || (iframeQuery ? `https://maps.google.com/maps?q=${iframeQuery}&z=${zoom}&output=embed` : null);
 
   async function handleExtract() {
     if (!mapsUrl) return;
@@ -117,9 +117,22 @@ const ContatoTab = ({ contactForm, contactConfig, isLoading, onContactSubmit }) 
             </p>
           </div>
 
+          {/* URL de Incorporação do Google Maps (mais confiável) */}
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
+            <Label className="font-bold text-sm text-primary">URL de Incorporação (Recomendado)</Label>
+            <Input
+              {...register('maps_embed_url')}
+              placeholder="https://www.google.com/maps/embed?pb=!1m18..."
+              className="focus-visible:ring-primary font-mono text-xs"
+            />
+            <p className="text-xs text-muted-foreground">
+              No Google Maps: clique em <strong>Compartilhar → Incorporar um mapa</strong>, copie apenas o conteúdo do atributo <code className="bg-muted px-1 rounded">src="..."</code> do iframe e cole aqui. Este método garante o local correto.
+            </p>
+          </div>
+
           {/* Link do Google Maps */}
           <div>
-            <Label className="font-bold text-sm">Link do Google Maps</Label>
+            <Label className="font-bold text-sm">Link de Compartilhamento (para extrair coordenadas)</Label>
             <div className="flex gap-2 mt-2">
               <Input
                 {...register('maps_url')}
@@ -144,7 +157,7 @@ const ContatoTab = ({ contactForm, contactConfig, isLoading, onContactSubmit }) 
               <p className="text-xs text-destructive mt-1">⚠️ Não foi possível extrair coordenadas deste link. Tente copiar o link completo do Google Maps (botão Compartilhar).</p>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              No Google Maps: clique em <strong>Compartilhar → Copiar link</strong> e cole aqui. Clique em <strong>Extrair</strong> para capturar as coordenadas automaticamente.
+              Usado como fallback se a URL de incorporação acima não estiver preenchida.
             </p>
           </div>
 
