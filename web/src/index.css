@@ -104,7 +104,6 @@
     scroll-behavior: smooth;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
-    overflow-x: clip;
     /* Scrollbar customizada */
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--primary) / 0.5) hsl(var(--muted));
@@ -124,7 +123,6 @@
     @apply bg-background text-foreground;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
-    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Previne FOUC de scroll */

@@ -36,8 +36,10 @@ const FaqPage          = lazy(() => import('@/pages/FaqPage.jsx'));
 const MainLayout = ({ children, siteConfig }) => (
   <>
     <Header siteConfig={siteConfig} />
-    <main>{children}</main>
-    <Footer siteConfig={siteConfig} />
+    <div className="overflow-x-hidden">
+      <main>{children}</main>
+      <Footer siteConfig={siteConfig} />
+    </div>
   </>
 );
 
