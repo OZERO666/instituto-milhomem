@@ -28,7 +28,8 @@ const Footer = ({ siteConfig }) => {
   const logoHeight   = Number(settings?.logo_size_footer) || 48;
   const currentYear  = new Date().getFullYear();
   const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
-  const mapLink     = config.maps_url || `https://maps.google.com/?q=${config.latitude || '-16.6869'},${config.longitude || '-49.2648'}`;
+  const mapSearchQuery = config.nome_local ? encodeURIComponent(config.nome_local) : (config.endereco ? encodeURIComponent(config.endereco) : 'Instituto+Milhomem+Goiânia');
+  const mapLink     = config.maps_url || `https://www.google.com/maps/search/?api=1&query=${mapSearchQuery}`;
 
   const CONTACT_ITEMS = [
     {

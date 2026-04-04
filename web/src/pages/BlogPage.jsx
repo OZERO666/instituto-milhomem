@@ -16,6 +16,7 @@ const BlogPage = () => {
   const pageConfig = usePagesConfig('blog');
   const labelsConfig = usePagesConfig('labels');
   const { applyList } = useTraducoesMulti('artigos');
+  const { applyList: applyCategories } = useTraducoesMulti('blog_categorias');
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -125,7 +126,7 @@ const BlogPage = () => {
               >
                 {pageConfig.all_categories_label}
               </button>
-              {categories.map(category => (
+              {applyCategories(categories).map(category => (
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}

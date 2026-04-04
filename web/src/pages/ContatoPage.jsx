@@ -37,7 +37,8 @@ const ContatoPage = () => {
   const translatedConfig = applyConfigTrad(config);
   const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
   const mapQuery    = config.latitude && config.longitude ? `${config.latitude},${config.longitude}` : (config.nome_local ? encodeURIComponent(config.nome_local) : '-16.6981381,-49.2703892');
-  const mapLink     = config.maps_url || `https://maps.google.com/?q=${mapQuery}`;
+  const mapSearchQuery = config.nome_local ? encodeURIComponent(config.nome_local) : (config.endereco ? encodeURIComponent(config.endereco) : 'Instituto+Milhomem+Goiânia');
+  const mapLink     = config.maps_url || `https://www.google.com/maps/search/?api=1&query=${mapSearchQuery}`;
 
   const [services,       setServices]       = useState([]);
   const [isSubmitting,   setIsSubmitting]   = useState(false);

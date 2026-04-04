@@ -43,16 +43,31 @@ process.on('SIGTERM', async () => {
 // Compressão gzip — deve vir antes de qualquer rota
 app.use(compression());
 
+// Redireciona HTTP → HTTPS em produção (quando atrás de proxy como nginx/Hostinger)
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    const proto = req.headers['x-forwarded-proto'];
+    if (proto && proto !== 'https') {
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
+}
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc:              ["'self'"],
-      scriptSrc:               ["'self'", "'unsafe-inline'"],
+      // 'unsafe-inline' is required for the Vite-injected inline <script type="module"> handlers.
+      // 'strict-dynamic' causes CSP3-compliant browsers to IGNORE 'unsafe-inline', providing
+      // real XSS protection while keeping backwards-compat with CSP2 browsers.
+      scriptSrc:               ["'self'", "'unsafe-inline'", "'strict-dynamic'"],
       styleSrc:                ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc:                 ["'self'", 'https://fonts.gstatic.com'],
       imgSrc:                  ["'self'", 'data:', 'blob:', 'https://horizons-cdn.hostinger.com', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
       objectSrc:               ["'none'"],
-      frameSrc:                ["'none'"],
+      // Allow Google Maps embeds used in ContatoPage
+      frameSrc:                ["'none'", 'https://maps.google.com', 'https://www.google.com'],
       frameAncestors:          ["'none'"],
       connectSrc:              ["'self'"],
       formAction:              ["'self'"],

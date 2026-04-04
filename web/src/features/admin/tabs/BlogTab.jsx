@@ -15,6 +15,10 @@ const ARTICLE_TRANSLATION_FIELDS = [
   { name: 'conteudo', label: 'Conteúdo', type: 'textarea', rows: 6 },
 ];
 
+const CATEGORY_TRANSLATION_FIELDS = [
+  { name: 'nome', label: 'Nome', type: 'input' },
+];
+
 const BlogTab = ({
   articles, blogCategories, isLoading, categoryForm,
   onGenericSubmit, onDelete,
@@ -25,6 +29,7 @@ const BlogTab = ({
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [translatingArticle, setTranslatingArticle] = useState(null);
+  const [translatingCategory, setTranslatingCategory] = useState(null);
   const filteredArticles = useMemo(() => {
     let result = articles;
     if (statusFilter !== 'all') result = result.filter(a => a.status === statusFilter);
@@ -54,13 +59,31 @@ const BlogTab = ({
           </form>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {blogCategories.map(cat => (
-              <div key={cat.id} className="flex items-center justify-between p-2 bg-muted rounded-md text-sm">
+              <React.Fragment key={cat.id}>
+              <div className="flex items-center justify-between p-2 bg-muted rounded-md text-sm">
                 <span className="font-medium">{cat.nome}</span>
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive"
-                  onClick={() => onDelete('blog-categorias', cat.id, cat.nome)}>
-                  <Trash2 className="w-3 h-3" />
-                </Button>
+                <div className="flex gap-1">
+                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-primary" title="Traduções"
+                    onClick={() => setTranslatingCategory(translatingCategory?.id === cat.id ? null : cat)}>
+                    <Globe className="w-3 h-3" />
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive"
+                    onClick={() => onDelete('blog-categorias', cat.id, cat.nome)}>
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
+              {translatingCategory?.id === cat.id && (
+                <div className="bg-white rounded-lg border border-primary/30 px-4 py-3 -mt-1">
+                  <TranslationFields
+                    tabela="blog_categorias"
+                    registroId={cat.id}
+                    originalData={cat}
+                    fields={CATEGORY_TRANSLATION_FIELDS}
+                  />
+                </div>
+              )}
+              </React.Fragment>
             ))}
             {blogCategories.length === 0 && <p className="text-xs text-muted-foreground text-center py-2">Nenhuma categoria criada ainda.</p>}
           </div>

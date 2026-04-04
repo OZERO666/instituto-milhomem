@@ -718,7 +718,7 @@ const HomePage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <ContactInfoCard icon={MapPin} title="Endereço">
                     <a
-                      href={`https://maps.google.com/?q=${get('latitude')},${get('longitude')}`}
+                      href={get('maps_url') || `https://www.google.com/maps/search/?api=1&query=${get('nome_local') ? encodeURIComponent(get('nome_local')) : encodeURIComponent(get('endereco'))}`}
                       target="_blank" rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium whitespace-pre-wrap"
                     >
