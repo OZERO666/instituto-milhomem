@@ -205,7 +205,12 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
-      <SEO />
+      <SEO
+        title="Transplante Capilar FUE em Goiânia | Dr. Pablo Milhomem | Instituto Milhomem"
+        description="Clínica premium de transplante capilar em Goiânia. Técnica FUE sem cicatriz, resultados naturais e definitivos. Consulta gratuita com Dr. Pablo Milhomem."
+        keywords="transplante capilar Goiânia, FUE, Dr Pablo Milhomem, clínica capilar, restauração capilar, Instituto Milhomem"
+        ogImage={heroConfig?.imagem_fundo}
+      />
       <WhatsAppButton />
 
       <main className="flex-grow">

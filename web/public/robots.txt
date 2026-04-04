@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /unauthorized
+
+Sitemap: https://institutomilhomem.com/sitemap.xml

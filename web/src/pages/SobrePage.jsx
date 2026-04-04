@@ -32,9 +32,10 @@ const SobrePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <SEO 
-        title="Sobre a Clínica | Instituto Milhomem" 
+      <SEO
+        title="Sobre a Clínica | Instituto Milhomem"
         description="Conheça a infraestrutura premium, a equipe especializada e a filosofia de excelência do Instituto Milhomem em Goiânia."
+        keywords="Dr Pablo Milhomem, clínica transplante capilar Goiânia, sobre Instituto Milhomem, cirurgião capilar, ISHRS, FUE Goiânia"
       />
 
       <WhatsAppButton />

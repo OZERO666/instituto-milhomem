@@ -32,6 +32,8 @@ const ServicosPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <SEO
+        title="Serviços de Transplante Capilar | Instituto Milhomem – Goiânia"
+        description="Transplante FUE, transplante de barba e tratamentos complementares com o Dr. Pablo Milhomem em Goiânia. Técnica avançada e resultados naturais."
         keywords="transplante capilar, FUE, mesoterapia capilar, PRP, Goiânia, restauração capilar, clínica capilar"
       />
 

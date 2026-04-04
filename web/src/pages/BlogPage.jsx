@@ -93,6 +93,8 @@ const BlogPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <SEO
+        title="Blog de Saúde Capilar | Artigos e Dicas | Instituto Milhomem"
+        description="Artigos sobre transplante capilar, pós-operatório, cuidados com cabelo e saúde capilar. Conteúdo especializado pelo Instituto Milhomem."
         keywords="transplante capilar, blog capilar, saúde capilar, FUE, Goiânia, dicas capilares, queda de cabelo"
       />
       

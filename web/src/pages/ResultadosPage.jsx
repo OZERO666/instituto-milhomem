@@ -70,6 +70,7 @@ const ResultadosPage = () => {
       <SEO
         title="Resultados - Antes e Depois | Instituto Milhomem"
         description="Veja os resultados reais de transplante capilar do Instituto Milhomem. Galeria de fotos antes e depois e depoimentos de pacientes."
+        keywords="antes e depois transplante capilar, resultados FUE, galeria transplante capilar, fotos antes depois cabelo, Instituto Milhomem resultados"
       />
 
       <WhatsAppButton />
