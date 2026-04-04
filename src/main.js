@@ -79,7 +79,40 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:              ["'none'"],
+      scriptSrc:               ["'none'"],
+      styleSrc:                ["'none'"],
+      imgSrc:                  ["'none'"],
+      fontSrc:                 ["'none'"],
+      objectSrc:               ["'none'"],
+      mediaSrc:                ["'none'"],
+      frameSrc:                ["'none'"],
+      frameAncestors:          ["'none'"],
+      connectSrc:              ["'self'"],
+      formAction:              ["'self'"],
+      baseUri:                 ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
+  crossOriginEmbedderPolicy:  false,
+  crossOriginOpenerPolicy:    { policy: 'same-origin' },
+  crossOriginResourcePolicy:  { policy: 'cross-origin' },
+  referrerPolicy:             { policy: 'strict-origin-when-cross-origin' },
+  hsts: {
+    maxAge:            31536000,
+    includeSubDomains: true,
+    preload:           true,
+  },
+  permittedCrossDomainPolicies: { permittedPolicies: 'none' },
+  xContentTypeOptions:    true,
+  xDnsPrefetchControl:    { allow: false },
+  xDownloadOptions:       true,
+  xFrameOptions:          { action: 'deny' },
+  xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
+}));
 
 // Bloqueia indexação por mecanismos de busca
 app.use((_req, res, next) => {
