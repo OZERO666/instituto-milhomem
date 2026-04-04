@@ -58,10 +58,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc:              ["'self'"],
-      // 'unsafe-inline' is required for the Vite-injected inline <script type="module"> handlers.
-      // 'strict-dynamic' causes CSP3-compliant browsers to IGNORE 'unsafe-inline', providing
-      // real XSS protection while keeping backwards-compat with CSP2 browsers.
-      scriptSrc:               ["'self'", "'unsafe-inline'", "'strict-dynamic'"],
+      scriptSrc:               ["'self'", "'unsafe-inline'"],
       styleSrc:                ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc:                 ["'self'", 'https://fonts.gstatic.com'],
       imgSrc:                  ["'self'", 'data:', 'blob:', 'https://horizons-cdn.hostinger.com', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
