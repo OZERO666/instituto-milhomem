@@ -20,7 +20,7 @@ const DEFAULTS = {
   meta_title:       'Instituto Milhomem | Transplante Capilar em Goiânia',
   meta_description: 'Clínica premium especializada em transplante capilar FUE em Goiânia.',
   keywords:         'transplante capilar, FUE, Goiânia, clínica capilar',
-  og_image:         '',
+  og_image:         'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/1e20c7dbf245fee0e2ca926ad4054327.png',
   canonical:        'https://institutomilhomem.com',
 };
 

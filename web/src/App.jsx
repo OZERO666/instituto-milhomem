@@ -4,6 +4,7 @@ import { Route, Routes, BrowserRouter as Router, Link, useLocation, Navigate } f
 import { useContatoConfig } from '@/hooks/useContatoConfig';
 import { useTheme }         from '@/hooks/useTheme';
 import { useSiteSettings }  from '@/hooks/useSiteSettings';
+import { useTranslation }   from 'react-i18next';
 import { Toaster } from '@/components/ui/sonner.jsx';
 import { AuthProvider } from '@/contexts/AuthContext.jsx';
 import ScrollToTop from '@/components/ScrollToTop.jsx';
@@ -204,7 +205,12 @@ const AnimatedRoutes = ({ siteConfig }) => {
 function App() {
   const siteConfig = useContatoConfig();
   useTheme(); // aplica cores da tabela site_settings como CSS vars no :root
+  const { i18n } = useTranslation();
 
+  // ── <html lang> dinâmico consoante idioma ativo ─────────────────────────
+  useEffect(() => {
+    document.documentElement.lang = i18n.language || 'pt-BR';
+  }, [i18n.language]);
   useEffect(() => {
     const onDoubleClick = (e) => e.preventDefault();
     document.addEventListener('dblclick', onDoubleClick, { passive: false });
