@@ -12,6 +12,7 @@ import path from 'path';
 import heroConfigRoutes from './routes/hero-config.js';
 import routes from './routes/index.js';
 import uploadRoutes from './routes/uploads.js';
+import sitemapRoute from './routes/sitemap.js';
 import { errorMiddleware, writeLimiter, sanitizeMiddleware } from './middleware/index.js';
 import logger from './utils/logger.js';
 
@@ -85,15 +86,20 @@ app.use(helmet({
   xFrameOptions:         { action: 'deny' },
 }));
 
-// Bloqueia indexação por mecanismos de busca
-app.use((_req, res, next) => {
-  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
+// X-Robots-Tag: noindex apenas para rotas de API e admin (nunca para o frontend público)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/admin')) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  }
   next();
 });
 
-// robots.txt — bloqueia todos os crawlers
+// robots.txt — permite indexação de páginas públicas, bloqueia admin/api
 app.get('/robots.txt', (_req, res) => {
-  res.type('text/plain').send('User-agent: *\nDisallow: /\n');
+  const baseUrl = process.env.SITE_URL || 'https://institutomilhomem.com';
+  res.type('text/plain').send(
+    `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nDisallow: /login\nSitemap: ${baseUrl}/sitemap.xml\n`
+  );
 });
 
 app.use(morgan('combined'));
@@ -113,6 +119,9 @@ app.use(sanitizeMiddleware);
 app.use('/api', routes());
 app.use('/api', uploadRoutes);
 app.use('/api/hero-config', heroConfigRoutes);
+
+// Sitemap dinâmico
+app.get('/sitemap.xml', sitemapRoute);
 
 // Serve o build do frontend (React SPA)
 app.use(express.static(DIST_DIR));

@@ -75,17 +75,34 @@ const ContatoPage = () => {
           lido:         false,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error('server');
       toast.success(t('contact_form.toast_success', 'Mensagem enviada! Entraremos em contato em breve.'));
       setSubmitted(true);
       reset();
       setPrivacyChecked(false);
-    } catch {
-      toast.error(t('contact_form.toast_error', 'Erro ao enviar. Por favor, tente novamente.'));
+    } catch (err) {
+      const isOffline = !navigator.onLine || err?.name === 'TypeError';
+      if (isOffline) {
+        toast.error(t('contact_form.toast_offline', 'Sem conexão com a internet. Fale conosco pelo WhatsApp.'), {
+          action: {
+            label: 'WhatsApp',
+            onClick: () => window.open(whatsappUrl, '_blank', 'noopener'),
+          },
+          duration: 8000,
+        });
+      } else {
+        toast.error(t('contact_form.toast_error', 'Erro ao enviar. Por favor, tente novamente ou fale pelo WhatsApp.'), {
+          action: {
+            label: 'WhatsApp',
+            onClick: () => window.open(whatsappUrl, '_blank', 'noopener'),
+          },
+          duration: 8000,
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }, [reset]);
+  }, [reset, whatsappUrl]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

@@ -24,6 +24,9 @@ const BlogCard = ({ article, ctaLabel = 'Ler artigo' }) => {
           <img
             src={imageUrl}
             alt={article.titulo}
+            width="800"
+            height="450"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>

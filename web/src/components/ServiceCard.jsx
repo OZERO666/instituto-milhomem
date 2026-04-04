@@ -1,13 +1,15 @@
 // src/components/ServiceCard.jsx
-import React, { useMemo } from 'react';
+import React, { useMemo, lazy, Suspense } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CheckCircle } from '@phosphor-icons/react/dist/csr/CheckCircle';
 import { Sparkle } from '@phosphor-icons/react/dist/csr/Sparkle';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '@/lib/apiServerClient';
-import PhosphorIcon from '@/components/PhosphorIcon.jsx';
 import { ICON_MAP } from '@/features/admin/tabs/ServicosTab.jsx';
+
+// Lazy-load PhosphorIcon para manter o glob de módulos num chunk separado
+const PhosphorIcon = lazy(() => import('@/components/PhosphorIcon.jsx'));
 
 // ─── Fallback quando não há ícone cadastrado ──────────────────────────────────
 const FallbackIcon = ({ size = 28 }) => (
@@ -22,7 +24,11 @@ const FallbackIcon = ({ size = 28 }) => (
 function ServiceIcon({ icon, size = 28, className = '' }) {
   const AestheticIcon = icon ? ICON_MAP[icon] : null;
   if (AestheticIcon) return <AestheticIcon className={`${className}`} style={{ width: size, height: size }} />;
-  if (icon) return <PhosphorIcon name={icon} size={size} weight="regular" className={className} />;
+  if (icon) return (
+    <Suspense fallback={<Sparkle size={size} weight="regular" className="text-primary opacity-40" />}>
+      <PhosphorIcon name={icon} size={size} weight="regular" className={className} />
+    </Suspense>
+  );
   return <FallbackIcon size={size} />;
 }
 
@@ -63,6 +69,9 @@ const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, inde
           <img
             src={imageUrl}
             alt={nome}
+            width="600"
+            height="192"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
