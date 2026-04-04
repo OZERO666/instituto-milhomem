@@ -16,7 +16,7 @@ import { errorMiddleware, writeLimiter, sanitizeMiddleware } from './middleware/
 import logger from './utils/logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DIST_DIR   = path.join(__dirname, '../../dist');
+const DIST_DIR   = path.join(__dirname, '../dist');
 
 const app = express();
 
