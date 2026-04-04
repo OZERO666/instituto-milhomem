@@ -132,7 +132,21 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                 watch={watch}
                 name="background_color"
                 label="Fundo Principal"
-                description="Cor de fundo da página"
+                description="Cor de fundo da página (seções claras)"
+              />
+              <ColorField
+                register={register}
+                watch={watch}
+                name="muted_color"
+                label="Fundo Alternado"
+                description="Segunda cor de fundo: seções Resultados, FAQ, Blog e outras intercaladas"
+              />
+              <ColorField
+                register={register}
+                watch={watch}
+                name="card_color"
+                label="Fundo do Card"
+                description="Fundo de cards, accordions e painéis de conteúdo"
               />
               <ColorField
                 register={register}
@@ -140,6 +154,13 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                 name="foreground_color"
                 label="Texto Principal"
                 description="Cor do corpo de texto"
+              />
+              <ColorField
+                register={register}
+                watch={watch}
+                name="border_color"
+                label="Cor das Bordas"
+                description="Linhas divisórias, bordas de inputs e separadores"
               />
             </div>
 

@@ -47,6 +47,9 @@ const COLOR_VAR_MAP = {
   accent_color:     '--accent',
   background_color: '--background',
   foreground_color: '--foreground',
+  muted_color:      '--muted',
+  card_color:       '--card',
+  border_color:     '--border',
 };
 
 export function useTheme() {
