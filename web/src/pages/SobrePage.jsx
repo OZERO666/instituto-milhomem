@@ -44,7 +44,7 @@ const SobrePage = () => {
         <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
-              src={config.hero_image || 'https://images.unsplash.com/photo-1666056445151-57949bacdd60'}
+              src={config.hero_image || ''}
               alt="Clínica Premium"
               className="w-full h-full object-cover"
               loading="lazy"

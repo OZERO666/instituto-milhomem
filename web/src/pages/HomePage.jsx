@@ -216,7 +216,7 @@ const HomePage = () => {
         <section className="relative min-h-[100dvh] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
-              src={heroConfig?.imagem_fundo?.trim() || 'https://images.unsplash.com/photo-1564479893852-180ac6065b2b'}
+              src={heroConfig?.imagem_fundo?.trim() || ''}
               alt="Homem confiante após transplante capilar"
               className="w-full h-full object-cover object-top scale-[1.03]"
               fetchPriority="high"

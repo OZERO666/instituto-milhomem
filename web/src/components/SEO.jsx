@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { LOGO_URL } from '@/config/site';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -19,7 +20,7 @@ const DEFAULTS = {
   meta_title:       'Instituto Milhomem | Transplante Capilar em Goiânia',
   meta_description: 'Clínica premium especializada em transplante capilar FUE em Goiânia.',
   keywords:         'transplante capilar, FUE, Goiânia, clínica capilar',
-  og_image:         'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/ee094f05e96779f379167f5302d013cd.png',
+  og_image:         '',
   canonical:        'https://institutomilhomem.com',
 };
 
@@ -106,7 +107,7 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
       name:    'Instituto Milhomem',
       logo: {
         '@type': 'ImageObject',
-        url:     'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/ee094f05e96779f379167f5302d013cd.png',
+        url:     LOGO_URL,
       },
     },
     mainEntityOfPage: {

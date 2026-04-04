@@ -4,8 +4,7 @@ export const LOGO_URL =
   'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/1e20c7dbf245fee0e2ca926ad4054327.png';
 
 export const FAVICON_URL = LOGO_URL;
-export const SOBRE_HERO_URL =
-  'https://images.unsplash.com/photo-1666056445151-57949bacdd60';
+export const SOBRE_HERO_URL = '';
 
 export const NAV_ITEMS = [
   { name: 'Home',       path: '/',           key: 'home'     },
@@ -42,7 +41,7 @@ export const SOBRE_DEFAULTS = {
   // Doctor
   doctor_name: 'Dr. Pablo Milhomem',
   doctor_title: 'Fundador & Cirurgião Chefe',
-  doctor_image: 'https://images.unsplash.com/photo-1637059824899-a441006a6875',
+  doctor_image: '',
   doctor_bio: 'Especialista dedicado exclusivamente à arte e ciência do transplante capilar. Com formação rigorosa e constante atualização nos maiores centros de referência mundial, o Dr. Pablo construiu o Instituto Milhomem sobre o pilar da excelência absoluta.\n\nSua abordagem une a precisão cirúrgica a um apurado senso estético, garantindo que cada folículo seja posicionado para criar densidade, naturalidade e harmonia com os traços faciais do paciente.',
   doctor_credentials: [
     'Membro da International Society of Hair Restoration Surgery (ISHRS)',
@@ -62,7 +61,7 @@ export const SOBRE_DEFAULTS = {
   about_title: 'Uma jornada construída para transformar vidas',
   about_text: 'No Instituto Milhomem, cada caso é tratado com exclusividade. Nossa clínica combina protocolos avançados, atendimento humanizado e total transparência em todas as etapas do transplante capilar.',
   about_detail_text: 'Cada detalhe da nossa clínica foi projetado para oferecer conforto, segurança e resultados excepcionais. Da recepção acolhedora ao centro cirúrgico de última geração, tudo é pensado para proporcionar uma experiência premium ao paciente.',
-  about_image: 'https://images.unsplash.com/photo-1637059824899-a441006a6875',
+  about_image: '',
 
   // Values
   values_title: 'Nossa Filosofia',
@@ -78,15 +77,15 @@ export const SOBRE_DEFAULTS = {
   team_title: 'Equipe Multidisciplinar',
   team_subtitle: 'O sucesso de um transplante capilar depende de uma equipe perfeitamente sincronizada. Nossos profissionais são altamente treinados para garantir segurança e resultados impecáveis.',
   team: [
-    { name: 'Dra. Ana Silva', role: 'Anestesiologista', image: 'https://images.unsplash.com/photo-1594824432258-f6a115114297', desc: 'Especialista em conforto e segurança do paciente durante todo o procedimento.' },
-    { name: 'Carlos Mendes', role: 'Enfermeiro Chefe', image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7', desc: 'Coordena a equipe de instrumentação com precisão cirúrgica e cuidado humanizado.' },
-    { name: 'Mariana Costa', role: 'Tricologista Clínica', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2', desc: 'Responsável pelos tratamentos complementares e preparo do couro cabeludo.' },
+    { name: 'Dra. Ana Silva', role: 'Anestesiologista', image: '', desc: 'Especialista em conforto e segurança do paciente durante todo o procedimento.' },
+    { name: 'Carlos Mendes', role: 'Enfermeiro Chefe', image: '', desc: 'Coordena a equipe de instrumentação com precisão cirúrgica e cuidado humanizado.' },
+    { name: 'Mariana Costa', role: 'Tricologista Clínica', image: '', desc: 'Responsável pelos tratamentos complementares e preparo do couro cabeludo.' },
   ],
 
   // Technology
   technology_title: 'Tecnologia de Vanguarda',
   technology_text: 'Utilizamos microscópios de alta resolução para a lapidação dos folículos e extratores motorizados de precisão milimétrica. Isso garante a integridade de cada unidade folicular, maximizando a taxa de sobrevivência e o volume final do transplante.\n\nNossos protocolos de anestesia local computadorizada proporcionam um procedimento praticamente indolor, permitindo que você relaxe, assista a um filme ou ouça música durante a cirurgia.',
-  technology_image: 'https://images.unsplash.com/photo-1516841273335-e39b37888115',
+  technology_image: '',
 };
 
 export const PAGE_CONFIG_DEFAULTS = {
@@ -115,11 +114,7 @@ export const PAGE_CONFIG_DEFAULTS = {
       paragraph_1: 'O Instituto Milhomem nasceu para devolver algo maior do que cabelo: a segurança de se olhar no espelho e se reconhecer de novo. Unimos tecnologia de ponta com um olhar estético cuidadoso em cada caso.',
       paragraph_2: 'Aqui você é acompanhado pelo mesmo time do começo ao fim — com transparência, previsibilidade de resultados e suporte completo no pré e pós-operatório.',
       cta_text: 'Conheça nossa clínica',
-      images: [
-        'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400',
-        'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400',
-        'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400',
-      ],
+      images: [],
       card_text: 'Avaliação\nsem compromisso',
       card_button_text: 'Agendar agora',
     },
