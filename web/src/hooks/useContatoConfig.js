@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { CONTATO_DEFAULTS } from '@/config/site';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Cache em memória — evita re-fetch em cada componente que usa o hook
 const CACHE_DISABLED = import.meta.env.VITE_DISABLE_CACHE === 'true';

@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const ROUTE_MAP = {
   '/':           'home',

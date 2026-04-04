@@ -1,5 +1,5 @@
 // src/lib/apiServerClient.js
-const API_BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://localhost:8090';
+const API_BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || '/api';
 
 const DEFAULT_TIMEOUT = 15000;
 const MAX_RETRIES     = 2;

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { SOBRE_DEFAULTS } from '@/config/site';
 import { parseJsonArray } from '@/features/admin/utils/sobreConfig.js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const normalizeSobreConfig = (data = {}) => ({
   ...SOBRE_DEFAULTS,

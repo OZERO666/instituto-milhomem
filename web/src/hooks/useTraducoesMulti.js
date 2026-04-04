@@ -11,7 +11,7 @@
 import { useState, useEffect, useRef } from 'react';
 import i18n from '@/i18n';
 
-const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://localhost:3001';
+const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || '/api';
 
 const _cache = new Map();
 const TTL = 30_000;
