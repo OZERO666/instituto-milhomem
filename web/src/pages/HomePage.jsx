@@ -213,7 +213,7 @@ const HomePage = () => {
         {/* ══════════════════════════════════════════════════════════════════
             HERO
         ══════════════════════════════════════════════════════════════════ */}
-        <section className="relative min-h-[calc(100svh-72px)] flex flex-col overflow-hidden">
+        <section className="relative flex flex-col overflow-hidden md:min-h-[calc(100svh-88px)]">
           <div className="absolute inset-0 z-0">
             <img
               src={heroConfig?.imagem_fundo?.trim() || ''}
@@ -235,7 +235,7 @@ const HomePage = () => {
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }}
           />
 
-          <div className="container-custom relative z-10 flex-1 flex flex-col justify-center py-8 md:py-20">
+          <div className="container-custom relative z-10 flex-1 flex flex-col justify-center py-10 md:py-24">
             {heroLoading ? (
               /* ── Skeleton enquanto carrega ── */
               <div className="max-w-3xl space-y-6 animate-pulse">
@@ -263,9 +263,9 @@ const HomePage = () => {
               >
                 {/* Badge */}
                 <motion.div
-                  className="inline-flex items-center gap-2.5 bg-primary/10 border border-primary/25
-                             text-primary px-5 py-2 rounded-full text-[10px] font-bold uppercase
-                             tracking-[0.1em] mb-6 md:mb-10 backdrop-blur-sm"
+                  className="inline-flex items-center gap-2 bg-primary/10 border border-primary/25
+                             text-primary px-3 py-1.5 rounded-full text-[9px] font-bold uppercase
+                             tracking-[0.08em] mb-3 md:mb-8 backdrop-blur-sm"
                   initial={{ opacity: 0, y: -12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
@@ -275,22 +275,22 @@ const HomePage = () => {
                 </motion.div>
 
                 {/* Título */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4.5rem] font-extrabold text-white
-                               mb-6 leading-[1.1] tracking-tight uppercase">
+                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-[4.5rem] font-extrabold text-white
+                               mb-3 md:mb-5 leading-tight md:leading-[1.06] tracking-tight uppercase">
                   {heroTitle}
                 </h1>
 
-                <div className="flex items-center gap-4 mb-4 md:mb-8 max-w-xs">
+                <div className="flex items-center gap-4 mb-3 md:mb-6 max-w-xs">
                   <div className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
                   <Gem className="w-3.5 h-3.5 text-primary/70" />
                 </div>
 
-                <p className="text-base md:text-xl text-white/80 mb-4 md:mb-10 leading-relaxed max-w-xl font-light">
+                <p className="text-xs sm:text-sm md:text-xl text-white/80 mb-3 md:mb-8 leading-relaxed max-w-xl font-light">
                   {heroSubtitle}
                 </p>
 
                 {/* Trust badges */}
-                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mb-4 md:mb-10
+                <div className="hidden sm:flex flex-wrap items-center gap-x-8 gap-y-2 mb-3 md:mb-8
                                 text-white/70 text-[10px] font-bold uppercase tracking-[0.15em]">
                   {[
                     { icon: Shield, label: t('hero.trust_team',    'Equipe médica especializada')  },
@@ -304,7 +304,7 @@ const HomePage = () => {
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <a
                     href={heroCtaLink}
                     target="_blank" rel="noopener noreferrer"
