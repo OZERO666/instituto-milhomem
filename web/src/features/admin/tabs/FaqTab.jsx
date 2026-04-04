@@ -1,6 +1,7 @@
 // src/features/admin/tabs/FaqTab.jsx
 import React, { useState, useMemo } from 'react';
 import { Edit, Trash2, Upload, Loader2, Search, Eye, EyeOff } from 'lucide-react';
+import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
@@ -105,6 +106,16 @@ const FaqTab = ({
               )}
             </div>
           </form>
+
+          <TranslationFields
+            tabela="faq"
+            registroId={editingItem?.id}
+            originalData={editingItem}
+            fields={[
+              { name: 'pergunta', label: 'Pergunta', type: 'input' },
+              { name: 'resposta', label: 'Resposta', type: 'textarea', rows: 5 },
+            ]}
+          />
         </div>
       </div>
 
