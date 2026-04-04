@@ -15,6 +15,7 @@ const DEFAULTS = {
   logo_size_header: '56',
   logo_size_footer: '48',
   robots_noindex:   'false',
+  blog_disabled:    'false',
 };
 
 export function useSettings() {
@@ -41,6 +42,7 @@ export function useSettings() {
           logo_size_header: data.logo_size_header || DEFAULTS.logo_size_header,
           logo_size_footer: data.logo_size_footer || DEFAULTS.logo_size_footer,
           robots_noindex:   data.robots_noindex   ?? DEFAULTS.robots_noindex,
+          blog_disabled:    data.blog_disabled    ?? DEFAULTS.blog_disabled,
         });
       }
     } catch (err) {
@@ -70,7 +72,10 @@ export function useSettings() {
         foreground_color: updated.foreground_color || data.foreground_color,
         site_name:        updated.site_name        || data.site_name,
         logo_size_header: updated.logo_size_header || data.logo_size_header,
-        logo_size_footer: updated.logo_size_footer || data.logo_size_footer,          robots_noindex:   updated.robots_noindex   ?? data.robots_noindex,      });
+        logo_size_footer: updated.logo_size_footer || data.logo_size_footer,
+        robots_noindex:   updated.robots_noindex   ?? data.robots_noindex,
+        blog_disabled:    updated.blog_disabled    ?? data.blog_disabled,
+      });
       refetch(); // atualiza useTheme → aplica cores imediatamente
       setSaveStatus('saved');
       toast.success('Configurações salvas! As cores foram aplicadas. Recarregue o site para que os visitantes vejam as mudanças.');
