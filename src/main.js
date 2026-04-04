@@ -62,7 +62,7 @@ app.use(helmet({
   },
   crossOriginEmbedderPolicy:  false,
   crossOriginOpenerPolicy:    { policy: 'same-origin' },
-  crossOriginResourcePolicy:  { policy: 'same-origin' },
+  crossOriginResourcePolicy:  { policy: 'cross-origin' },
   referrerPolicy:             { policy: 'strict-origin-when-cross-origin' },
   strictTransportSecurity: {
     maxAge:            31536000,
