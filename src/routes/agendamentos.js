@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
     const LOGO_URL  = 'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/1e20c7dbf245fee0e2ca926ad4054327.png';
     const WHATSAPP  = (process.env.WHATSAPP_NUMBER || '5562981070937').replace(/\D/g, '');
     const firstName = nome.split(' ')[0];
-    const now       = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const nowStr    = now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
     const waMsg     = encodeURIComponent(`Olá! Entrei em contato pelo site e gostaria de mais informações${tipo_servico ? ` sobre ${tipo_servico}` : ''}.`);
 
     // Notificação para a clínica
@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
               <tr><td style="padding:8px;font-weight:bold;vertical-align:top">Mensagem:</td><td style="padding:8px;white-space:pre-wrap">${mensagem || '—'}</td></tr>
             </table>
             <p style="margin-top:20px;font-size:12px;color:#999">
-              Recebido em ${now} · <a href="${SITE_URL}/admin" style="color:#B8860B">Ver no painel</a>
+              Recebido em ${nowStr} · <a href="${SITE_URL}/admin" style="color:#B8860B">Ver no painel</a>
             </p>
           </div>
         </div>
