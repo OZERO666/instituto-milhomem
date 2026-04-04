@@ -105,7 +105,7 @@ const ContatoPage = () => {
   }, [reset, whatsappUrl]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen">
       <SEO
         title="Agende sua Consulta | Instituto Milhomem – Goiânia"
         description="Entre em contato com o Instituto Milhomem. Consulta gratuita de transplante capilar em Goiânia. Resposta rápida por WhatsApp, telefone ou formulário."
@@ -114,7 +114,7 @@ const ContatoPage = () => {
       <WhatsAppButton />
 
       <main className="flex-grow">
-        <section className="section-padding bg-muted relative overflow-hidden">
+        <section className="section-padding bg-muted">
 
           <div className="container-custom relative z-10">
 
