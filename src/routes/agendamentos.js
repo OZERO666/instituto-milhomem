@@ -4,6 +4,7 @@ import pool from '../db/mysql.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { checkPermission } from '../middleware/checkPermission.js';
 import logger from '../utils/logger.js';
+import { sendMail } from '../utils/mailer.js';
 
 const router = Router();
 
@@ -42,7 +43,29 @@ router.post('/', async (req, res) => {
 
     logger.info(`Novo agendamento recebido: ${nome} (${email})`);
 
-    // TODO: ativar notificação por email após rodar npm install no servidor (nodemailer)
+    // Notificação por email (não-bloqueante)
+    sendMail({
+      subject: `📋 Novo contato — ${nome}`,
+      replyTo: email,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+          <h2 style="color:#B8860B;border-bottom:2px solid #B8860B;padding-bottom:8px">
+            Novo contato recebido
+          </h2>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td style="padding:8px;font-weight:bold;width:140px">Nome:</td><td style="padding:8px">${nome}</td></tr>
+            <tr style="background:#f9f9f9"><td style="padding:8px;font-weight:bold">Email:</td><td style="padding:8px"><a href="mailto:${email}">${email}</a></td></tr>
+            <tr><td style="padding:8px;font-weight:bold">Telefone:</td><td style="padding:8px">${telefone}</td></tr>
+            <tr style="background:#f9f9f9"><td style="padding:8px;font-weight:bold">Serviço:</td><td style="padding:8px">${tipo_servico || '—'}</td></tr>
+            <tr><td style="padding:8px;font-weight:bold;vertical-align:top">Mensagem:</td><td style="padding:8px;white-space:pre-wrap">${mensagem || '—'}</td></tr>
+          </table>
+          <p style="margin-top:20px;font-size:12px;color:#666">
+            Recebido em ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}
+            · <a href="${process.env.SITE_URL || 'https://institutomilhomem.com'}/admin">Ver no painel</a>
+          </p>
+        </div>
+      `,
+    });
 
     res.status(201).json({ message: 'Agendamento recebido com sucesso' });
   } catch (error) {
