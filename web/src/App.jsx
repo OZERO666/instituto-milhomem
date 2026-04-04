@@ -32,16 +32,8 @@ const PrivacidadePage  = lazy(() => import('@/pages/PrivacidadePage.jsx'));
 const TermosUsoPage    = lazy(() => import('@/pages/TermosUsoPage.jsx'));
 const FaqPage          = lazy(() => import('@/pages/FaqPage.jsx'));
 
-// ─── Layout padrão (Header + Footer) ─────────────────────────────────────────
-const MainLayout = ({ children, siteConfig }) => (
-  <>
-    <Header siteConfig={siteConfig} />
-    <div className="overflow-x-hidden">
-      <main>{children}</main>
-      <Footer siteConfig={siteConfig} />
-    </div>
-  </>
-);
+// ─── Layout padrão — envolve conteúdo da rota em <main> ──────────────────────
+const MainLayout = ({ children }) => <main>{children}</main>;
 
 // ─── Page Loader ──────────────────────────────────────────────────────────────
 const PageLoader = ({ logoUrl }) => (
@@ -140,46 +132,21 @@ const AnimatedRoutes = ({ siteConfig }) => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
 
-        {/* Públicas — com Header e Footer */}
-        <Route
-          path="/"
-          element={<MainLayout siteConfig={siteConfig}><HomePage /></MainLayout>}
-        />
-        <Route
-          path="/sobre"
-          element={<MainLayout siteConfig={siteConfig}><SobrePage /></MainLayout>}
-        />
-        <Route
-          path="/servicos"
-          element={<MainLayout siteConfig={siteConfig}><ServicosPage /></MainLayout>}
-        />
-        <Route
-          path="/servicos/:slug"
-          element={<MainLayout siteConfig={siteConfig}><ServiceDetailPage /></MainLayout>}
-        />
-        <Route
-          path="/resultados"
-          element={<MainLayout siteConfig={siteConfig}><ResultadosPage /></MainLayout>}
-        />
-        <Route
-          path="/blog"
-          element={blogDisabled ? <Navigate to="/" replace /> : <MainLayout siteConfig={siteConfig}><BlogPage /></MainLayout>}
-        />
-        <Route
-          path="/blog/:slug"
-          element={blogDisabled ? <Navigate to="/" replace /> : <MainLayout siteConfig={siteConfig}><BlogPostPage /></MainLayout>}
-        />
-        <Route
-          path="/contato"
-          element={<MainLayout siteConfig={siteConfig}><ContatoPage /></MainLayout>}
-        />
-        <Route
-          path="/faq"
-          element={<MainLayout siteConfig={siteConfig}><FaqPage /></MainLayout>}
-        />
+        {/* Públicas */}
+        <Route path="/"                        element={<MainLayout><HomePage /></MainLayout>} />
+        <Route path="/sobre"                   element={<MainLayout><SobrePage /></MainLayout>} />
+        <Route path="/servicos"                element={<MainLayout><ServicosPage /></MainLayout>} />
+        <Route path="/servicos/:slug"          element={<MainLayout><ServiceDetailPage /></MainLayout>} />
+        <Route path="/resultados"              element={<MainLayout><ResultadosPage /></MainLayout>} />
+        <Route path="/blog"                    element={blogDisabled ? <Navigate to="/" replace /> : <MainLayout><BlogPage /></MainLayout>} />
+        <Route path="/blog/:slug"              element={blogDisabled ? <Navigate to="/" replace /> : <MainLayout><BlogPostPage /></MainLayout>} />
+        <Route path="/contato"                 element={<MainLayout><ContatoPage /></MainLayout>} />
+        <Route path="/faq"                     element={<MainLayout><FaqPage /></MainLayout>} />
+        <Route path="/politica-de-privacidade" element={<MainLayout><PrivacidadePage /></MainLayout>} />
+        <Route path="/termos-de-uso"           element={<MainLayout><TermosUsoPage /></MainLayout>} />
 
-        {/* Sem Header/Footer */}
-        <Route path="/login" element={<AdminLoginPage />} />
+        {/* Sem layout */}
+        <Route path="/login"        element={<AdminLoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route
           path="/admin"
@@ -190,17 +157,7 @@ const AnimatedRoutes = ({ siteConfig }) => {
           }
         />
 
-        {/* LGPD — com Header e Footer */}
-        <Route
-          path="/politica-de-privacidade"
-          element={<MainLayout siteConfig={siteConfig}><PrivacidadePage /></MainLayout>}
-        />
-        <Route
-          path="/termos-de-uso"
-          element={<MainLayout siteConfig={siteConfig}><TermosUsoPage /></MainLayout>}
-        />
-
-        {/* 404 — sem Header/Footer para não quebrar o layout */}
+        {/* 404 */}
         <Route path="*" element={<NotFoundPage logoUrl={siteConfig?.logo_url} />} />
 
       </Routes>
@@ -208,55 +165,67 @@ const AnimatedRoutes = ({ siteConfig }) => {
   );
 };
 
-// ─── App ──────────────────────────────────────────────────────────────────────
-function App() {
-  const siteConfig = useContatoConfig();
-  useTheme(); // aplica cores da tabela site_settings como CSS vars no :root
+// ─── AppShell — Header e Footer persistentes FORA do AnimatePresence ──────────
+const AppShell = ({ siteConfig }) => {
+  const location = useLocation();
   const { i18n } = useTranslation();
 
-  // ── <html lang> dinâmico consoante idioma ativo ─────────────────────────
+  // Oculta Header/Footer nas rotas de admin/auth
+  const hideLayout = ['/login', '/unauthorized', '/admin'].some(
+    p => location.pathname === p || location.pathname.startsWith('/admin/')
+  );
+
   useEffect(() => {
     document.documentElement.lang = i18n.language || 'pt-BR';
   }, [i18n.language]);
+
   useEffect(() => {
     const onDoubleClick = (e) => e.preventDefault();
     document.addEventListener('dblclick', onDoubleClick, { passive: false });
-
-    return () => {
-      document.removeEventListener('dblclick', onDoubleClick);
-    };
+    return () => document.removeEventListener('dblclick', onDoubleClick);
   }, []);
 
   useEffect(() => {
     if (!siteConfig?.favicon_url) return;
-
     let link = document.querySelector("link[rel~='icon']");
     if (!link) {
       link = document.createElement('link');
       link.rel = 'icon';
       document.head.appendChild(link);
     }
-
     link.href = siteConfig.favicon_url;
   }, [siteConfig?.favicon_url]);
 
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
+    <>
+      <ScrollToTop />
+      {!hideLayout && <Header siteConfig={siteConfig} />}
+      <div className="overflow-x-hidden">
         <Suspense fallback={<PageLoader logoUrl={siteConfig?.logo_url} />}>
           <AnimatedRoutes siteConfig={siteConfig} />
         </Suspense>
-        <CookieBanner />
-        <Toaster
-          position="top-right"
-          richColors
-          closeButton
-          toastOptions={{
-            duration: 4000,
-            className: 'font-semibold',
-          }}
-        />
+        {!hideLayout && <Footer siteConfig={siteConfig} />}
+      </div>
+      <CookieBanner />
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        toastOptions={{ duration: 4000, className: 'font-semibold' }}
+      />
+    </>
+  );
+};
+
+// ─── App ──────────────────────────────────────────────────────────────────────
+function App() {
+  const siteConfig = useContatoConfig();
+  useTheme();
+
+  return (
+    <AuthProvider>
+      <Router>
+        <AppShell siteConfig={siteConfig} />
       </Router>
     </AuthProvider>
   );
