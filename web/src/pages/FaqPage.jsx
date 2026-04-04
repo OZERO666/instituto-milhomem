@@ -88,7 +88,7 @@ const FaqPage = () => {
                   ))}
                 </div>
               ) : faqItems.length === 0 ? (
-                <div className="text-center py-24 bg-card rounded-2xl border border-border">
+                <div className="text-center py-20 bg-card rounded-2xl border border-border">
                   <p className="text-muted-foreground font-medium text-lg">Nenhuma pergunta cadastrada ainda.</p>
                 </div>
               ) : (

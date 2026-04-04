@@ -66,7 +66,7 @@ const ResultadosPage = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       <SEO
         title="Resultados - Antes e Depois | Instituto Milhomem"
         description="Veja os resultados reais de transplante capilar do Instituto Milhomem. Galeria de fotos antes e depois e depoimentos de pacientes."
@@ -78,10 +78,10 @@ const ResultadosPage = () => {
       <main className="flex-grow">
         <section className="section-padding bg-muted">
 
-          <div className="container-custom relative z-10">
+          <div className="container-custom">
 
             {/* HEADER */}
-            <div className="max-w-3xl mx-auto text-center mb-12">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-8 h-px bg-primary" />
                 <span className="text-primary font-bold uppercase tracking-widest text-sm">{pageConfig.header_badge}</span>
@@ -103,8 +103,8 @@ const ResultadosPage = () => {
                   onClick={() => setActiveThemeId(filter.id)}
                   className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all duration-300 active:scale-95 border ${
                     activeThemeId === filter.id
-                      ? 'bg-primary text-[#181B1E] border-primary shadow-lg'
-                      : 'bg-white text-foreground border-primary/30 hover:border-primary hover:text-primary'
+                      ? 'bg-primary text-secondary border-primary shadow-lg'
+                      : 'bg-card text-foreground border-border hover:border-primary hover:text-primary'
                   }`}
                 >
                   {filter.label}
@@ -116,7 +116,7 @@ const ResultadosPage = () => {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-xl p-4 border border-primary/20 shadow-sm">
+                  <div key={i} className="bg-card rounded-xl p-4 border border-border shadow-sm">
                     <div className="aspect-[4/3] bg-muted rounded-lg animate-pulse mb-4" />
                     <div className="h-5 bg-muted rounded animate-pulse mb-3 w-3/4" />
                     <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
@@ -130,7 +130,7 @@ const ResultadosPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white rounded-2xl border border-primary/20 shadow-sm mb-24">
+              <div className="text-center py-20 bg-card rounded-2xl border border-border shadow-sm mb-24">
                 <p className="text-muted-foreground font-medium text-lg">
                   {t('resultados.empty_text', 'Nenhum resultado encontrado para este tema.')}
                 </p>
@@ -159,18 +159,17 @@ const ResultadosPage = () => {
             )}
 
             {/* CTA INSTAGRAM */}
-            <div className="mt-12 md:mt-24 bg-[#181B1E] rounded-2xl p-6 sm:p-12 text-center border border-primary shadow-2xl relative overflow-hidden">
-
-              <div className="relative z-10">
+            <div className="mt-14 bg-secondary rounded-2xl p-8 sm:p-12 text-center border border-primary/20">
+              <div>
                 <h3 className="text-3xl font-bold mb-4 text-white">{t('resultados.videos_title', 'Vídeos de Depoimentos')}</h3>
-                <p className="text-white/80 mb-8 text-lg max-w-2xl mx-auto">
+                <p className="text-white/60 mb-8 text-lg max-w-2xl mx-auto">
                   {t('resultados.videos_subtitle', 'Acompanhe nossos pacientes no Instagram e veja depoimentos em vídeo sobre a experiência no Instituto Milhomem.')}
                 </p>
                 <a
                   href="https://www.instagram.com/institutomilhomem"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 bg-primary text-[#181B1E] px-8 py-4 rounded-lg font-bold hover:bg-secondary hover:text-white transition-all duration-300 active:scale-95 uppercase tracking-wide"
+                  className="inline-flex items-center gap-3 bg-primary text-secondary px-8 py-4 rounded-xl font-bold hover:bg-primary/90 transition-colors uppercase tracking-widest shadow-lg active:scale-95"
                 >
                   {t('resultados.instagram_cta', 'Ver no Instagram')}
                 </a>
