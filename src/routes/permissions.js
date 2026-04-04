@@ -6,7 +6,7 @@ import logger from '../utils/logger.js';
 
 const router = Router();
 
-router.get('/', authMiddleware, checkPermission('users', 'read'), async (req, res) => {
+router.get('/', authMiddleware, checkPermission('permissions', 'read'), async (req, res) => {
   try {
     const [rows] = await pool.execute(
       'SELECT id, resource, action, description FROM permissions ORDER BY resource ASC, action ASC'

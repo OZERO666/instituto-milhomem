@@ -24,6 +24,7 @@ router.get('/:tabela/:registroId', async (req, res) => {
     res.json(result);
   } catch (err) {
     // Tabela pode não existir ainda — retorna vazio sem derrubar o servidor
+    if (err.code !== 'ER_NO_SUCH_TABLE') console.error('Traducoes GET /:tabela/:registroId error:', err.message);
     res.json({});
   }
 });
@@ -50,6 +51,7 @@ router.get('/:tabela', async (req, res) => {
     res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
     res.json(result);
   } catch (err) {
+    if (err.code !== 'ER_NO_SUCH_TABLE') console.error('Traducoes GET /:tabela error:', err.message);
     res.json({});
   }
 });

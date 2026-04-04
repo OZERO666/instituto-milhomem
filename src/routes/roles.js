@@ -36,7 +36,7 @@ const enrichRoles = async () => {
   }));
 };
 
-router.get('/', authMiddleware, checkPermission('users', 'read'), async (_req, res) => {
+router.get('/', authMiddleware, checkPermission('roles', 'read'), async (_req, res) => {
   try {
     const roles = await enrichRoles();
     res.json(roles);
@@ -46,7 +46,7 @@ router.get('/', authMiddleware, checkPermission('users', 'read'), async (_req, r
   }
 });
 
-router.post('/', authMiddleware, checkPermission('users', 'create'), async (req, res) => {
+router.post('/', authMiddleware, checkPermission('roles', 'create'), async (req, res) => {
   try {
     const { name, description, permission_ids = [] } = req.body;
 
@@ -81,7 +81,7 @@ router.post('/', authMiddleware, checkPermission('users', 'create'), async (req,
   }
 });
 
-router.put('/:id', authMiddleware, checkPermission('users', 'update'), async (req, res) => {
+router.put('/:id', authMiddleware, checkPermission('roles', 'update'), async (req, res) => {
   try {
     const roleId = req.params.id;
     const { name, description, permission_ids = [] } = req.body;
@@ -128,7 +128,7 @@ router.put('/:id', authMiddleware, checkPermission('users', 'update'), async (re
   }
 });
 
-router.delete('/:id', authMiddleware, checkPermission('users', 'delete'), async (req, res) => {
+router.delete('/:id', authMiddleware, checkPermission('roles', 'delete'), async (req, res) => {
   try {
     const roleId = req.params.id;
 

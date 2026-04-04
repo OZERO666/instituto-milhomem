@@ -10,7 +10,7 @@ const router = Router();
 // GET /hero-config
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query(
+    const [rows] = await pool.execute(
       'SELECT * FROM hero_config ORDER BY id LIMIT 1'
     );
     if (!rows.length) return res.json(null);
@@ -28,9 +28,10 @@ router.post('/', authMiddleware, checkPermission('dashboard', 'create'), async (
     const { badge, titulo, subtitulo, cta_texto, cta_link, imagem_fundo } = req.body;
     const now = new Date();
 
-    const [result] = await pool.query(
+    const [result] = await pool.execute(
       `INSERT INTO hero_config (badge, titulo, subtitulo, cta_texto, cta_link, imagem_fundo, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+
       [
         badge || null,
         titulo || null,
@@ -43,7 +44,7 @@ router.post('/', authMiddleware, checkPermission('dashboard', 'create'), async (
       ]
     );
 
-    const [rows] = await pool.query('SELECT * FROM hero_config WHERE id = ?', [result.insertId]);
+    const [rows] = await pool.execute('SELECT * FROM hero_config WHERE id = ?', [result.insertId]);
     return res.status(201).json(rows[0]);
   } catch (err) {
     logger.error('POST /hero-config error', err.message);
@@ -57,10 +58,11 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
     const { id } = req.params;
     const { badge, titulo, subtitulo, cta_texto, cta_link, imagem_fundo } = req.body;
 
-    const [result] = await pool.query(
+    const [result] = await pool.execute(
       `UPDATE hero_config
          SET badge = ?, titulo = ?, subtitulo = ?, cta_texto = ?, cta_link = ?, imagem_fundo = ?, updated_at = ?
        WHERE id = ?`,
+
       [
         badge || null,
         titulo || null,
@@ -77,7 +79,7 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
       return res.status(404).json({ error: 'hero_config não encontrado' });
     }
 
-    const [rows] = await pool.query('SELECT * FROM hero_config WHERE id = ?', [id]);
+    const [rows] = await pool.execute('SELECT * FROM hero_config WHERE id = ?', [id]);
     return res.json(rows[0]);
   } catch (err) {
     logger.error('PUT /hero-config/:id error', err.message);

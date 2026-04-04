@@ -9,7 +9,7 @@ const router = Router();
 // GET /settings — público, retorna objeto { key: value }
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query(
+    const [rows] = await pool.execute(
       'SELECT setting_key, setting_value FROM site_settings'
     );
     const settings = {};
@@ -38,7 +38,7 @@ router.put('/', authMiddleware, async (req, res) => {
 
   try {
     for (const [key, value] of entries) {
-      await pool.query(
+      await pool.execute(
         `INSERT INTO site_settings (setting_key, setting_value)
          VALUES (?, ?)
          ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
@@ -47,7 +47,7 @@ router.put('/', authMiddleware, async (req, res) => {
     }
 
     // Retorna todas as settings atualizadas
-    const [rows] = await pool.query(
+    const [rows] = await pool.execute(
       'SELECT setting_key, setting_value FROM site_settings'
     );
     const updated = {};

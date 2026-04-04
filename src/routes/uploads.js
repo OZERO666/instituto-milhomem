@@ -1,18 +1,13 @@
-// src/routes/upload.js
+// src/routes/uploads.js
 import express from 'express';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import sanitizeHtml from 'sanitize-html';
 import { authMiddleware } from '../middleware/auth.js';
+import '../config/cloudinary.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // ─── Tipos permitidos ──────────────────────────────────────────────────────────
 const ALLOWED_MIME_TYPES = new Set([
