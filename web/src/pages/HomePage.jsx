@@ -15,6 +15,7 @@ import BlogCard          from '@/components/BlogCard.jsx';
 import BeforeAfterCarousel  from '@/components/BeforeAfterCarousel.jsx';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel.jsx';
 import { usePagesConfig } from '@/hooks/usePagesConfig';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 import api from '@/lib/apiServerClient';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -155,6 +156,8 @@ const HomePage = () => {
   const { t } = useTranslation();
   const homePageConfig = usePagesConfig('home');
   const labelsConfig = usePagesConfig('labels');
+  const { settings } = useSiteSettings();
+  const blogDisabled = settings?.blog_disabled === 'true';
 
   // Traduções dinâmicas do banco
   const { applyList: applyServices }     = useTraducoesMulti('servicos');
@@ -691,6 +694,7 @@ const HomePage = () => {
         {/* ══════════════════════════════════════════════════════════════════
             BLOG
         ══════════════════════════════════════════════════════════════════ */}
+        {!blogDisabled && (
         <section className="section-padding bg-muted border-t border-border/40">
           <div className="container-custom">
             <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
@@ -730,6 +734,7 @@ const HomePage = () => {
             )}
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             CTA FINAL — CONTATO SIMPLIFICADO
