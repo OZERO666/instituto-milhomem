@@ -13,13 +13,14 @@ i18n
   .init({
     resources: {
       'pt-BR': { translation: ptBR },
+      pt:      { translation: ptBR },
       en:      { translation: en  },
       es:      { translation: es  },
     },
 
     // Idioma padrão e fallback
     fallbackLng: 'pt-BR',
-    supportedLngs: ['pt-BR', 'en', 'es'],
+    supportedLngs: ['pt-BR', 'pt', 'en', 'es'],
     nonExplicitSupportedLngs: true,
 
     // Detecção automática — tenta localStorage primeiro, depois o navegador
