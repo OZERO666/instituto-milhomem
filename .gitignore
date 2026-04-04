@@ -17,6 +17,14 @@ start-err.txt
 # Migrations locais
 src/db/migrations/000_schema_completo.sql
 
+# Frontend build output
+dist/
+
+# Frontend dentro do repo
+web/node_modules/
+web/dist/
+web/.env
+
 # Sistema
 .DS_Store
 Thumbs.db

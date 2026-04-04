@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home":     "Home",
+    "services": "Serviços",
+    "about":    "Sobre",
+    "results":  "Resultados",
+    "blog":     "Blog",
+    "contact":  "Contato"
+  },
+  "header": {
+    "schedule_cta": "Agendar Consulta",
+    "admin_panel":  "Painel",
+    "open_menu":    "Abrir menu",
+    "close_menu":   "Fechar menu"
+  },
+  "footer": {
+    "navigation":        "Navegação",
+    "contact_section":   "Contato",
+    "schedule_section":  "Atendimento",
+    "location_label":    "Endereço",
+    "phone_label":       "Telefone",
+    "email_label":       "E-mail",
+    "schedule_label":    "Horário",
+    "privacy_policy":    "Política de Privacidade",
+    "terms_of_use":      "Termos de Uso",
+    "schedule_cta":      "Agendar Consulta"
+  },
+  "hero": {
+    "trust_team":    "Equipe médica especializada",
+    "trust_results": "Resultados naturais comprovados",
+    "see_results":   "Ver Resultados",
+    "scroll":        "Role"
+  },
+  "contact_form": {
+    "subtitle":           "Preencha os campos abaixo e entraremos em contato",
+    "name_label":         "Nome completo",
+    "name_placeholder":   "Seu nome",
+    "phone_label":        "WhatsApp / Telefone",
+    "phone_placeholder":  "(62) 99999-9999",
+    "email_label":        "E-mail",
+    "service_label":      "Serviço de interesse",
+    "service_placeholder":"Selecione um serviço",
+    "service_other":      "Outro / Não sei ainda",
+    "message_label":      "Mensagem",
+    "message_optional":   "(opcional)",
+    "message_placeholder":"Conte brevemente sobre seu caso ou dúvidas…",
+    "privacy_pre":        "Li e concordo com a",
+    "privacy_link":       "Política de Privacidade",
+    "privacy_post":       "e autorizo o uso dos meus dados para contato.",
+    "send_button":        "Enviar Mensagem",
+    "sending":            "Enviando…",
+    "success_title":      "Mensagem enviada!",
+    "success_text":       "Recebemos seu contato e retornaremos em breve. Você também pode nos chamar diretamente pelo WhatsApp.",
+    "send_another":       "Enviar outro",
+    "toast_success":      "Mensagem enviada! Entraremos em contato em breve.",
+    "toast_error":        "Erro ao enviar. Por favor, tente novamente.",
+    "follow_us":          "Siga-nos"
+  },
+  "errors": {
+    "name_required":  "Nome é obrigatório",
+    "phone_required": "Telefone é obrigatório",
+    "email_required": "E-mail é obrigatório",
+    "email_invalid":  "E-mail inválido"
+  },
+  "common": {
+    "loading":          "Carregando...",
+    "no_services":      "Nenhum serviço encontrado.",
+    "date_unavailable": "Data não disponível",
+    "required":         "*",
+    "whatsapp":         "WhatsApp"
+  },
+  "contact_map": {
+    "open_maps": "Traçar Rota"
+  },
+  "resultados": {
+    "empty_text":       "Nenhum resultado encontrado para este tema.",
+    "videos_title":     "Vídeos de Depoimentos",
+    "videos_subtitle":  "Acompanhe nossos pacientes no Instagram e veja depoimentos em vídeo sobre a experiência no Instituto Milhomem.",
+    "instagram_cta":    "Ver no Instagram"
+  }
+}

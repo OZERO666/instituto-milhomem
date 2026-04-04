@@ -1,12 +1,14 @@
 {
-	"name": "api",
+	"name": "instituto-milhomem",
 	"type": "module",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
 		"dev": "nodemon src/main.js",
 		"start": "node src/main.js",
-		"lint": "eslint . --quiet"
+		"lint": "eslint . --quiet",
+		"build:web": "cd web && npm ci && npm run build",
+		"build": "npm run build:web"
 	},
 	"dependencies": {
 		"bcryptjs": "^3.0.3",

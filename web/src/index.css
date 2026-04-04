@@ -1,0 +1,346 @@
+/* src/index.css */
+/* Fonte carregada via <link> no index.html para não bloquear renderização */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Layout */
+    --radius: 0.5rem;
+
+    /* Background / Foreground */
+    --background:         0 0% 100%;
+    --foreground:         0 0% 10%;
+
+    /* Brand — Manual de Identidade Visual Instituto Milhomem */
+    --primary:            34 45% 61%;   /* #C8A16E - Leão (dourado caramelo) */
+    --primary-foreground: 210 11% 11%;  /* #181B1E - texto escuro sobre dourado */
+    --secondary:          210 11% 11%;  /* #181B1E - Preto Misterioso */
+    --secondary-foreground: 0 0% 100%;
+
+    /* Accent — Pêssego Amarelo (dourado claro) */
+    --accent:             38 100% 82%; /* #FFDEA4 */
+    --accent-foreground:  210 11% 11%;
+
+    /* Muted */
+    --muted:              0 0% 96%;
+    --muted-foreground:   0 0% 45%;
+
+    /* Card / Popover */
+    --card:               0 0% 100%;
+    --card-foreground:    0 0% 10%;
+    --popover:            0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Feedback */
+    --destructive:            0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success:                142 71% 45%;
+    --success-foreground:     0 0% 100%;
+    --warning:                38 92% 50%;
+    --warning-foreground:     0 0% 10%;
+
+    /* Form */
+    --border: 0 0% 88%;
+    --input:  0 0% 98%;
+    --ring:   34 45% 61%;
+
+    /* Paleta completa do manual */
+    --brand-pessego:  38 100% 82%;  /* #FFDEA4 */
+    --brand-leao:     34  45% 61%;  /* #C8A16E */
+    --brand-coiote:   31  42% 38%;  /* #8B6439 */
+    --brand-sepia:    30  53% 30%;  /* #754D24 */
+    --brand-escuro:  210  11% 11%;  /* #181B1E */
+
+    /* Sombra personalizada */
+    --shadow-gold: 0 4px 24px -4px hsl(34 45% 61% / 0.30);
+    --shadow-navy: 0 4px 24px -4px hsl(210 11% 11% / 0.25);
+  }
+
+  .dark {
+    --background:         210 11% 8%;
+    --foreground:         0 0% 95%;
+
+    --primary:            34 45% 61%;  /* #C8A16E */
+    --primary-foreground: 210 11% 11%;
+    --secondary:          210 11% 15%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent:             38 100% 82%; /* #FFDEA4 */
+    --accent-foreground:  210 11% 11%;
+
+    --muted:              210 11% 18%;
+    --muted-foreground:   0 0% 65%;
+
+    --card:               210 11% 11%;
+    --card-foreground:    0 0% 95%;
+    --popover:            210 11% 11%;
+    --popover-foreground: 0 0% 95%;
+
+    --destructive:            0 62% 35%;
+    --destructive-foreground: 0 0% 100%;
+    --success:                142 60% 35%;
+    --success-foreground:     0 0% 100%;
+    --warning:                38 80% 42%;
+    --warning-foreground:     0 0% 10%;
+
+    --border: 210 11% 20%;
+    --input:  210 11% 16%;
+    --ring:   34 45% 61%;
+
+    --shadow-gold: 0 4px 24px -4px hsl(34 45% 61% / 0.22);
+    --shadow-navy: 0 4px 24px -4px hsl(0 0% 0% / 0.40);
+  }
+
+  /* ─── Reset / Base ─────────────────────────────────────────────────────── */
+  *, *::before, *::after {
+    @apply border-border box-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    /* Scrollbar customizada */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.5) hsl(var(--muted));
+  }
+
+  html::-webkit-scrollbar       { width: 6px; }
+  html::-webkit-scrollbar-track { background: hsl(var(--muted)); }
+  html::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.5);
+    border-radius: 999px;
+  }
+  html::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Previne FOUC de scroll */
+    min-height: 100dvh;
+  }
+
+  /* Seleção de texto com a cor da marca */
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--secondary));
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    text-wrap: balance;
+    line-height: 1.2;
+  }
+
+  p {
+    @apply leading-relaxed;
+    text-wrap: pretty;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  img, video {
+    @apply max-w-full block;
+  }
+
+  /* Focus visível acessível */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+    border-radius: var(--radius);
+  }
+
+  /* Remove outline padrão quando não é teclado */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* ─── Utilities ───────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Layout */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 lg:py-24 px-4 sm:px-8;
+  }
+
+  /* Tipografia */
+  .text-balance    { text-wrap: balance; }
+  .text-pretty     { text-wrap: pretty; }
+
+  .heading-xl {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-tight;
+  }
+  .heading-lg {
+    @apply text-3xl sm:text-4xl font-extrabold tracking-tight;
+  }
+  .heading-md {
+    @apply text-2xl sm:text-3xl font-bold;
+  }
+
+  /* Transições */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .transition-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
+  /* Botões */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground
+           hover:bg-accent hover:shadow-lg
+           active:scale-[0.97]
+           transition-all duration-300
+           font-semibold px-6 py-3 rounded-md
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground
+           hover:bg-secondary/90 hover:shadow-lg
+           active:scale-[0.97]
+           transition-all duration-300
+           font-semibold px-6 py-3 rounded-md
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary text-primary bg-transparent
+           hover:bg-primary hover:text-primary-foreground
+           active:scale-[0.97]
+           transition-all duration-300
+           font-semibold px-6 py-3 rounded-md;
+  }
+
+  .btn-ghost {
+    @apply text-primary bg-transparent
+           hover:bg-primary/10
+           active:scale-[0.97]
+           transition-all duration-300
+           font-semibold px-6 py-3 rounded-md;
+  }
+
+  /* Cards */
+  .card-elevated {
+    @apply bg-card rounded-xl shadow-lg
+           hover:shadow-2xl
+           p-8
+           transition-all duration-300
+           border border-border
+           hover:border-primary/40;
+  }
+
+  .card-glass {
+    @apply bg-white/10 dark:bg-white/5
+           backdrop-blur-md
+           border border-white/20
+           rounded-xl
+           shadow-lg;
+  }
+
+  /* Gradientes da marca */
+  .gradient-gold {
+    background: linear-gradient(135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 100%
+    );
+  }
+
+  .gradient-navy {
+    background: linear-gradient(135deg,
+      hsl(var(--secondary)) 0%,
+      hsl(210 11% 18%) 100%
+    );
+  }
+
+  .gradient-hero {
+    background: linear-gradient(
+      160deg,
+      hsl(var(--secondary)) 0%,
+      hsl(210 11% 16%) 60%,
+      hsl(var(--secondary)) 100%
+    );
+  }
+
+  /* Texto gradiente */
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 100%
+    );
+  }
+
+  /* Divisor dourado */
+  .divider-gold {
+    @apply border-0 h-px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--primary) / 0.6) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Sombras da marca */
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .shadow-navy { box-shadow: var(--shadow-navy); }
+
+  /* Animações utilitárias */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  /* Aspect ratios úteis */
+  .aspect-video-wide { aspect-ratio: 16/9; }
+  .aspect-square      { aspect-ratio: 1/1; }
+}
+
+/* ─── Keyframes ───────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ─── Skeleton Loader ─────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+  @apply rounded-md;
+}

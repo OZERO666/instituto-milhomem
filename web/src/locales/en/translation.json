@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home":     "Home",
+    "services": "Services",
+    "about":    "About",
+    "results":  "Results",
+    "blog":     "Blog",
+    "contact":  "Contact"
+  },
+  "header": {
+    "schedule_cta": "Book Consultation",
+    "admin_panel":  "Panel",
+    "open_menu":    "Open menu",
+    "close_menu":   "Close menu"
+  },
+  "footer": {
+    "navigation":        "Navigation",
+    "contact_section":   "Contact",
+    "schedule_section":  "Office Hours",
+    "location_label":    "Address",
+    "phone_label":       "Phone",
+    "email_label":       "E-mail",
+    "schedule_label":    "Hours",
+    "privacy_policy":    "Privacy Policy",
+    "terms_of_use":      "Terms of Use",
+    "schedule_cta":      "Book Consultation"
+  },
+  "hero": {
+    "trust_team":    "Specialized medical team",
+    "trust_results": "Proven natural results",
+    "see_results":   "See Results",
+    "scroll":        "Scroll"
+  },
+  "contact_form": {
+    "subtitle":           "Fill in the fields below and we'll get back to you",
+    "name_label":         "Full name",
+    "name_placeholder":   "Your name",
+    "phone_label":        "WhatsApp / Phone",
+    "phone_placeholder":  "+55 (62) 99999-9999",
+    "email_label":        "E-mail",
+    "service_label":      "Service of interest",
+    "service_placeholder":"Select a service",
+    "service_other":      "Other / Not sure yet",
+    "message_label":      "Message",
+    "message_optional":   "(optional)",
+    "message_placeholder":"Briefly describe your case or questions…",
+    "privacy_pre":        "I have read and agree to the",
+    "privacy_link":       "Privacy Policy",
+    "privacy_post":       "and authorize the use of my data for contact purposes.",
+    "send_button":        "Send Message",
+    "sending":            "Sending…",
+    "success_title":      "Message sent!",
+    "success_text":       "We received your message and will get back to you shortly. You can also reach us directly on WhatsApp.",
+    "send_another":       "Send another",
+    "toast_success":      "Message sent! We'll contact you soon.",
+    "toast_error":        "Error sending message. Please try again.",
+    "follow_us":          "Follow us"
+  },
+  "errors": {
+    "name_required":  "Name is required",
+    "phone_required": "Phone is required",
+    "email_required": "E-mail is required",
+    "email_invalid":  "Invalid e-mail"
+  },
+  "common": {
+    "loading":          "Loading...",
+    "no_services":      "No services found.",
+    "date_unavailable": "Date unavailable",
+    "required":         "*",
+    "whatsapp":         "WhatsApp"
+  },
+  "contact_map": {
+    "open_maps": "Get Directions"
+  },
+  "resultados": {
+    "empty_text":       "No results found for this theme.",
+    "videos_title":     "Video Testimonials",
+    "videos_subtitle":  "Follow our patients on Instagram and watch video testimonials about their experience at Instituto Milhomem.",
+    "instagram_cta":    "Watch on Instagram"
+  }
+}

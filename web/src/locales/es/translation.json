@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home":     "Inicio",
+    "services": "Servicios",
+    "about":    "Sobre nosotros",
+    "results":  "Resultados",
+    "blog":     "Blog",
+    "contact":  "Contacto"
+  },
+  "header": {
+    "schedule_cta": "Agendar Consulta",
+    "admin_panel":  "Panel",
+    "open_menu":    "Abrir menú",
+    "close_menu":   "Cerrar menú"
+  },
+  "footer": {
+    "navigation":        "Navegación",
+    "contact_section":   "Contacto",
+    "schedule_section":  "Atención",
+    "location_label":    "Dirección",
+    "phone_label":       "Teléfono",
+    "email_label":       "Correo",
+    "schedule_label":    "Horario",
+    "privacy_policy":    "Política de Privacidad",
+    "terms_of_use":      "Términos de Uso",
+    "schedule_cta":      "Agendar Consulta"
+  },
+  "hero": {
+    "trust_team":    "Equipo médico especializado",
+    "trust_results": "Resultados naturales comprobados",
+    "see_results":   "Ver Resultados",
+    "scroll":        "Desplazar"
+  },
+  "contact_form": {
+    "subtitle":           "Complete los campos y nos pondremos en contacto",
+    "name_label":         "Nombre completo",
+    "name_placeholder":   "Su nombre",
+    "phone_label":        "WhatsApp / Teléfono",
+    "phone_placeholder":  "+55 (62) 99999-9999",
+    "email_label":        "Correo electrónico",
+    "service_label":      "Servicio de interés",
+    "service_placeholder":"Seleccione un servicio",
+    "service_other":      "Otro / Aún no lo sé",
+    "message_label":      "Mensaje",
+    "message_optional":   "(opcional)",
+    "message_placeholder":"Describa brevemente su caso o dudas…",
+    "privacy_pre":        "He leído y acepto la",
+    "privacy_link":       "Política de Privacidad",
+    "privacy_post":       "y autorizo el uso de mis datos para contacto.",
+    "send_button":        "Enviar Mensaje",
+    "sending":            "Enviando…",
+    "success_title":      "¡Mensaje enviado!",
+    "success_text":       "Recibimos su consulta y le responderemos pronto. También puede contactarnos directamente por WhatsApp.",
+    "send_another":       "Enviar otro",
+    "toast_success":      "¡Mensaje enviado! Nos pondremos en contacto pronto.",
+    "toast_error":        "Error al enviar. Por favor, inténtelo de nuevo.",
+    "follow_us":          "Síguenos"
+  },
+  "errors": {
+    "name_required":  "El nombre es obligatorio",
+    "phone_required": "El teléfono es obligatorio",
+    "email_required": "El correo es obligatorio",
+    "email_invalid":  "Correo inválido"
+  },
+  "common": {
+    "loading":          "Cargando...",
+    "no_services":      "No se encontraron servicios.",
+    "date_unavailable": "Fecha no disponible",
+    "required":         "*",
+    "whatsapp":         "WhatsApp"
+  },
+  "contact_map": {
+    "open_maps": "Cómo llegar"
+  },
+  "resultados": {
+    "empty_text":       "No se encontraron resultados para este tema.",
+    "videos_title":     "Testimonios en Video",
+    "videos_subtitle":  "Siga a nuestros pacientes en Instagram y vea testimonios en video sobre la experiencia en el Instituto Milhomem.",
+    "instagram_cta":    "Ver en Instagram"
+  }
+}

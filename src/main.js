@@ -4,15 +4,19 @@ dotenv.config();
 
 import express from 'express';
 import compression from 'compression';
-import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 import heroConfigRoutes from './routes/hero-config.js';
 import routes from './routes/index.js';
 import uploadRoutes from './routes/uploads.js';
 import { errorMiddleware, writeLimiter, sanitizeMiddleware } from './middleware/index.js';
 import logger from './utils/logger.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIST_DIR   = path.join(__dirname, '../../dist');
 
 const app = express();
 
@@ -36,70 +40,29 @@ process.on('SIGTERM', async () => {
   process.exit();
 });
 
-const allowedOrigins = [
-  process.env.CORS_ORIGIN,
-  'https://www.institutomilhomem.com',
-  'https://institutomilhomem.com',
-  // localhost para desenvolvimento
-  'http://localhost:3000',
-  'http://localhost:5173',
-].filter(Boolean);
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Permite requisições sem Origin (ex: curl, health-check, mobile apps)
-    if (!origin) {
-      logger.info('CORS: Requisição sem origem permitida');
-      return callback(null, true);
-    }
-    if (allowedOrigins.includes(origin)) {
-      logger.info(`CORS: Origem permitida - ${origin}`);
-      return callback(null, true);
-    }
-    logger.warn(`CORS: Origem bloqueada - ${origin}`);
-    return callback(new Error(`Origin não permitido pelo CORS: ${origin}`), false);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
 // Compressão gzip — deve vir antes de qualquer rota
 app.use(compression());
-
-// CORS antes do helmet — garante headers mesmo em respostas de erro
-app.use(cors(corsOptions));
-app.options(/.*/, cors(corsOptions));
-
-// Middleware global para garantir cabeçalhos CORS em respostas de erro
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
 
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc:              ["'none'"],
-      scriptSrc:               ["'none'"],
-      styleSrc:                ["'none'"],
-      imgSrc:                  ["'none'"],
-      fontSrc:                 ["'none'"],
+      defaultSrc:              ["'self'"],
+      scriptSrc:               ["'self'", "'unsafe-inline'"],
+      styleSrc:                ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc:                 ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc:                  ["'self'", 'data:', 'blob:', 'https://horizons-cdn.hostinger.com', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
       objectSrc:               ["'none'"],
-      mediaSrc:                ["'none'"],
       frameSrc:                ["'none'"],
       frameAncestors:          ["'none'"],
       connectSrc:              ["'self'"],
       formAction:              ["'self'"],
-      baseUri:                 ["'none'"],
+      baseUri:                 ["'self'"],
       upgradeInsecureRequests: [],
     },
   },
   crossOriginEmbedderPolicy:  false,
   crossOriginOpenerPolicy:    { policy: 'same-origin' },
-  crossOriginResourcePolicy:  { policy: 'cross-origin' },
+  crossOriginResourcePolicy:  { policy: 'same-origin' },
   referrerPolicy:             { policy: 'strict-origin-when-cross-origin' },
   strictTransportSecurity: {
     maxAge:            31536000,
@@ -134,17 +97,23 @@ app.use((req, res, next) => {
 });
 app.use(sanitizeMiddleware);
 
-// Rotas principais
-app.use('/', routes());
-app.use('/', uploadRoutes); // ✅ nome correto
+// Rotas da API — prefixadas com /api
+app.use('/api', routes());
+app.use('/api', uploadRoutes);
+app.use('/api/hero-config', heroConfigRoutes);
 
-// Nova rota HeroConfig
-app.use('/hero-config', heroConfigRoutes);
+// Serve o build do frontend (React SPA)
+app.use(express.static(DIST_DIR));
+
+// SPA fallback — qualquer rota não-API devolve o index.html
+app.get(/^(?!\/api).*$/, (_req, res) => {
+  res.sendFile(path.join(DIST_DIR, 'index.html'));
+});
 
 // Middleware de erro
 app.use(errorMiddleware);
 
-// 404
+// 404 para rotas desconhecidas da API
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });

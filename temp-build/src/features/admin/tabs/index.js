@@ -1,0 +1,13 @@
+export { default as OverviewTab } from './OverviewTab.jsx';
+export { default as BookingsTab } from './BookingsTab.jsx';
+export { default as ServicosTab } from './ServicosTab.jsx';
+export { default as GaleriaTab } from './GaleriaTab.jsx';
+export { default as BlogTab } from './BlogTab.jsx';
+export { default as DepoimentosTab } from './DepoimentosTab.jsx';
+export { default as EstatisticasTab } from './EstatisticasTab.jsx';
+export { default as ContatoTab } from './ContatoTab.jsx';
+export { default as BrandingTab } from './BrandingTab.jsx';
+export { default as SeoTab } from './SeoTab.jsx';
+export { default as PagesTab } from './PagesTab.jsx';
+export { default as SobreTab } from './SobreTab.jsx';
+export { default as HeroTab } from './HeroTab.jsx';

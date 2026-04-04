@@ -1,0 +1,58 @@
+import {
+  Activity,
+  Mail,
+  List,
+  Image,
+  FileText,
+  MessageSquare,
+  BarChart3,
+  MapPin,
+  Search,
+  Layout,
+  Globe,
+  Info,
+  UserCircle,
+  Cpu,
+  Heart,
+  Settings2,
+} from 'lucide-react';
+
+export const ADMIN_TABS = [
+  { value: 'overview', icon: Activity, label: 'Resumo', resource: 'dashboard', action: 'read' },
+  { value: 'bookings', icon: Mail, label: 'Leads', badgeKey: 'unreadBookings', resource: 'leads', action: 'read' },
+  { value: 'services', icon: List, label: 'Serviços', resource: 'blog', action: 'read' },
+  { value: 'gallery', icon: Image, label: 'Galeria', resource: 'gallery', action: 'read' },
+  { value: 'blog', icon: FileText, label: 'Blog', resource: 'blog', action: 'read' },
+  { value: 'testimonials', icon: MessageSquare, label: 'Depoimentos', resource: 'testimonials', action: 'read' },
+  { value: 'stats', icon: BarChart3, label: 'Estatísticas', resource: 'dashboard', action: 'read' },
+  { value: 'users', icon: UserCircle, label: 'Usuários', resource: 'users', action: 'read' },
+  { value: 'contact', icon: MapPin, label: 'Contato', resource: 'dashboard', action: 'read' },
+  { value: 'branding', icon: Image, label: 'Branding', resource: 'dashboard', action: 'read' },
+  { value: 'seo', icon: Search, label: 'SEO', resource: 'dashboard', action: 'read' },
+  { value: 'hero', icon: Layout, label: 'Hero', resource: 'dashboard', action: 'read' },
+  { value: 'pages', icon: Globe, label: 'Páginas', resource: 'dashboard', action: 'read' },
+  { value: 'sobre',    icon: Info,      label: 'Sobre',           resource: 'dashboard', action: 'read' },
+  { value: 'settings', icon: Settings2,  label: 'Configurações',   resource: 'dashboard', action: 'read' },
+];
+
+export const PAGES_SECTION_OPTIONS = [
+  { key: 'home', label: 'Home' },
+  { key: 'servicos', label: 'Serviços' },
+  { key: 'blog', label: 'Blog' },
+  { key: 'contato', label: 'Contato' },
+  { key: 'resultados', label: 'Resultados' },
+  { key: 'footer', label: 'Footer' },
+  { key: 'service_detail', label: 'Detalhe Serviço' },
+  { key: 'blog_post', label: 'Post do Blog' },
+  { key: 'labels', label: 'Labels Globais' },
+];
+
+export const SOBRE_SECTION_OPTIONS = [
+  { key: 'hero', icon: Layout, label: 'Hero' },
+  { key: 'doctor', icon: UserCircle, label: 'Doutor' },
+  { key: 'wfi', icon: Globe, label: 'WFI' },
+  { key: 'about', icon: Info, label: 'Sobre' },
+  { key: 'values', icon: Heart, label: 'Valores' },
+  { key: 'team', icon: List, label: 'Equipe' },
+  { key: 'technology', icon: Cpu, label: 'Tecnologia' },
+];
