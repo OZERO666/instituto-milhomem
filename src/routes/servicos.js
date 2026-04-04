@@ -53,6 +53,7 @@ router.post('/', authMiddleware, checkPermission('blog', 'create'), async (req, 
       icon,
       ordem,
       conteudo,
+      faq,
     } = req.body;
 
     if (slug) {
@@ -65,7 +66,7 @@ router.post('/', authMiddleware, checkPermission('blog', 'create'), async (req, 
     const id  = uuidv4();
 
     await pool.execute(
-      'INSERT INTO servicos (id, nome, slug, descricao, beneficios, processo, imagem, icon, ordem, conteudo, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO servicos (id, nome, slug, descricao, beneficios, processo, imagem, icon, ordem, conteudo, faq, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         nome || null,
@@ -77,6 +78,7 @@ router.post('/', authMiddleware, checkPermission('blog', 'create'), async (req, 
         icon || null,
         ordem ?? 0,
         conteudo || null,
+        faq || null,
         now,
         now,
       ]
@@ -102,6 +104,7 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
       icon,
       ordem,
       conteudo,
+      faq,
     } = req.body;
 
     if (slug) {
@@ -114,7 +117,7 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
     const now = new Date();
 
     const [result] = await pool.execute(
-      'UPDATE servicos SET nome=?, slug=?, descricao=?, beneficios=?, processo=?, imagem=?, icon=?, ordem=?, conteudo=?, updated=? WHERE id=?',
+      'UPDATE servicos SET nome=?, slug=?, descricao=?, beneficios=?, processo=?, imagem=?, icon=?, ordem=?, conteudo=?, faq=?, updated=? WHERE id=?',
       [
         nome || null,
         slug || null,
@@ -125,6 +128,7 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
         icon || null,
         ordem ?? 0,
         conteudo || null,
+        faq || null,
         now,
         req.params.id,
       ]
