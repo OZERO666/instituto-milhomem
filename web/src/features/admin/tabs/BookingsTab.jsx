@@ -22,6 +22,7 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [periodFilter, setPeriodFilter] = useState('30d');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [ctaFilter, setCtaFilter] = useState('all');
 
@@ -52,7 +53,9 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
 
       const matchesSource = sourceFilter === 'all' || toNormalizedValue(booking.origem) === sourceFilter;
       const matchesCta = ctaFilter === 'all' || toNormalizedValue(booking.cta_origem) === ctaFilter;
-      if (!matchesSource || !matchesCta) return false;
+      const statusValue = booking.lido ? 'read' : 'new';
+      const matchesStatus = statusFilter === 'all' || statusValue === statusFilter;
+      if (!matchesSource || !matchesCta || !matchesStatus) return false;
 
       if (!normalizedQuery) return true;
       const haystack = [
@@ -70,7 +73,7 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
         .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [bookings, ctaFilter, periodFilter, query, sourceFilter]);
+  }, [bookings, ctaFilter, periodFilter, query, sourceFilter, statusFilter]);
 
   const exportCsv = () => {
     if (filteredBookings.length === 0) return;
@@ -139,7 +142,7 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
     <div className="bg-white rounded-xl shadow-sm border border-border p-6">
       <h2 className="text-2xl font-bold mb-6 text-secondary border-b pb-4">{t('admin.bookings.title')}</h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 mb-5">
         <div className="relative lg:col-span-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
@@ -161,6 +164,17 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
           <option value="30d">{t('admin.bookings.period_30d')}</option>
           <option value="90d">{t('admin.bookings.period_90d')}</option>
           <option value="all">{t('admin.bookings.period_all')}</option>
+        </select>
+
+        <select
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          aria-label={t('admin.bookings.status_filter_label')}
+          className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+        >
+          <option value="all">{t('admin.bookings.all_statuses')}</option>
+          <option value="new">{t('admin.bookings.status_new')}</option>
+          <option value="read">{t('admin.bookings.status_read')}</option>
         </select>
 
         <select

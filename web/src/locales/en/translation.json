@@ -200,6 +200,8 @@
       "period_30d": "Last 30 days",
       "period_90d": "Last 90 days",
       "period_all": "All time",
+      "status_filter_label": "Status",
+      "all_statuses": "All statuses",
       "export_csv": "Export CSV",
       "export_filename_prefix": "leads",
       "all_sources": "All sources",
