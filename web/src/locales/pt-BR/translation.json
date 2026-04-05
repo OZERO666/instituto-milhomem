@@ -187,5 +187,36 @@
     "s11_p1":           "Dúvidas sobre estes Termos? Entre em contato:",
     "back_home":        "Voltar ao início",
     "see_privacy":      "Ver Política de Privacidade →"
+  },
+  "admin": {
+    "common": {
+      "not_informed": "Não informado"
+    },
+    "bookings": {
+      "title": "Leads / Agendamentos",
+      "search_placeholder": "Buscar por nome, email, campanha...",
+      "all_sources": "Todas origens",
+      "all_ctas": "Todos CTAs",
+      "empty_filtered": "Nenhum lead encontrado para os filtros atuais.",
+      "status_read": "Lido",
+      "status_new": "Novo",
+      "origin_label": "Origem",
+      "cta_label": "CTA",
+      "utm_label": "UTM",
+      "mark_as_read": "Marcar como lido"
+    },
+    "conversion": {
+      "title": "Conversão por Origem",
+      "leads": "leads",
+      "top_sources": "Top Origens",
+      "top_ctas": "Top CTAs",
+      "top_campaigns": "Top Campanhas UTM",
+      "empty_data": "Sem dados ainda.",
+      "empty_campaigns": "Sem campanhas identificadas."
+    },
+    "overview": {
+      "latest_leads_title": "Últimos Leads",
+      "no_leads": "Nenhum lead ainda."
+    }
   }
 }

@@ -187,5 +187,36 @@
     "s11_p1":           "Questions about these Terms? Contact us:",
     "back_home":        "Back to home",
     "see_privacy":      "See Privacy Policy →"
+  },
+  "admin": {
+    "common": {
+      "not_informed": "Not informed"
+    },
+    "bookings": {
+      "title": "Leads / Bookings",
+      "search_placeholder": "Search by name, email, campaign...",
+      "all_sources": "All sources",
+      "all_ctas": "All CTAs",
+      "empty_filtered": "No leads found for the current filters.",
+      "status_read": "Read",
+      "status_new": "New",
+      "origin_label": "Source",
+      "cta_label": "CTA",
+      "utm_label": "UTM",
+      "mark_as_read": "Mark as read"
+    },
+    "conversion": {
+      "title": "Conversion by Source",
+      "leads": "leads",
+      "top_sources": "Top Sources",
+      "top_ctas": "Top CTAs",
+      "top_campaigns": "Top UTM Campaigns",
+      "empty_data": "No data yet.",
+      "empty_campaigns": "No campaigns identified yet."
+    },
+    "overview": {
+      "latest_leads_title": "Latest Leads",
+      "no_leads": "No leads yet."
+    }
   }
 }
