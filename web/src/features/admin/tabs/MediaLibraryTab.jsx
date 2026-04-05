@@ -1,10 +1,9 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
-import { Calendar, Check, Copy, ExternalLink, Folder, Image as ImageIcon, Loader2, Maximize2, Pencil, RefreshCw, Search, Trash2, X } from 'lucide-react';
+import { Copy, ExternalLink, Folder, Image as ImageIcon, Loader2, Maximize2, RefreshCw, Search, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Label } from '@/components/ui/label.jsx';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet.jsx';
 import {
   AlertDialog,
@@ -42,24 +41,14 @@ function formatDate(dateStr) {
 }
 
 export default function MediaLibraryTab() {
-  const { assets, isLoading, isDeleting, isSaving, nextCursor, activeFolder, fetchMedia, loadMore, deleteAsset, renameAsset } = useMediaLibrary();
+  const { assets, isLoading, isDeleting, nextCursor, activeFolder, fetchMedia, loadMore, deleteAsset } = useMediaLibrary();
   const [query, setQuery] = useState('');
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
-  const [newName, setNewName] = useState('');
-  const [isEditingName, setIsEditingName] = useState(false);
 
   useEffect(() => {
     fetchMedia('all');
   }, [fetchMedia]);
-
-  // Sync selectedAsset when assets update (e.g. after rename)
-  useEffect(() => {
-    if (selectedAsset) {
-      const updated = assets.find((a) => a.asset_id === selectedAsset.asset_id);
-      if (updated) setSelectedAsset(updated);
-    }
-  }, [assets, selectedAsset]);
 
   const filteredAssets = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -84,15 +73,6 @@ export default function MediaLibraryTab() {
 
   const handleOpenDetails = (asset) => {
     setSelectedAsset(asset);
-    const currentName = asset.public_id.split('/').pop();
-    setNewName(currentName);
-    setIsEditingName(false);
-  };
-
-  const handleRename = async () => {
-    if (!selectedAsset || !newName.trim()) return;
-    const result = await renameAsset(selectedAsset.public_id, newName.trim());
-    if (result) setIsEditingName(false);
   };
 
   const handleDeleteFromSheet = async () => {
@@ -102,8 +82,6 @@ export default function MediaLibraryTab() {
     setConfirmDelete(null);
   };
 
-  const currentFileName = selectedAsset?.public_id?.split('/').pop() || '';
-
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm border border-border p-6">
@@ -111,7 +89,7 @@ export default function MediaLibraryTab() {
           <div>
             <h2 className="text-2xl font-bold text-secondary">Biblioteca De Mídia</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Arquivos hospedados no Cloudinary. Clique em qualquer imagem para ver detalhes, renomear ou deletar.
+              Arquivos hospedados no Cloudinary. Clique em qualquer imagem para ver detalhes ou deletar.
             </p>
           </div>
           <Button variant="outline" onClick={() => fetchMedia(activeFolder)} className="gap-2">
@@ -179,9 +157,6 @@ export default function MediaLibraryTab() {
                   <Button variant="outline" size="sm" className="flex-1 gap-1.5 text-xs" onClick={() => handleCopy(asset.secure_url)}>
                     <Copy className="w-3.5 h-3.5" /> Copiar URL
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => handleOpenDetails(asset)}>
-                    <Pencil className="w-3.5 h-3.5" /> Editar
-                  </Button>
                   <Button
                     variant="outline"
                     size="icon"
@@ -206,11 +181,11 @@ export default function MediaLibraryTab() {
         </div>
       )}
 
-      {/* Detail / Edit Sheet */}
+      {/* Detail Sheet */}
       <Sheet open={!!selectedAsset} onOpenChange={(open) => { if (!open) setSelectedAsset(null); }}>
         <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader>
-            <SheetTitle className="truncate">{currentFileName}</SheetTitle>
+            <SheetTitle className="truncate">{selectedAsset?.public_id?.split('/').pop()}</SheetTitle>
           </SheetHeader>
 
           {selectedAsset && (
@@ -246,34 +221,9 @@ export default function MediaLibraryTab() {
                 </div>
               </div>
 
-              {/* Rename */}
-              <div className="space-y-2">
-                <Label className="font-semibold text-sm text-secondary">Renomear arquivo</Label>
-                <p className="text-xs text-muted-foreground">Atenção: renomear quebra URLs já em uso no site. Atualize os registros necessários após renomear.</p>
-                <div className="flex gap-2">
-                  <Input
-                    value={newName}
-                    onChange={(e) => { setNewName(e.target.value); setIsEditingName(true); }}
-                    placeholder="novo-nome-do-arquivo"
-                    className="flex-1"
-                    disabled={isSaving}
-                  />
-                  {isEditingName && newName !== currentFileName && (
-                    <>
-                      <Button size="icon" disabled={isSaving} onClick={handleRename} className="shrink-0">
-                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                      </Button>
-                      <Button size="icon" variant="ghost" disabled={isSaving} onClick={() => { setNewName(currentFileName); setIsEditingName(false); }} className="shrink-0">
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-
               {/* URL */}
               <div className="space-y-2">
-                <Label className="font-semibold text-sm text-secondary">URL da imagem</Label>
+                <p className="text-xs font-semibold text-secondary">URL da imagem</p>
                 <div className="flex gap-2">
                   <Input value={selectedAsset.secure_url} readOnly className="flex-1 text-xs" />
                   <Button size="icon" variant="outline" onClick={() => handleCopy(selectedAsset.secure_url)}>
