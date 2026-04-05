@@ -194,6 +194,10 @@
     },
     "bookings": {
       "title": "Leads / Agendamentos",
+      "summary_total": "Total filtrado",
+      "summary_new": "Novos",
+      "summary_read": "Lidos",
+      "summary_read_rate": "% lidos",
       "search_placeholder": "Buscar por nome, email, campanha...",
       "period_label": "Período",
       "period_7d": "Últimos 7 dias",
@@ -217,6 +221,8 @@
     "conversion": {
       "title": "Conversão por Origem",
       "leads": "leads",
+      "trend_title": "Tendência Diária",
+      "trend_window": "Últimos {{days}} dias",
       "period_label": "Período",
       "period_7d": "Últimos 7 dias",
       "period_30d": "Últimos 30 dias",

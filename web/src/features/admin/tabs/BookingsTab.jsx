@@ -75,6 +75,14 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
     });
   }, [bookings, ctaFilter, periodFilter, query, sourceFilter, statusFilter]);
 
+  const bookingSummary = useMemo(() => {
+    const total = filteredBookings.length;
+    const read = filteredBookings.filter((booking) => Boolean(booking.lido)).length;
+    const fresh = total - read;
+    const readRate = total > 0 ? Math.round((read / total) * 100) : 0;
+    return { total, read, fresh, readRate };
+  }, [filteredBookings]);
+
   const exportCsv = () => {
     if (filteredBookings.length === 0) return;
 
@@ -141,6 +149,25 @@ const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-border p-6">
       <h2 className="text-2xl font-bold mb-6 text-secondary border-b pb-4">{t('admin.bookings.title')}</h2>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+        <div className="rounded-lg border border-border bg-slate-50/70 p-3">
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t('admin.bookings.summary_total')}</p>
+          <p className="text-2xl font-bold text-secondary mt-1">{bookingSummary.total}</p>
+        </div>
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t('admin.bookings.summary_new')}</p>
+          <p className="text-2xl font-bold text-primary mt-1">{bookingSummary.fresh}</p>
+        </div>
+        <div className="rounded-lg border border-border bg-white p-3">
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t('admin.bookings.summary_read')}</p>
+          <p className="text-2xl font-bold text-secondary mt-1">{bookingSummary.read}</p>
+        </div>
+        <div className="rounded-lg border border-border bg-white p-3">
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t('admin.bookings.summary_read_rate')}</p>
+          <p className="text-2xl font-bold text-secondary mt-1">{bookingSummary.readRate}%</p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 mb-5">
         <div className="relative lg:col-span-1">

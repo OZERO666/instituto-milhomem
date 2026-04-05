@@ -91,6 +91,44 @@ export default function AdminConversionInsights({ bookings = [] }) {
     };
   }, [filteredBookings.length, previousPeriodCount, t]);
 
+  const trendWindowDays = periodDays || 30;
+
+  const trendPoints = useMemo(() => {
+    const now = new Date();
+    const dayMs = 24 * 60 * 60 * 1000;
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    start.setTime(start.getTime() - (trendWindowDays - 1) * dayMs);
+
+    const points = Array.from({ length: trendWindowDays }, (_, index) => {
+      const date = new Date(start.getTime() + index * dayMs);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      return { key, label: String(date.getDate()), count: 0 };
+    });
+
+    const indexByKey = new Map(points.map((point, index) => [point.key, index]));
+
+    filteredBookings.forEach((booking) => {
+      const rawDate = booking?.created || booking?.created_at;
+      if (!rawDate) return;
+      const parsed = new Date(rawDate);
+      if (Number.isNaN(parsed.getTime())) return;
+
+      const key = `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`;
+      const targetIndex = indexByKey.get(key);
+      if (targetIndex === undefined) return;
+
+      points[targetIndex].count += 1;
+    });
+
+    return points;
+  }, [filteredBookings, trendWindowDays]);
+
+  const trendMax = useMemo(() => {
+    const maxValue = trendPoints.reduce((max, point) => Math.max(max, point.count), 0);
+    return maxValue || 1;
+  }, [trendPoints]);
+
   const sourceStats = useMemo(() => buildTopEntries(filteredBookings, 'origem'), [filteredBookings]);
   const ctaStats = useMemo(() => buildTopEntries(filteredBookings, 'cta_origem'), [filteredBookings]);
   const campaignStats = useMemo(() => buildTopEntries(filteredBookings, 'utm_campaign'), [filteredBookings]);
@@ -174,6 +212,28 @@ export default function AdminConversionInsights({ bookings = [] }) {
             ))}
             {campaignStats.length === 0 && <p className="text-xs text-muted-foreground">{t('admin.conversion.empty_campaigns')}</p>}
           </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-slate-50/60 p-4">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('admin.conversion.trend_title')}</p>
+          <span className="text-xs text-muted-foreground">{t('admin.conversion.trend_window', { days: trendWindowDays })}</span>
+        </div>
+        <div className="grid grid-cols-12 sm:grid-cols-15 md:grid-cols-20 gap-1.5 items-end h-20">
+          {trendPoints.map((point) => {
+            const height = Math.max(6, Math.round((point.count / trendMax) * 64));
+            return (
+              <div key={point.key} className="flex flex-col items-center justify-end gap-1">
+                <div
+                  title={`${point.key}: ${point.count}`}
+                  className="w-full min-w-[8px] rounded-sm bg-primary/75"
+                  style={{ height: `${height}px` }}
+                />
+                <span className="text-[10px] leading-none text-muted-foreground">{point.label}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
