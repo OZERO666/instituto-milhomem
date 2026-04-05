@@ -15,14 +15,38 @@ CREATE TABLE IF NOT EXISTS resources (
   KEY idx_resource_slug (resource_slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Alter permissions table to add resource_id foreign key if needed
+-- Alter permissions table to add columns if not exists
 ALTER TABLE permissions
-  ADD COLUMN IF NOT EXISTS permission_slug CHAR(36) COLLATE utf8mb4_unicode_ci,
-  ADD COLUMN IF NOT EXISTS resource_id CHAR(36) COLLATE utf8mb4_unicode_ci,
+  ADD COLUMN IF NOT EXISTS permission_slug CHAR(36),
+  ADD COLUMN IF NOT EXISTS resource_id CHAR(36),
   ADD COLUMN IF NOT EXISTS created DATETIME DEFAULT CURRENT_TIMESTAMP,
   ADD COLUMN IF NOT EXISTS updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
--- Add foreign key constraint if it doesn't exist
+-- Drop FK if it exists so we can safely MODIFY column collation
+SET @fk_drop_exists = (
+  SELECT COUNT(*)
+  FROM information_schema.TABLE_CONSTRAINTS
+  WHERE CONSTRAINT_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'permissions'
+    AND CONSTRAINT_NAME = 'fk_permissions_resource'
+    AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+);
+SET @fk_drop_sql = IF(
+  @fk_drop_exists > 0,
+  'ALTER TABLE permissions DROP FOREIGN KEY fk_permissions_resource',
+  'SELECT 1'
+);
+PREPARE stmt_fk_drop FROM @fk_drop_sql;
+EXECUTE stmt_fk_drop;
+DEALLOCATE PREPARE stmt_fk_drop;
+
+-- Force correct collation on permission_slug and resource_id (idempotent fix)
+-- This fixes columns that may have been created with wrong collation in a previous run
+ALTER TABLE permissions
+  MODIFY COLUMN permission_slug CHAR(36) COLLATE utf8mb4_unicode_ci NULL,
+  MODIFY COLUMN resource_id CHAR(36) COLLATE utf8mb4_unicode_ci NULL;
+
+-- Re-add foreign key constraint (now collations are guaranteed to match)
 SET @fk_exists = (
   SELECT COUNT(*)
   FROM information_schema.TABLE_CONSTRAINTS
@@ -31,7 +55,6 @@ SET @fk_exists = (
     AND CONSTRAINT_NAME = 'fk_permissions_resource'
     AND CONSTRAINT_TYPE = 'FOREIGN KEY'
 );
-
 SET @fk_sql = IF(
   @fk_exists = 0,
   'ALTER TABLE permissions ADD CONSTRAINT fk_permissions_resource FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE',
