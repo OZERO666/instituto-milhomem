@@ -194,10 +194,10 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
       <link rel="canonical" href={u} />
 
       {/* Hreflang — same URL for all languages (no URL prefixes) */}
-      <link rel="alternate" hreflang="pt-BR"    href={u} />
-      <link rel="alternate" hreflang="en"       href={u} />
-      <link rel="alternate" hreflang="es"       href={u} />
-      <link rel="alternate" hreflang="x-default" href={u} />
+      <link rel="alternate" hrefLang="pt-BR"    href={u} />
+      <link rel="alternate" hrefLang="en"       href={u} />
+      <link rel="alternate" hrefLang="es"       href={u} />
+      <link rel="alternate" hrefLang="x-default" href={u} />
 
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
