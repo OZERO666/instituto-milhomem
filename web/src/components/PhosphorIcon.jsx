@@ -25,11 +25,15 @@ const getIconModulePath = (iconName) => (
   iconName ? `/node_modules/@phosphor-icons/react/dist/csr/${iconName}.es.js` : null
 );
 
-const resolveIconExport = (iconModule, iconName) => (
-  iconModule?.[iconName]
-  ?? iconModule?.[`${iconName}Icon`]
-  ?? null
-);
+const resolveIconExport = (iconModule) => {
+  if (!iconModule) return null;
+  // Rollup minifies export names in production, so we cannot rely on named lookups.
+  // Instead, take the first exported value that is a React forwardRef / function component.
+  for (const val of Object.values(iconModule)) {
+    if (typeof val === 'function') return val;
+  }
+  return null;
+};
 
 const loadIcon = async (requestedName) => {
   const normalizedName = normalizePhosphorIconName(requestedName) ?? FALLBACK_ICON;
@@ -48,8 +52,7 @@ const loadIcon = async (requestedName) => {
   }
 
   const iconModule = await moduleLoader();
-  const resolvedIcon = resolveIconExport(iconModule, normalizedName)
-    ?? resolveIconExport(iconModule, FALLBACK_ICON);
+  const resolvedIcon = resolveIconExport(iconModule);
 
   if (resolvedIcon) {
     iconCache.set(requestedPath ?? fallbackPath, resolvedIcon);
