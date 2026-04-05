@@ -7,16 +7,8 @@ import logger from '../utils/logger.js';
 
 const router = Router();
 
-// Migração segura: adiciona colunas novas se ainda não existirem
-(async () => {
-  try {
-    await pool.execute(`ALTER TABLE artigos ADD COLUMN IF NOT EXISTS status ENUM('draft','published') NOT NULL DEFAULT 'published'`);
-    await pool.execute(`ALTER TABLE artigos ADD COLUMN IF NOT EXISTS tags TEXT NULL`);
-    logger.info('Artigos: colunas status/tags verificadas');
-  } catch (err) {
-    logger.warn('Artigos migration warning:', err.message);
-  }
-})();
+// Schema for artigos workflow is formalized in 011_artigos_workflow_schema.sql
+// Columns: status ENUM('draft','published','scheduled'), tags JSON, featured TINYINT
 
 router.get('/', async (req, res) => {
   try {
@@ -112,7 +104,7 @@ router.put('/:id', authMiddleware, checkPermission('blog', 'update'), async (req
     }
 
     const tagsJson = Array.isArray(tags) ? JSON.stringify(tags) : (tags ?? null);
-    const statusVal = ['draft', 'published'].includes(status) ? status : 'published';
+    const statusVal = ['draft', 'published', 'scheduled'].includes(status) ? status : 'published';
 
     const [result] = await pool.execute(
       'UPDATE artigos SET titulo=?, slug=?, autor=?, categoria=?, categoria_id=?, conteudo=?, resumo=?, imagem_destaque=?, data_publicacao=?, status=?, tags=?, updated=? WHERE id=?',
