@@ -11,10 +11,8 @@ const TestimonialCard = ({ testimonial, index = 0 }) => {
 
   // ─── Foto ─────────────────────────────────────────────────────────────────
   const photoUrl = useMemo(() => {
-    if (!testimonial.foto) return null;
-    if (testimonial.foto.startsWith('http')) return testimonial.foto;
-    return api.getFileUrl('depoimentos', testimonial.id, testimonial.foto);
-  }, [testimonial.foto, testimonial.id]);
+    return api.resolveMediaUrl('depoimentos', testimonial.foto);
+  }, [testimonial.foto]);
 
   const initialName = testimonial.nome?.charAt(0)?.toUpperCase() || 'P';
 

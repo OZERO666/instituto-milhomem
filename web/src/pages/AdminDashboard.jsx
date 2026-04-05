@@ -30,7 +30,7 @@ import { useFaq }          from '@/features/admin/hooks/useFaq.js';
 import {
   OverviewTab, BookingsTab, ServicosTab, GaleriaTab, BlogTab,
   DepoimentosTab, EstatisticasTab, ContatoTab, BrandingTab,
-  SeoTab, PagesTab, SobreTab, HeroTab, UsersRolesTab, SettingsTab, FaqTab,
+  SeoTab, PagesTab, SobreTab, HeroTab, MediaLibraryTab, UsersRolesTab, SettingsTab, FaqTab,
 } from '@/features/admin/tabs';
 
 const AdminDashboard = () => {
@@ -47,6 +47,11 @@ const AdminDashboard = () => {
       return canAccess(tab.resource, tab.action || 'read');
     }),
     [canAccess]
+  );
+
+  const activeTabMeta = useMemo(
+    () => availableTabs.find((tab) => tab.value === activeTab),
+    [activeTab, availableTabs]
   );
 
   useEffect(() => {
@@ -72,7 +77,12 @@ const AdminDashboard = () => {
 
   const { services, isLoading: loadingServicos, serviceForm, editingItem: svcEditing, setEditingItem: setSvcEditing, fetchServicos, handleServicosSubmit, handleReorder } = useServicos(currentUser);
   const { galleryItems, galleryThemes, isLoading: loadingGaleria, galleryForm, themeForm, editingItem: galEditing, setEditingItem: setGalEditing, editingTheme, setEditingTheme, fetchGaleria, handleGaleriaSubmit, handleThemeSubmit } = useGaleria(currentUser);
-  const { articles, blogCategories, isLoading: loadingBlog, categoryForm, isArticleEditorOpen, currentArticle, fetchBlog, handleCategorySubmit, openArticleEditor, closeArticleEditor, handleArticleSuccess } = useBlog(currentUser);
+  const {
+    articles, blogCategories, isLoading: loadingBlog, categoryForm,
+    isArticleEditorOpen, currentArticle, fetchBlog, handleCategorySubmit,
+    handleArticleStatusChange, handleDuplicateArticle,
+    openArticleEditor, closeArticleEditor, handleArticleSuccess,
+  } = useBlog(currentUser);
   const { testimonials, isLoading: loadingDepoimentos, testimonialForm, editingItem: depEditing, setEditingItem: setDepEditing, fetchDepoimentos, handleDepoimentosSubmit } = useDepoimentos(currentUser);
   const { isLoading: loadingEstatisticas, statsForm, fetchEstatisticas, handleStatsSubmit } = useEstatisticas(currentUser);
   const { contactConfig, isLoading: loadingContato, contactForm, fetchContato, handleContactSubmit } = useContato(currentUser);
@@ -86,6 +96,30 @@ const AdminDashboard = () => {
     testimonialForm, statsForm, contactForm, settingsForm, faqForm,
   ].some(f => f.formState.isDirty);
   const { guardTab, showDialog: showUnsavedDialog, confirmLeave, cancelLeave } = useUnsavedGuard(anyDirty);
+
+  const handleSelectTab = useCallback((tab) => {
+    guardTab(tab, setActiveTab);
+  }, [guardTab]);
+
+  const headerStatus = useMemo(() => {
+    if (heroSaving || sobreSaving || pagesSaving || settingsSaveStatus === 'saving') {
+      return { tone: 'saving', label: `Salvando em ${activeTabMeta?.label || 'configuracoes'}...` };
+    }
+
+    if (settingsSaveStatus === 'error') {
+      return { tone: 'error', label: 'Erro ao salvar configuracoes' };
+    }
+
+    if (settingsSaveStatus === 'saved') {
+      return { tone: 'saved', label: 'Alteracoes salvas com sucesso' };
+    }
+
+    if (anyDirty) {
+      return { tone: 'dirty', label: `Alteracoes pendentes em ${activeTabMeta?.label || 'uma aba'}` };
+    }
+
+    return { tone: 'idle', label: `${activeTabMeta?.label || 'Painel'} pronto para edicao` };
+  }, [activeTabMeta, anyDirty, heroSaving, pagesSaving, settingsSaveStatus, sobreSaving]);
 
   // ─── Audit logs (overview only) ───────────────────────────────────────────
   const fetchAuditLogs = useCallback(async () => {
@@ -107,6 +141,7 @@ const AdminDashboard = () => {
         case 'services':     return fetchServicos();
         case 'gallery':      return fetchGaleria();
         case 'blog':         return fetchBlog();
+        case 'media':        return;
         case 'testimonials': return fetchDepoimentos();
         case 'faq':          return fetchFaq();
         case 'stats':        return fetchEstatisticas();
@@ -181,7 +216,13 @@ const AdminDashboard = () => {
       </Helmet>
 
       <div className="min-h-screen bg-secondary flex flex-col">
-        <AdminShellHeader currentUserEmail={currentUser?.email} onLogout={handleLogout} />
+        <AdminShellHeader
+          currentUserEmail={currentUser?.email}
+          onLogout={handleLogout}
+          canAccess={canAccess}
+          onSelectTab={handleSelectTab}
+          status={headerStatus}
+        />
 
         <div className="container-custom py-6 flex-grow flex flex-col">
           <Tabs value={activeTab} onValueChange={(tab) => guardTab(tab, setActiveTab)} className="flex-grow flex flex-col">
@@ -191,6 +232,7 @@ const AdminDashboard = () => {
               <OverviewTab
                 bookings={bookings} services={services}
                 galleryItems={galleryItems} articles={articles} auditLogs={auditLogs}
+                testimonials={testimonials} faqItems={faqItems}
               />
             </TabsContent>
 
@@ -224,6 +266,10 @@ const AdminDashboard = () => {
               />
             </TabsContent>
 
+            <TabsContent value="media">
+              <MediaLibraryTab />
+            </TabsContent>
+
             <TabsContent value="blog">
               <BlogTab
                 articles={articles} blogCategories={blogCategories} isLoading={loadingBlog}
@@ -231,6 +277,8 @@ const AdminDashboard = () => {
                 onGenericSubmit={handleGenericSubmit} onDelete={handleDelete}
                 openArticleEditor={openArticleEditor} isArticleEditorOpen={isArticleEditorOpen}
                 closeArticleEditor={closeArticleEditor} currentArticle={currentArticle}
+                onArticleStatusChange={(article, status, overrides) => handleArticleStatusChange(article, status, fetchData, overrides)}
+                onDuplicateArticle={(article) => handleDuplicateArticle(article, fetchData)}
                 onArticleSuccess={() => handleArticleSuccess(fetchData)}
               />
             </TabsContent>

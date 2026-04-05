@@ -11,6 +11,7 @@ export { default as SeoTab } from './SeoTab.jsx';
 export { default as PagesTab } from './PagesTab.jsx';
 export { default as SobreTab } from './SobreTab.jsx';
 export { default as HeroTab } from './HeroTab.jsx';
+export { default as MediaLibraryTab } from './MediaLibraryTab.jsx';
 export { default as UsersRolesTab } from './UsersRolesTab.jsx';
 export { default as SettingsTab } from './SettingsTab.jsx';
 export { default as FaqTab } from './FaqTab.jsx';

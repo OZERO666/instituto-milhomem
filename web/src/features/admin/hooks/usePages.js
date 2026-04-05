@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import api from '@/lib/apiServerClient';
 import { sanitizeObject } from '@/lib/sanitizeInput.js';
-import { logAction, uploadFile } from '@/features/admin/utils/adminApi.js';
+import { logAction } from '@/features/admin/utils/adminApi.js';
 import { PAGE_CONFIG_DEFAULTS } from '@/config/site';
 import { deepMerge } from '@/hooks/usePagesConfig';
 
@@ -50,24 +50,10 @@ export function usePages(currentUser) {
   const handlePagesSubmit = async (data) => {
     setPagesSaving(true);
     try {
-      // Upload de imagens da Seção Sobre da Home (home.about.images)
       const aboutImages = data?.home?.about?.images || [];
-      const uploadedImages = await Promise.all(
-        aboutImages.map(async (img, idx) => {
-          const input = document.getElementById(`pages_home_about_image_${idx}`);
-          const file  = input?.files?.[0];
-          if (file) {
-            const url = await uploadFile(file, 'misc');
-            if (input) input.value = '';
-            return url;
-          }
-          // img pode ser string (URL) ou objeto {url, _previewUrl}
-          return typeof img === 'string' ? img : (img?.url || '');
-        })
-      );
       if (!data.home) data.home = {};
       if (!data.home.about) data.home.about = {};
-      data.home.about.images = uploadedImages.filter(Boolean);
+      data.home.about.images = aboutImages.filter(Boolean);
 
       for (const pageKey of PAGES_CONFIG_KEYS) {
         const payload  = sanitizeObject(data?.[pageKey] || {});

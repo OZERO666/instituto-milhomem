@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Plus, FileText, Loader2, Search, CheckCircle2, PenLine, Hash, Globe } from 'lucide-react';
+import { Edit, Trash2, Plus, FileText, Loader2, Search, CheckCircle2, PenLine, Hash, Globe, Copy, Send, RotateCcw, Clock3 } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import ArticleEditor from '@/components/ArticleEditor.jsx';
@@ -19,11 +19,13 @@ const CATEGORY_TRANSLATION_FIELDS = [
   { name: 'nome', label: 'Nome', type: 'input' },
 ];
 
+const isScheduledArticle = (article) => article?.status === 'published' && article?.data_publicacao && new Date(article.data_publicacao) > new Date();
+
 const BlogTab = ({
   articles, blogCategories, isLoading, categoryForm,
   onGenericSubmit, onDelete,
   openArticleEditor, isArticleEditorOpen, closeArticleEditor,
-  currentArticle, onArticleSuccess,
+  currentArticle, onArticleSuccess, onArticleStatusChange, onDuplicateArticle,
 }) => {
   const { register, handleSubmit, formState: { isSubmitting } } = categoryForm;
   const [query, setQuery] = useState('');
@@ -32,7 +34,9 @@ const BlogTab = ({
   const [translatingCategory, setTranslatingCategory] = useState(null);
   const filteredArticles = useMemo(() => {
     let result = articles;
-    if (statusFilter !== 'all') result = result.filter(a => a.status === statusFilter);
+    if (statusFilter === 'draft') result = result.filter(a => a.status === 'draft');
+    if (statusFilter === 'published') result = result.filter(a => a.status === 'published' && !isScheduledArticle(a));
+    if (statusFilter === 'scheduled') result = result.filter(isScheduledArticle);
     const q = query.trim().toLowerCase();
     if (!q) return result;
     return result.filter(a =>
@@ -112,7 +116,8 @@ const BlogTab = ({
         <div className="flex gap-2 flex-wrap">
           {[
             { key: 'all',       label: 'Todos',      count: articles.length },
-            { key: 'published', label: 'Publicados',  count: articles.filter(a => a.status !== 'draft').length },
+            { key: 'published', label: 'Publicados',  count: articles.filter(a => a.status === 'published' && !isScheduledArticle(a)).length },
+            { key: 'scheduled', label: 'Agendados',   count: articles.filter(isScheduledArticle).length },
             { key: 'draft',     label: 'Rascunhos',   count: articles.filter(a => a.status === 'draft').length },
           ].map(({ key, label, count }) => (
             <button key={key} onClick={() => setStatusFilter(key)}
@@ -129,6 +134,9 @@ const BlogTab = ({
           <p className="text-muted-foreground text-center py-12">{query ? 'Nenhum artigo encontrado.' : 'Nenhum artigo cadastrado.'}</p>
         ) : pagedArticles.map(item => (
           <React.Fragment key={item.id}>
+          {(() => {
+            const isScheduled = isScheduledArticle(item);
+            return (
           <div className="bg-white rounded-xl p-6 border border-border shadow-sm flex gap-5 hover:border-primary/50 transition-colors">
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -139,6 +147,10 @@ const BlogTab = ({
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-700 flex-shrink-0">
                         <PenLine className="w-3 h-3" /> Rascunho
                       </span>
+                    ) : isScheduled ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-700 flex-shrink-0">
+                        <Clock3 className="w-3 h-3" /> Agendado
+                      </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-700 flex-shrink-0">
                         <CheckCircle2 className="w-3 h-3" /> Publicado
@@ -147,9 +159,28 @@ const BlogTab = ({
                   </div>
                   {item.slug && <p className="text-xs text-muted-foreground">/blog/{item.slug}</p>}
                   {item.categoria_nome && <p className="text-xs text-muted-foreground">Categoria: {item.categoria_nome}</p>}
+                  {item.data_publicacao && (
+                    <p className="text-xs text-muted-foreground">
+                      {isScheduled ? 'Agendado para' : 'Publicacao'}: {format(new Date(item.data_publicacao), 'dd/MM/yyyy HH:mm')}
+                    </p>
+                  )}
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
                   <Button size="icon" variant="outline" onClick={() => openArticleEditor(item)}><Edit className="w-4 h-4" /></Button>
+                  {item.status === 'draft' ? (
+                    <Button size="icon" variant="outline" title="Publicar agora" className="text-emerald-700 hover:text-emerald-800" onClick={() => onArticleStatusChange(item, 'published')}>
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  ) : isScheduled ? (
+                    <Button size="icon" variant="outline" title="Publicar imediatamente" className="text-sky-700 hover:text-sky-800" onClick={() => onArticleStatusChange(item, 'published', { data_publicacao: new Date().toISOString() })}>
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button size="icon" variant="outline" title="Voltar para rascunho" className="text-amber-700 hover:text-amber-800" onClick={() => onArticleStatusChange(item, 'draft')}>
+                      <RotateCcw className="w-4 h-4" />
+                    </Button>
+                  )}
+                  <Button size="icon" variant="outline" title="Duplicar artigo" onClick={() => onDuplicateArticle(item)}><Copy className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="Traduções" className="text-primary hover:bg-primary/10" onClick={() => setTranslatingArticle(translatingArticle?.id === item.id ? null : item)}><Globe className="w-4 h-4" /></Button>
                   <Button size="icon" variant="destructive" onClick={() => onDelete('artigos', item.id, item.titulo)}><Trash2 className="w-4 h-4" /></Button>
                 </div>
@@ -171,6 +202,8 @@ const BlogTab = ({
               <p className="text-xs text-muted-foreground mt-2">{item.created ? format(new Date(item.created), 'dd/MM/yyyy HH:mm') : ''}</p>
             </div>
           </div>
+            );
+          })()}
           {translatingArticle?.id === item.id && (
             <div className="bg-white rounded-xl border border-primary/30 shadow-sm px-6 py-4 -mt-2">
               <TranslationFields

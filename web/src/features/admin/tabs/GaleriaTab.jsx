@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label.jsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 import Pagination from '@/features/admin/components/Pagination.jsx';
-import { useFilePreview } from '@/features/admin/hooks/useFilePreview.js';
 import { usePagination } from '@/features/admin/hooks/usePagination.js';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
 
 const GaleriaTab = ({
@@ -16,9 +16,7 @@ const GaleriaTab = ({
   editingItem, setEditingItem, editingTheme, setEditingTheme,
   onGenericSubmit, onThemeSubmit, onDelete,
 }) => {
-  const { register, handleSubmit, reset, watch, control, formState: { isSubmitting } } = galleryForm;
-  const antesPreview  = useFilePreview(watch('foto_antes'));
-  const depoisPreview = useFilePreview(watch('foto_depois'));
+  const { register, handleSubmit, reset, setValue, watch, control, formState: { isSubmitting } } = galleryForm;
   const [query, setQuery] = useState('');
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -104,28 +102,28 @@ const GaleriaTab = ({
               <Input type="number" {...register('meses_pos_operatorio')} className="mt-2 focus-visible:ring-primary" />
             </div>
             <div className="p-4 border border-dashed border-border rounded-lg bg-muted/30">
-              <Label className="mb-2 block font-bold">Foto Antes</Label>
-              {(antesPreview || editingItem?.foto_antes) && (
-                <img
-                  src={antesPreview ?? editingItem.foto_antes}
-                  alt="preview antes"
-                  className="w-full h-24 object-cover rounded-lg mb-2 border border-border"
-                />
-              )}
-              <Input type="file" accept="image/*" className="bg-white" {...register('foto_antes')} />
-              {!antesPreview && editingItem?.foto_antes && <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para manter a foto atual</p>}
+              <input type="hidden" {...register('foto_antes')} />
+              <MediaSelectorField
+                label="Foto Antes"
+                value={watch('foto_antes') || ''}
+                onChange={(nextValue) => setValue('foto_antes', nextValue, { shouldDirty: true })}
+                folder="galeria"
+                libraryFolders={['all', 'galeria', 'branding', 'misc']}
+                previewClassName="h-24"
+                helperText="Selecione a imagem de antes na biblioteca ou envie uma nova ao Cloudinary."
+              />
             </div>
             <div className="p-4 border border-dashed border-border rounded-lg bg-muted/30">
-              <Label className="mb-2 block font-bold">Foto Depois</Label>
-              {(depoisPreview || editingItem?.foto_depois) && (
-                <img
-                  src={depoisPreview ?? editingItem.foto_depois}
-                  alt="preview depois"
-                  className="w-full h-24 object-cover rounded-lg mb-2 border border-border"
-                />
-              )}
-              <Input type="file" accept="image/*" className="bg-white" {...register('foto_depois')} />
-              {!depoisPreview && editingItem?.foto_depois && <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para manter a foto atual</p>}
+              <input type="hidden" {...register('foto_depois')} />
+              <MediaSelectorField
+                label="Foto Depois"
+                value={watch('foto_depois') || ''}
+                onChange={(nextValue) => setValue('foto_depois', nextValue, { shouldDirty: true })}
+                folder="galeria"
+                libraryFolders={['all', 'galeria', 'branding', 'misc']}
+                previewClassName="h-24"
+                helperText="Selecione a imagem de depois na biblioteca ou envie uma nova ao Cloudinary."
+              />
             </div>
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={isSubmitting} className="flex-1 bg-primary text-primary-foreground hover:bg-secondary hover:text-white font-bold uppercase tracking-wide">

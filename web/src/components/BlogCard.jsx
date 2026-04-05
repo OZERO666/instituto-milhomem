@@ -6,13 +6,7 @@ import { ptBR } from 'date-fns/locale';
 import api from '@/lib/apiServerClient';
 
 const BlogCard = ({ article, ctaLabel = 'Ler artigo' }) => {
-  const getImageUrl = () => {
-    if (!article.imagem_destaque) return null;
-    if (article.imagem_destaque.startsWith('http')) return article.imagem_destaque;
-    return api.getFileUrl('artigos', article.id, article.imagem_destaque);
-  };
-
-  const imageUrl = getImageUrl();
+  const imageUrl = api.resolveMediaUrl('artigos', article.imagem_destaque);
 
   return (
     <Link

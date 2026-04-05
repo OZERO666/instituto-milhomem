@@ -20,7 +20,22 @@ router.get('/', authMiddleware, checkPermission('leads', 'read'), async (req, re
 
 router.post('/', async (req, res) => {
   try {
-    const { nome, email, telefone, tipo_servico, mensagem } = req.body;
+    const {
+      nome,
+      email,
+      telefone,
+      tipo_servico,
+      mensagem,
+      origem,
+      cta_origem,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      landing_page,
+      referrer_url,
+    } = req.body;
 
     // Validação de campos obrigatórios
     if (!nome || !email || !telefone) {
@@ -36,9 +51,37 @@ router.post('/', async (req, res) => {
     const id = uuidv4(); // ← gerado pelo servidor, não pelo cliente
     const now = new Date();
 
+    const normalizeText = (value, max = 255) => {
+      if (value === null || value === undefined) return null;
+      const text = String(value).trim();
+      return text ? text.slice(0, max) : null;
+    };
+
     await pool.execute(
-      'INSERT INTO agendamentos (id, nome, email, telefone, tipo_servico, mensagem, lido, created, updated) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)',
-      [id, nome, email, telefone, tipo_servico || null, mensagem || null, now, now]
+      `INSERT INTO agendamentos (
+        id, nome, email, telefone, tipo_servico, mensagem,
+        origem, cta_origem, utm_source, utm_medium, utm_campaign, utm_content, utm_term,
+        landing_page, referrer_url, lido, created, updated
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
+      [
+        id,
+        nome,
+        email,
+        telefone,
+        tipo_servico || null,
+        mensagem || null,
+        normalizeText(origem, 120),
+        normalizeText(cta_origem, 160),
+        normalizeText(utm_source, 160),
+        normalizeText(utm_medium, 160),
+        normalizeText(utm_campaign, 180),
+        normalizeText(utm_content, 180),
+        normalizeText(utm_term, 180),
+        normalizeText(landing_page, 255),
+        normalizeText(referrer_url, 512),
+        now,
+        now,
+      ]
     );
 
     logger.info(`Novo agendamento recebido: ${nome} (${email})`);

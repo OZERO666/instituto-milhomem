@@ -26,7 +26,6 @@ export function useDepoimentos(currentUser) {
       collection: 'depoimentos',
       data,
       form: testimonialForm,
-      fileFields: ['foto'],
       editingItem,
       setEditingItem,
       currentUser,

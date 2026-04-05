@@ -1,9 +1,12 @@
 import React from 'react';
-import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge.jsx';
 import AdminOverviewStats from '@/features/admin/components/AdminOverviewStats.jsx';
+import AdminOverviewAlerts from '@/features/admin/components/AdminOverviewAlerts.jsx';
+import AdminAuditTimeline from '@/features/admin/components/AdminAuditTimeline.jsx';
+import AdminTranslationCoverage from '@/features/admin/components/AdminTranslationCoverage.jsx';
+import AdminConversionInsights from '@/features/admin/components/AdminConversionInsights.jsx';
 
-const OverviewTab = ({ bookings, services, galleryItems, articles, auditLogs }) => (
+const OverviewTab = ({ bookings, services, galleryItems, articles, auditLogs, testimonials, faqItems }) => (
   <div className="space-y-6">
     <AdminOverviewStats
       unreadBookings={bookings.filter((b) => !b.lido).length}
@@ -11,26 +14,23 @@ const OverviewTab = ({ bookings, services, galleryItems, articles, auditLogs }) 
       galleryCount={galleryItems.length}
       articlesCount={articles.length}
     />
+    <AdminOverviewAlerts
+      bookings={bookings}
+      services={services}
+      galleryItems={galleryItems}
+      articles={articles}
+      auditLogs={auditLogs}
+    />
+    <AdminTranslationCoverage
+      services={services}
+      articles={articles}
+      galleryItems={galleryItems}
+      testimonials={testimonials}
+      faqItems={faqItems}
+    />
+    <AdminConversionInsights bookings={bookings} />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-        <h3 className="font-bold text-lg mb-4 text-secondary border-b pb-2">Atividade Recente</h3>
-        <div className="space-y-3">
-          {auditLogs.slice(0, 5).map(log => (
-            <div key={log.id} className="flex items-start gap-3 text-sm">
-              <div className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-              <div>
-                <p className="font-medium text-foreground">{log.details}</p>
-                <p className="text-xs text-muted-foreground">
-                  {log.timestamp ? format(new Date(log.timestamp), 'dd/MM/yyyy HH:mm') : ''}
-                </p>
-              </div>
-            </div>
-          ))}
-          {auditLogs.length === 0 && (
-            <p className="text-sm text-muted-foreground">Nenhuma atividade registrada.</p>
-          )}
-        </div>
-      </div>
+      <AdminAuditTimeline auditLogs={auditLogs} />
       <div className="bg-white rounded-xl shadow-sm border border-border p-6">
         <h3 className="font-bold text-lg mb-4 text-secondary border-b pb-2">Últimos Leads</h3>
         <div className="space-y-3">

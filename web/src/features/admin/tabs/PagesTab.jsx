@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, X, CheckCircle, ImageIcon, Upload, Eye } from 'lucide-react';
+import React from 'react';
+import { Plus, X, CheckCircle, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
 import AdminSectionSwitch from '@/features/admin/components/AdminSectionSwitch.jsx';
 import { PAGES_SECTION_OPTIONS } from '@/features/admin/constants/navigation.js';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
 
 const PAGES_TRANSLATION_FIELDS = {
@@ -87,53 +88,6 @@ const PAGES_TRANSLATION_FIELDS = {
 };
 
 const PAGES_CONFIG_KEYS = ['home', 'servicos', 'blog', 'contato', 'resultados', 'footer', 'service_detail', 'blog_post', 'labels'];
-
-// ─── Image Picker (single slot, file-based) ───────────────────────────────────
-const ImageSlot = ({ id, currentUrl, placeholder, onChange }) => {
-  const [localPreview, setLocalPreview] = useState(null);
-  useEffect(() => { setLocalPreview(null); }, [currentUrl]);
-  const src = localPreview || currentUrl || null;
-
-  return (
-    <div className="space-y-2">
-      <div
-        className="relative group cursor-pointer border-2 border-dashed border-border hover:border-primary/50 rounded-xl bg-muted/30 transition-all overflow-hidden"
-        onClick={() => document.getElementById(id)?.click()}
-      >
-        {src ? (
-          <>
-            <img src={src} alt="Preview" className="w-full h-32 object-cover" />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold">
-              <Upload className="w-3.5 h-3.5" /> Trocar
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center justify-center gap-2 h-24 text-muted-foreground">
-            <ImageIcon className="w-6 h-6 text-primary/50" />
-            <p className="text-xs font-bold text-foreground">Clique para selecionar</p>
-          </div>
-        )}
-      </div>
-      <Input
-        value={currentUrl || ''}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder || 'Ou cole a URL da imagem...'}
-        className="text-xs focus-visible:ring-primary"
-      />
-      <input
-        id={id}
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          setLocalPreview(URL.createObjectURL(file));
-        }}
-      />
-    </div>
-  );
-};
 
 // ─── Section field helper ─────────────────────────────────────────────────────
 const Field = ({ label, children }) => (
@@ -294,15 +248,17 @@ const PagesTab = ({ pagesForm, pagesSection, setPagesSection, pagesConfig, pages
                         </div>
                         <div className="border border-border rounded-xl p-2 bg-muted/20 space-y-2">
                           <p className="text-[10px] font-bold uppercase text-muted-foreground px-1">Imagem {idx + 1}</p>
-                          <ImageSlot
-                            id={`pages_home_about_image_${idx}`}
-                            currentUrl={imgUrl}
-                            placeholder={`URL da imagem ${idx + 1}`}
+                          <MediaSelectorField
+                            value={imgUrl}
                             onChange={(val) => {
                               const current = [...(pagesForm.getValues('home.about.images') || [])];
                               current[idx] = val;
-                              pagesForm.setValue('home.about.images', current);
+                              pagesForm.setValue('home.about.images', current, { shouldDirty: true });
                             }}
+                            folder="misc"
+                            libraryFolders={['all', 'branding', 'misc']}
+                            previewClassName="h-32"
+                            helperText={`Imagem ${idx + 1} da seção Sobre da Home.`}
                           />
                         </div>
                       </div>

@@ -6,16 +6,15 @@ import { Textarea } from '@/components/ui/textarea.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 import Pagination from '@/features/admin/components/Pagination.jsx';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
-import { useFilePreview } from '@/features/admin/hooks/useFilePreview.js';
 import { usePagination } from '@/features/admin/hooks/usePagination.js';
 
 const FieldError = ({ error }) =>
   error ? <p className="text-xs text-destructive mt-1">{error.message || 'Campo obrigatório'}</p> : null;
 
 const DepoimentosTab = ({ testimonials, isLoading, testimonialForm, editingItem, setEditingItem, onGenericSubmit, onDelete }) => {
-  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = testimonialForm;
-  const fotoPreview = useFilePreview(watch('foto'));
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors, isSubmitting } } = testimonialForm;
   const [query, setQuery] = useState('');
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -51,16 +50,16 @@ const DepoimentosTab = ({ testimonials, isLoading, testimonialForm, editingItem,
               <FieldError error={errors.mensagem} />
             </div>
             <div className="p-4 border border-dashed border-border rounded-lg bg-muted/30">
-              <Label className="mb-2 block font-bold">Foto</Label>
-              {(fotoPreview || editingItem?.foto) && (
-                <img
-                  src={fotoPreview ?? editingItem.foto}
-                  alt="preview"
-                  className="w-full h-24 object-cover rounded-lg mb-2 border border-border"
-                />
-              )}
-              <Input type="file" accept="image/*" className="bg-white" {...register('foto')} />
-              {!fotoPreview && editingItem?.foto && <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para manter a foto atual</p>}
+              <input type="hidden" {...register('foto')} />
+              <MediaSelectorField
+                label="Foto"
+                value={watch('foto') || ''}
+                onChange={(nextValue) => setValue('foto', nextValue, { shouldDirty: true })}
+                folder="depoimentos"
+                libraryFolders={['all', 'depoimentos', 'branding', 'misc']}
+                previewClassName="h-24"
+                helperText="Escolha uma foto já existente do Cloudinary ou envie uma nova para o depoimento."
+              />
             </div>
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={isSubmitting} className="flex-1 bg-primary text-primary-foreground hover:bg-secondary hover:text-white font-bold uppercase tracking-wide">

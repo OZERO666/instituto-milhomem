@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
-  X, Upload, Save, Eye, EyeOff, RefreshCw,
-  Image as ImageIcon, FileText, Tag, User, Calendar,
+  X, Save, Eye, EyeOff, RefreshCw,
+  FileText, Tag, User, Calendar,
   BookOpen, Hash, CheckCircle2, PenLine, Maximize2, Minimize2,
 } from 'lucide-react';
 import ReactQuill from 'react-quill';
@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge.jsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/lib/apiServerClient';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 
 // ─── Quill modules ────────────────────────────────────────────────────────────
 const quillModules = {
@@ -55,43 +56,11 @@ const generateSlug = (title) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)+/g, '');
 
-// ─── Image Preview ────────────────────────────────────────────────────────────
-const ImagePreview = ({ article, fileRef }) => {
-  const [preview, setPreview] = useState(article?.imagem_destaque || null);
-
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setPreview(URL.createObjectURL(file));
-  };
-
-  return (
-    <div className="space-y-3">
-      <div
-        className="relative group cursor-pointer border-2 border-dashed border-border hover:border-primary/50 rounded-xl bg-muted/30 transition-all duration-200 overflow-hidden"
-        onClick={() => fileRef.current?.click()}
-      >
-        {preview ? (
-          <>
-            <img src={preview} alt="Preview" className="w-full h-40 object-cover" />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-bold text-sm">
-              <Upload className="w-5 h-5" /> Trocar imagem
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center justify-center gap-3 py-8 text-muted-foreground">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <ImageIcon className="w-6 h-6 text-primary" />
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-xs text-foreground">Clique para selecionar</p>
-              <p className="text-[10px]">PNG, JPG, WEBP · 1200×630px</p>
-            </div>
-          </div>
-        )}
-      </div>
-      <Input id="imagem_destaque" ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleChange} />
-    </div>
-  );
+const toDateTimeLocalValue = (value) => {
+  const date = value ? new Date(value) : new Date();
+  const timezoneOffset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - timezoneOffset * 60000);
+  return localDate.toISOString().slice(0, 16);
 };
 
 // ─── Tags Input ───────────────────────────────────────────────────────────────
@@ -154,7 +123,6 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
   const [wordCount,    setWordCount]     = useState(0);
   const [tags,         setTags]         = useState(parseTags(article?.tags));
   const [status,       setStatus]       = useState(article?.status || 'published');
-  const fileRef = useRef(null);
 
   const {
     register, handleSubmit, setValue, watch, formState: { errors, isDirty },
@@ -165,9 +133,8 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
       resumo:          article?.resumo || '',
       categoria_id:    article?.categoria_id || '',
       autor:           article?.autor || 'Dr. Pablo Milhomem',
-      data_publicacao: article?.data_publicacao
-        ? new Date(article.data_publicacao).toISOString().split('T')[0]
-        : new Date().toISOString().split('T')[0],
+      data_publicacao: toDateTimeLocalValue(article?.data_publicacao),
+      imagem_destaque: article?.imagem_destaque || '',
     },
   });
 
@@ -203,18 +170,8 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
 
   const onSubmit = async (data) => {
     if (!content || content === '<p><br></p>') { toast.error('O conteúdo do artigo é obrigatório'); return; }
-    const file = fileRef.current?.files[0] || null;
     setIsSubmitting(true);
     try {
-      let imagemUrl = article?.imagem_destaque || null;
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadRes = await api.fetch('/upload/artigos', { method: 'POST', body: formData });
-        if (!uploadRes.ok) throw new Error(`Erro ao fazer upload: ${await uploadRes.text()}`);
-        imagemUrl = (await uploadRes.json()).url;
-      }
-
       const url    = article ? `/artigos/${article.id}` : '/artigos';
       const method = article ? 'PUT' : 'POST';
       const res = await api.fetch(url, {
@@ -228,7 +185,7 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
           categoria_id:    data.categoria_id || null,
           autor:           data.autor,
           data_publicacao: new Date(data.data_publicacao).toISOString(),
-          imagem_destaque: imagemUrl,
+          imagem_destaque: data.imagem_destaque || null,
           status,
           tags,
         }),
@@ -394,7 +351,7 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
                     <Label className="font-bold flex items-center gap-2 mb-2">
                       <Calendar className="w-4 h-4 text-primary" /> Publicação
                     </Label>
-                    <Input type="date" {...register('data_publicacao')} className="focus-visible:ring-primary" />
+                    <Input type="datetime-local" {...register('data_publicacao')} className="focus-visible:ring-primary" />
                   </div>
                 </div>
 
@@ -490,7 +447,15 @@ const ArticleEditor = ({ article, onClose, onSuccess }) => {
               {/* IMAGEM */}
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Imagem de Destaque</p>
-                <ImagePreview article={article} fileRef={fileRef} />
+                <input type="hidden" {...register('imagem_destaque')} />
+                <MediaSelectorField
+                  value={watch('imagem_destaque') || ''}
+                  onChange={(nextValue) => setValue('imagem_destaque', nextValue, { shouldDirty: true })}
+                  folder="artigos"
+                  libraryFolders={['all', 'artigos', 'branding', 'misc']}
+                  previewClassName="h-40"
+                  helperText="Use um asset já existente da biblioteca ou envie uma nova imagem ao Cloudinary para o artigo."
+                />
               </div>
 
               {/* SEO PREVIEW */}

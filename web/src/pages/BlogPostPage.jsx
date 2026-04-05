@@ -58,12 +58,7 @@ const BlogPostPage = () => {
     if (slug) fetchArticle();
   }, [slug]);
 
-  const getImageUrl = (article) => {
-    if (!article?.imagem_destaque) return null;
-    if (article.imagem_destaque.startsWith('http')) return article.imagem_destaque;
-    const base = import.meta.env.VITE_API_URL || '';
-    return `${base}/uploads/${article.imagem_destaque}`;
-  };
+  const getImageUrl = (item) => api.resolveMediaUrl('artigos', item?.imagem_destaque);
 
   const parseTags = (raw) => {
     if (!raw) return [];

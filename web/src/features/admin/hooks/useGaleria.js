@@ -32,7 +32,6 @@ export function useGaleria(currentUser) {
       collection: 'galeria',
       data,
       form: galleryForm,
-      fileFields: ['foto_antes', 'foto_depois'],
       editingItem,
       setEditingItem,
       currentUser,

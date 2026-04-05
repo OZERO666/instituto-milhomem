@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 
 const FieldError = ({ error }) =>
@@ -116,16 +117,16 @@ const SeoTab = ({ seoList, seoEditing, seoForm, isLoading, handleEditSeo, handle
           </div>
 
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-foreground">Imagem OG (Open Graph)</label>
-            <input
-              type="url"
-              {...register('og_image')}
-              placeholder="https://..."
-              className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            <input type="hidden" {...register('og_image')} />
+            <MediaSelectorField
+              label="Imagem OG (Open Graph)"
+              value={ogImage || ''}
+              onChange={(nextValue) => seoForm.setValue('og_image', nextValue, { shouldDirty: true })}
+              folder="branding"
+              libraryFolders={['all', 'branding', 'artigos', 'misc']}
+              previewClassName="h-24"
+              helperText="Use uma imagem do acervo do Cloudinary para compartilhamento social ou envie uma nova agora."
             />
-            {ogImage && (
-              <img src={ogImage} alt="Preview OG" className="mt-2 h-20 rounded-lg object-cover border border-border" />
-            )}
           </div>
 
           <button

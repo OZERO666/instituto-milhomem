@@ -6,8 +6,8 @@ import { Textarea } from '@/components/ui/textarea.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
-import { useFilePreview } from '@/features/admin/hooks/useFilePreview.js';
 import {
   HairTransplantIcon, HairFUEIcon, HairDHIIcon, BeardTransplantIcon,
   EyebrowTransplantIcon, SkinCleansingIcon, PeelingLaserIcon, SkinHydrationIcon,
@@ -87,7 +87,6 @@ const FieldError = ({ error }) =>
 
 const ServicosTab = ({ services, isLoading, serviceForm, editingItem, setEditingItem, onGenericSubmit, onDelete, onReorder }) => {
   const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = serviceForm;
-  const imagemPreview = useFilePreview(watch('imagem'));
   const [query, setQuery] = useState('');
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -137,16 +136,16 @@ const ServicosTab = ({ services, isLoading, serviceForm, editingItem, setEditing
               <Input type="number" {...register('ordem')} className="mt-2 focus-visible:ring-primary" />
             </div>
             <div className="p-4 border border-dashed border-border rounded-lg bg-muted/30">
-              <Label className="mb-2 block font-bold">Imagem Representativa</Label>
-              {(imagemPreview || editingItem?.imagem) && (
-                <img
-                  src={imagemPreview ?? editingItem.imagem}
-                  alt="preview"
-                  className="w-full h-24 object-cover rounded-lg mb-2 border border-border"
-                />
-              )}
-              <Input type="file" accept="image/*" className="bg-white" {...register('imagem')} />
-              {!imagemPreview && editingItem?.imagem && <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para manter a imagem atual</p>}
+              <input type="hidden" {...register('imagem')} />
+              <MediaSelectorField
+                label="Imagem Representativa"
+                value={watch('imagem') || ''}
+                onChange={(nextValue) => setValue('imagem', nextValue, { shouldDirty: true })}
+                folder="servicos"
+                libraryFolders={['all', 'servicos', 'misc']}
+                previewClassName="h-24"
+                helperText="Use uma imagem já existente da biblioteca ou envie uma nova direto para o Cloudinary."
+              />
             </div>
 
             <div className="flex gap-3 pt-2">

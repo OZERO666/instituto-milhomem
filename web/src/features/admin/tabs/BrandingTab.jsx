@@ -1,35 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { Loader2, Upload } from 'lucide-react';
-import { toast } from 'sonner';
+import React from 'react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
-import { Input } from '@/components/ui/input.jsx';
-import { Label } from '@/components/ui/label.jsx';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
-import { uploadFile } from '@/features/admin/utils/adminApi.js';
 
 const BrandingTab = ({ contactForm, contactConfig, onContactSubmit, isLoading }) => {
   const { formState: { isSubmitting }, setValue, watch } = contactForm;
-  const [uploadingLogo, setUploadingLogo]       = useState(false);
-  const [uploadingFavicon, setUploadingFavicon] = useState(false);
-  const logoFileRef    = useRef(null);
-  const faviconFileRef = useRef(null);
-
-  const currentLogoUrl    = watch('logo_url');
-  const currentFaviconUrl = watch('favicon_url');
-
-  const handleUpload = async (file, field, folder, setUploading) => {
-    if (!file) return;
-    setUploading(true);
-    try {
-      const url = await uploadFile(file, folder);
-      setValue(field, url, { shouldDirty: true });
-      toast.success('Upload realizado com sucesso!');
-    } catch (err) {
-      toast.error(err.message || 'Erro no upload');
-    } finally {
-      setUploading(false);
-    }
-  };
 
   if (isLoading) return <TabLoader rows={4} card />;
   return (
@@ -39,72 +15,33 @@ const BrandingTab = ({ contactForm, contactConfig, onContactSubmit, isLoading })
 
       {/* Logo */}
       <div>
-        <Label className="font-bold">Logo do Site</Label>
-        <Input {...contactForm.register('logo_url')} placeholder="https://..." className="mt-2 focus-visible:ring-primary" />
-        <div className="flex items-center gap-2 mt-2">
-          <input
-            ref={logoFileRef}
-            type="file"
-            accept="image/*,.svg"
-            className="hidden"
-            onChange={e => handleUpload(e.target.files[0], 'logo_url', 'branding', setUploadingLogo)}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={uploadingLogo}
-            onClick={() => logoFileRef.current?.click()}
-            className="gap-2"
-          >
-            {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            {uploadingLogo ? 'Enviando…' : 'Upload para Cloudinary'}
-          </Button>
-        </div>
-        {(currentLogoUrl || contactConfig?.logo_url) && (
-          <img
-            src={currentLogoUrl || contactConfig.logo_url}
-            alt="Preview Logo"
-            className="mt-3 h-16 object-contain rounded-xl border border-border"
-          />
-        )}
+        <input type="hidden" {...contactForm.register('logo_url')} />
+        <MediaSelectorField
+          label="Logo do Site"
+          value={watch('logo_url') || contactConfig?.logo_url || ''}
+          onChange={(nextValue) => setValue('logo_url', nextValue, { shouldDirty: true })}
+          folder="branding"
+          libraryFolders={['all', 'branding', 'misc']}
+          previewClassName="h-24"
+          helperText="Prefira SVG ou PNG. O arquivo pode ser reaproveitado da biblioteca ou enviado agora para o Cloudinary."
+        />
       </div>
 
       {/* Favicon */}
       <div>
-        <Label className="font-bold">Favicon</Label>
-        <p className="text-xs text-muted-foreground mt-0.5 mb-1">Suporta SVG, PNG, ICO. Recomendado: SVG ou PNG 512×512.</p>
-        <Input {...contactForm.register('favicon_url')} placeholder="https://..." className="mt-2 focus-visible:ring-primary" />
-        <div className="flex items-center gap-2 mt-2">
-          <input
-            ref={faviconFileRef}
-            type="file"
-            accept="image/*,.svg,.ico"
-            className="hidden"
-            onChange={e => handleUpload(e.target.files[0], 'favicon_url', 'branding', setUploadingFavicon)}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={uploadingFavicon}
-            onClick={() => faviconFileRef.current?.click()}
-            className="gap-2"
-          >
-            {uploadingFavicon ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            {uploadingFavicon ? 'Enviando…' : 'Upload para Cloudinary'}
-          </Button>
-        </div>
-        {(currentFaviconUrl || contactConfig?.favicon_url) && (
-          <img
-            src={currentFaviconUrl || contactConfig.favicon_url}
-            alt="Preview Favicon"
-            className="mt-3 h-12 w-12 object-contain rounded-xl border border-border bg-muted p-1"
-          />
-        )}
+        <input type="hidden" {...contactForm.register('favicon_url')} />
+        <MediaSelectorField
+          label="Favicon"
+          value={watch('favicon_url') || contactConfig?.favicon_url || ''}
+          onChange={(nextValue) => setValue('favicon_url', nextValue, { shouldDirty: true })}
+          folder="branding"
+          libraryFolders={['all', 'branding', 'misc']}
+          previewClassName="h-20"
+          helperText="Suporta SVG, PNG ou ICO. Recomendado: SVG ou PNG 512x512."
+        />
       </div>
 
-      <Button type="submit" disabled={isSubmitting || uploadingLogo || uploadingFavicon} className="mt-4 bg-primary text-primary-foreground hover:bg-secondary hover:text-white">
+      <Button type="submit" disabled={isSubmitting} className="mt-4 bg-primary text-primary-foreground hover:bg-secondary hover:text-white">
         {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
         Salvar Branding
       </Button>

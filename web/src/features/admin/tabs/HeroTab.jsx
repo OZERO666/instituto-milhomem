@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
 import { Label } from '@/components/ui/label.jsx';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
 
 const HeroTab = ({
@@ -42,16 +43,16 @@ const HeroTab = ({
             <Input {...heroForm.register('cta_link')} placeholder="Ex: #contato ou /contato" className="mt-2 focus-visible:ring-primary" />
           </div>
           <div>
-            <Label className="font-bold">Imagem de Fundo</Label>
-            <Input {...heroForm.register('imagem_fundo')} placeholder="https://..." className="mt-2 focus-visible:ring-primary" />
-            <Input id="imagem_fundo_file" type="file" accept="image/*" className="mt-2 bg-white" />
-            {heroConfig?.imagem_fundo && (
-              <img
-                src={heroConfig.imagem_fundo}
-                alt="Prévia do Hero"
-                className="mt-3 w-full h-36 object-cover rounded-xl border border-border"
-              />
-            )}
+            <input type="hidden" {...heroForm.register('imagem_fundo')} />
+            <MediaSelectorField
+              label="Imagem de Fundo"
+              value={heroForm.watch('imagem_fundo')}
+              onChange={(nextValue) => heroForm.setValue('imagem_fundo', nextValue, { shouldDirty: true })}
+              folder="misc"
+              libraryFolders={['all', 'branding', 'misc']}
+              previewClassName="h-36"
+              helperText="Você pode colar uma URL, escolher um arquivo existente da biblioteca ou enviar uma nova imagem ao Cloudinary."
+            />
           </div>
           <Button
             type="submit"

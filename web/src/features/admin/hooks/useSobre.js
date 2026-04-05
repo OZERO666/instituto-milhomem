@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import api from '@/lib/apiServerClient';
 import { sanitizeObject } from '@/lib/sanitizeInput.js';
-import { uploadFile, logAction } from '@/features/admin/utils/adminApi.js';
+import { logAction } from '@/features/admin/utils/adminApi.js';
 import { normalizeSobreConfig } from '@/features/admin/utils/sobreConfig.js';
 
 export function useSobre(currentUser) {
@@ -29,38 +29,11 @@ export function useSobre(currentUser) {
   const handleSobreSubmit = async (data) => {
     setSobreSaving(true);
     try {
-      const imageFields = [
-        { field: 'hero_image',       inputId: 'sobre_hero_image_file' },
-        { field: 'doctor_image',     inputId: 'sobre_doctor_image_file' },
-        { field: 'about_image',      inputId: 'sobre_about_image_file' },
-        { field: 'technology_image', inputId: 'sobre_technology_image_file' },
-      ];
-      for (const { field, inputId } of imageFields) {
-        const input = document.getElementById(inputId);
-        const file  = input?.files?.[0];
-        if (file) {
-          data[field] = await uploadFile(file, 'misc');
-          if (input) input.value = '';
-        } else if (sobreConfig?.[field]) {
-          data[field] = sobreConfig[field];
-        }
-      }
-
-      // Upload de fotos individuais de membros da equipe
       const teamRaw = data.team || [];
-      const team = await Promise.all(
-        teamRaw.map(async (member, idx) => {
-          const input = document.getElementById(`team_image_file_${idx}`);
-          const file  = input?.files?.[0];
-          // eslint-disable-next-line no-unused-vars
-          const { _previewUrl, ...cleanMember } = member;
-          if (file) {
-            cleanMember.image = await uploadFile(file, 'misc');
-            if (input) input.value = '';
-          }
-          return cleanMember;
-        })
-      );
+      const team = teamRaw.map((member) => {
+        const { _previewUrl, ...cleanMember } = member;
+        return cleanMember;
+      });
 
       const sanitizedData = sanitizeObject(data);
       sanitizedData.values             = data.values             || [];

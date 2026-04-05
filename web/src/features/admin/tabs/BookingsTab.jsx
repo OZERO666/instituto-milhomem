@@ -1,56 +1,152 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import { Trash2 } from 'lucide-react';
+import { Search, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 
-const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => (
-  <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-    <h2 className="text-2xl font-bold mb-6 text-secondary border-b pb-4">Leads / Agendamentos</h2>
-    {isLoading ? (
-      <TabLoader rows={4} />
-    ) : bookings.length === 0 ? (
-      <p className="text-muted-foreground text-center py-12">Nenhum lead cadastrado.</p>
-    ) : (
-      <div className="space-y-4">
-        {bookings.map(b => (
-          <div
-            key={b.id}
-            className={`p-5 rounded-xl border ${
-              b.lido ? 'border-border bg-white' : 'border-primary/50 bg-primary/5'
-            } flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
-          >
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <p className="font-bold text-lg text-secondary">{b.nome}</p>
-                <Badge variant={b.lido ? 'outline' : 'default'}>{b.lido ? 'Lido' : 'Novo'}</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground">{b.email} · {b.telefone}</p>
-              <p className="text-sm font-medium text-primary">{b.tipo_servico}</p>
-              {b.mensagem && (
-                <p className="text-sm text-muted-foreground italic">"{b.mensagem}"</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                {b.created_at ? format(new Date(b.created_at), 'dd/MM/yyyy HH:mm') : ''}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              {!b.lido && (
-                <Button size="sm" onClick={() => onMarkAsRead(b.id)}
-                  className="bg-primary text-primary-foreground hover:bg-secondary hover:text-white">
-                  Marcar como lido
-                </Button>
-              )}
-              <Button size="sm" variant="destructive" onClick={() => onDelete('agendamentos', b.id, b.nome)}>
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        ))}
+const NORMALIZE_EMPTY = 'nao-informado';
+
+const toNormalizedValue = (value) => {
+  const text = String(value || '').trim();
+  return text || NORMALIZE_EMPTY;
+};
+
+const toDisplayValue = (value) => {
+  if (!value || value === NORMALIZE_EMPTY) return 'Não informado';
+  return value;
+};
+
+const BookingsTab = ({ bookings, isLoading, onMarkAsRead, onDelete }) => {
+  const [query, setQuery] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('all');
+  const [ctaFilter, setCtaFilter] = useState('all');
+
+  const sourceOptions = useMemo(() => {
+    const values = Array.from(new Set(bookings.map((booking) => toNormalizedValue(booking.origem))));
+    return values.sort((a, b) => a.localeCompare(b));
+  }, [bookings]);
+
+  const ctaOptions = useMemo(() => {
+    const values = Array.from(new Set(bookings.map((booking) => toNormalizedValue(booking.cta_origem))));
+    return values.sort((a, b) => a.localeCompare(b));
+  }, [bookings]);
+
+  const filteredBookings = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return bookings.filter((booking) => {
+      const matchesSource = sourceFilter === 'all' || toNormalizedValue(booking.origem) === sourceFilter;
+      const matchesCta = ctaFilter === 'all' || toNormalizedValue(booking.cta_origem) === ctaFilter;
+      if (!matchesSource || !matchesCta) return false;
+
+      if (!normalizedQuery) return true;
+      const haystack = [
+        booking.nome,
+        booking.email,
+        booking.telefone,
+        booking.tipo_servico,
+        booking.mensagem,
+        booking.origem,
+        booking.cta_origem,
+        booking.utm_campaign,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(normalizedQuery);
+    });
+  }, [bookings, ctaFilter, query, sourceFilter]);
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+      <h2 className="text-2xl font-bold mb-6 text-secondary border-b pb-4">Leads / Agendamentos</h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
+        <div className="relative lg:col-span-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Buscar por nome, email, campanha..."
+            className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <select
+          value={sourceFilter}
+          onChange={(event) => setSourceFilter(event.target.value)}
+          className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+        >
+          <option value="all">Todas origens</option>
+          {sourceOptions.map((option) => (
+            <option key={option} value={option}>{toDisplayValue(option)}</option>
+          ))}
+        </select>
+
+        <select
+          value={ctaFilter}
+          onChange={(event) => setCtaFilter(event.target.value)}
+          className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+        >
+          <option value="all">Todos CTAs</option>
+          {ctaOptions.map((option) => (
+            <option key={option} value={option}>{toDisplayValue(option)}</option>
+          ))}
+        </select>
       </div>
-    )}
-  </div>
-);
+
+      {isLoading ? (
+        <TabLoader rows={4} />
+      ) : filteredBookings.length === 0 ? (
+        <p className="text-muted-foreground text-center py-12">Nenhum lead encontrado para os filtros atuais.</p>
+      ) : (
+        <div className="space-y-4">
+          {filteredBookings.map((b) => (
+            <div
+              key={b.id}
+              className={`p-5 rounded-xl border ${
+                b.lido ? 'border-border bg-white' : 'border-primary/50 bg-primary/5'
+              } flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
+            >
+              <div className="space-y-1">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="font-bold text-lg text-secondary">{b.nome}</p>
+                  <Badge variant={b.lido ? 'outline' : 'default'}>{b.lido ? 'Lido' : 'Novo'}</Badge>
+                  {b.origem && <Badge variant="outline">Origem: {b.origem}</Badge>}
+                  {b.cta_origem && <Badge variant="outline">CTA: {b.cta_origem}</Badge>}
+                </div>
+                <p className="text-sm text-muted-foreground">{b.email} · {b.telefone}</p>
+                <p className="text-sm font-medium text-primary">{b.tipo_servico}</p>
+                {b.mensagem && (
+                  <p className="text-sm text-muted-foreground italic">"{b.mensagem}"</p>
+                )}
+                {(b.utm_source || b.utm_medium || b.utm_campaign) && (
+                  <p className="text-xs text-muted-foreground">
+                    UTM: {[b.utm_source, b.utm_medium, b.utm_campaign].filter(Boolean).join(' / ')}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {b.created ? format(new Date(b.created), 'dd/MM/yyyy HH:mm') : (b.created_at ? format(new Date(b.created_at), 'dd/MM/yyyy HH:mm') : '')}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                {!b.lido && (
+                  <Button size="sm" onClick={() => onMarkAsRead(b.id)}
+                    className="bg-primary text-primary-foreground hover:bg-secondary hover:text-white">
+                    Marcar como lido
+                  </Button>
+                )}
+                <Button size="sm" variant="destructive" onClick={() => onDelete('agendamentos', b.id, b.nome)}>
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default BookingsTab;

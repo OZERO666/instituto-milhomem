@@ -7,11 +7,7 @@ const BeforeAfterCard = ({ item }) => {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
 
-  const getImageUrl = (filename) => {
-    if (!filename) return null;
-    if (filename.startsWith('http')) return filename;
-    return api.getFileUrl('galeria', item.id, filename);
-  };
+  const getImageUrl = (filename) => api.resolveMediaUrl('galeria', filename);
 
   const beforeUrl = getImageUrl(item.foto_antes);
   const afterUrl = getImageUrl(item.foto_depois);

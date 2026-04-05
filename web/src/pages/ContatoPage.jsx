@@ -15,6 +15,7 @@ import { Label }    from '@/components/ui/label.jsx';
 import SEO          from '@/components/SEO.jsx';
 import WhatsAppButton from '@/components/WhatsAppButton.jsx';
 import api          from '@/lib/apiServerClient';
+import { getLeadTrackingPayload } from '@/lib/leadTracking.js';
 import { useContatoConfig, buildWhatsappUrl, formatTelHref } from '@/hooks/useContatoConfig';
 import { usePagesConfig } from '@/hooks/usePagesConfig';
 import { useTraducoes } from '@/hooks/useTraducoes';
@@ -64,6 +65,7 @@ const ContatoPage = () => {
   const onSubmit = useCallback(async (data) => {
     setIsSubmitting(true);
     try {
+      const trackingPayload = getLeadTrackingPayload('contato_form');
       const res = await api.fetch('/agendamentos', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -73,6 +75,7 @@ const ContatoPage = () => {
           telefone:     data.telefone,
           mensagem:     data.mensagem,
           tipo_servico: data.tipo_servico,
+          ...trackingPayload,
         }),
       });
       if (!res.ok) throw new Error('server');

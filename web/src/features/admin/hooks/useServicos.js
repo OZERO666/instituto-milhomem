@@ -26,7 +26,6 @@ export function useServicos(currentUser) {
       collection: 'servicos',
       data,
       form: serviceForm,
-      fileFields: ['imagem'],
       editingItem,
       setEditingItem,
       currentUser,

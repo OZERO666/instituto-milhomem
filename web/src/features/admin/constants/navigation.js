@@ -16,6 +16,7 @@ import {
   Heart,
   Settings2,
   HelpCircle,
+  Images,
 } from 'lucide-react';
 
 export const ADMIN_TABS = [
@@ -23,6 +24,7 @@ export const ADMIN_TABS = [
   { value: 'bookings', icon: Mail, label: 'Leads', badgeKey: 'unreadBookings', resource: 'leads', action: 'read' },
   { value: 'services', icon: List, label: 'Serviços', resource: 'blog', action: 'read' },
   { value: 'gallery', icon: Image, label: 'Galeria', resource: 'gallery', action: 'read' },
+  { value: 'media', icon: Images, label: 'Mídia', resource: 'gallery', action: 'read' },
   { value: 'blog', icon: FileText, label: 'Blog', resource: 'blog', action: 'read' },
   { value: 'testimonials', icon: MessageSquare, label: 'Depoimentos', resource: 'testimonials', action: 'read' },
   { value: 'faq',          icon: HelpCircle,    label: 'FAQ',          resource: 'dashboard',    action: 'read' },

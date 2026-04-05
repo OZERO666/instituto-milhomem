@@ -73,6 +73,8 @@ const parseError = async (res, label) => {
   throw new Error(`${label} → ${res.status}`);
 };
 
+const isAbsoluteUrl = (value) => /^https?:\/\//i.test(String(value || ''));
+
 const apiServerClient = {
   fetch: (endpoint, options = {}) => {
     const url = `${API_BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
@@ -124,15 +126,14 @@ const apiServerClient = {
     return res.json();
   },
 
-  // ── URL pública do arquivo ──────────────────────────────────────────────
-  // Backend serve em: /uploads/{collection}/{filename}
-  getFileUrl: (_collection, _recordId, filename) => {
-  if (!filename) return null;
-  // URL completa do Cloudinary — retorna direto
-  if (filename.startsWith('http')) return filename;
-  // Fallback para imagens antigas ainda com filename local
-  return `${API_BASE_URL}/uploads/${_collection}/${filename}`;
-},
+  resolveMediaUrl: (collection, filename) => {
+    if (!filename) return null;
+    if (isAbsoluteUrl(filename)) return filename;
+    return `${API_BASE_URL}/uploads/${collection}/${filename}`;
+  },
+
+  // Mantido por compatibilidade com chamadas antigas.
+  getFileUrl: (collection, _recordId, filename) => apiServerClient.resolveMediaUrl(collection, filename),
 
   getBaseUrl: () => API_BASE_URL,
 };

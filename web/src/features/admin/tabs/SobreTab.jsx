@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Plus, X, CheckCircle, ImageIcon, Upload,
+  Plus, X, CheckCircle,
   Award, Shield, Heart, Sparkles, Star, Zap, Target, Users, Clock,
   Leaf, Gem, TrendingUp, BadgeCheck, Stethoscope, Eye, Brain, Smile,
   Globe, Handshake, Lightbulb, Lock, Medal, Microscope, Ribbon, Sun,
@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label.jsx';
 import AdminSectionSwitch from '@/features/admin/components/AdminSectionSwitch.jsx';
 import { SOBRE_SECTION_OPTIONS } from '@/features/admin/constants/navigation.js';
 import { parseJsonArray } from '@/features/admin/utils/sobreConfig.js';
+import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TranslationFields from '@/features/admin/components/TranslationFields.jsx';
 
 const SOBRE_TRANSLATION_FIELDS = {
@@ -49,52 +50,6 @@ const SOBRE_TRANSLATION_FIELDS = {
     { name: 'technology_title', label: 'Título',  type: 'input' },
     { name: 'technology_text',  label: 'Texto',   type: 'textarea', rows: 4 },
   ],
-};
-
-// ─── Image Picker (single field) ─────────────────────────────────────────────
-const ImagePickerField = ({ id, currentUrl, label, aspectClass = 'h-36' }) => {
-  const [localPreview, setLocalPreview] = useState(null);
-
-  useEffect(() => { setLocalPreview(null); }, [currentUrl]);
-
-  const src = localPreview || currentUrl || null;
-
-  return (
-    <div>
-      {label && <Label className="font-bold mb-2 block">{label}</Label>}
-      <div
-        className="relative group cursor-pointer border-2 border-dashed border-border hover:border-primary/50 rounded-xl bg-muted/30 transition-all overflow-hidden"
-        onClick={() => document.getElementById(id)?.click()}
-      >
-        {src ? (
-          <>
-            <img src={src} alt="Preview" className={`w-full ${aspectClass} object-cover`} />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-sm font-bold">
-              <Upload className="w-4 h-4" /> Trocar imagem
-            </div>
-          </>
-        ) : (
-          <div className={`flex flex-col items-center justify-center gap-2 ${aspectClass} text-muted-foreground`}>
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <ImageIcon className="w-5 h-5 text-primary" />
-            </div>
-            <p className="text-xs font-bold text-foreground">Clique para selecionar</p>
-            <p className="text-[10px]">PNG, JPG ou WEBP</p>
-          </div>
-        )}
-      </div>
-      <input
-        id={id}
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) setLocalPreview(URL.createObjectURL(file));
-        }}
-      />
-    </div>
-  );
 };
 
 // ─── Icon Picker ──────────────────────────────────────────────────────────────
@@ -174,8 +129,15 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
             </div>
             <div>
               <Label className="font-bold">Imagem Hero</Label>
-              <Input {...sobreForm.register('hero_image')} placeholder="https://... (ou selecione abaixo)" className="mt-2 mb-2 focus-visible:ring-primary" />
-              <ImagePickerField id="sobre_hero_image_file" currentUrl={sobreForm.watch('hero_image')} />
+              <input type="hidden" {...sobreForm.register('hero_image')} />
+              <MediaSelectorField
+                value={sobreForm.watch('hero_image') || ''}
+                onChange={(nextValue) => sobreForm.setValue('hero_image', nextValue, { shouldDirty: true })}
+                folder="misc"
+                libraryFolders={['all', 'branding', 'misc']}
+                previewClassName="h-36"
+                helperText="Você pode colar uma URL, escolher da biblioteca ou enviar uma nova imagem ao Cloudinary."
+              />
             </div>
           </div>
         )}
@@ -200,8 +162,15 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
             </div>
             <div>
               <Label className="font-bold">Foto do Doutor</Label>
-              <Input {...sobreForm.register('doctor_image')} placeholder="https://... (ou selecione abaixo)" className="mt-2 mb-2 focus-visible:ring-primary" />
-              <ImagePickerField id="sobre_doctor_image_file" currentUrl={sobreForm.watch('doctor_image')} aspectClass="h-48" />
+              <input type="hidden" {...sobreForm.register('doctor_image')} />
+              <MediaSelectorField
+                value={sobreForm.watch('doctor_image') || ''}
+                onChange={(nextValue) => sobreForm.setValue('doctor_image', nextValue, { shouldDirty: true })}
+                folder="misc"
+                libraryFolders={['all', 'branding', 'misc']}
+                previewClassName="h-48"
+                helperText="Use uma foto já enviada ou faça upload direto para o Cloudinary."
+              />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -298,8 +267,15 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
             </div>
             <div>
               <Label className="font-bold">Imagem</Label>
-              <Input {...sobreForm.register('about_image')} placeholder="https://... (ou selecione abaixo)" className="mt-2 mb-2 focus-visible:ring-primary" />
-              <ImagePickerField id="sobre_about_image_file" currentUrl={sobreForm.watch('about_image')} />
+              <input type="hidden" {...sobreForm.register('about_image')} />
+              <MediaSelectorField
+                value={sobreForm.watch('about_image') || ''}
+                onChange={(nextValue) => sobreForm.setValue('about_image', nextValue, { shouldDirty: true })}
+                folder="misc"
+                libraryFolders={['all', 'branding', 'misc']}
+                previewClassName="h-36"
+                helperText="Escolha uma imagem da biblioteca para manter consistência visual entre páginas."
+              />
             </div>
           </div>
         )}
@@ -432,42 +408,21 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
                       className="focus-visible:ring-primary"
                     />
                   </div>
-                  <Input
-                    value={member.image || ''}
-                    onChange={e => {
-                      const curr = [...(sobreForm.getValues('team') || [])];
-                      curr[idx] = { ...curr[idx], image: e.target.value };
-                      sobreForm.setValue('team', curr);
-                    }}
-                    placeholder="URL da foto (ou selecione abaixo)"
-                    className="mb-1 focus-visible:ring-primary"
-                  />
-                  <label className="flex items-center gap-2 cursor-pointer mt-1 mb-2">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-lg transition-colors">
-                      <ImageIcon className="w-3.5 h-3.5" /> Selecionar do dispositivo
-                    </span>
-                    <input
-                      id={`team_image_file_${idx}`}
-                      type="file"
-                      accept="image/*"
-                      className="sr-only"
-                      onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const objectUrl = URL.createObjectURL(file);
+                  <div className="mb-2">
+                    <MediaSelectorField
+                      label="Foto"
+                      value={member.image || ''}
+                      onChange={(nextValue) => {
                         const curr = [...(sobreForm.getValues('team') || [])];
-                        curr[idx] = { ...curr[idx], _previewUrl: objectUrl };
-                        sobreForm.setValue('team', curr);
+                        curr[idx] = { ...curr[idx], image: nextValue };
+                        sobreForm.setValue('team', curr, { shouldDirty: true });
                       }}
+                      folder="misc"
+                      libraryFolders={['all', 'branding', 'misc']}
+                      previewClassName="h-28"
+                      helperText="Reaproveite imagens do Cloudinary para a equipe ou envie uma nova agora."
                     />
-                  </label>
-                  {(member._previewUrl || member.image) && (
-                    <img
-                      src={member._previewUrl || member.image}
-                      alt="Preview"
-                      className="mb-2 h-20 w-20 object-cover rounded-lg border border-border"
-                    />
-                  )}
+                  </div>
                   <Textarea
                     value={member.desc || ''}
                     onChange={e => {
@@ -524,8 +479,15 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
             </div>
             <div>
               <Label className="font-bold">Imagem</Label>
-              <Input {...sobreForm.register('technology_image')} placeholder="https://... (ou selecione abaixo)" className="mt-2 mb-2 focus-visible:ring-primary" />
-              <ImagePickerField id="sobre_technology_image_file" currentUrl={sobreForm.watch('technology_image')} />
+              <input type="hidden" {...sobreForm.register('technology_image')} />
+              <MediaSelectorField
+                value={sobreForm.watch('technology_image') || ''}
+                onChange={(nextValue) => sobreForm.setValue('technology_image', nextValue, { shouldDirty: true })}
+                folder="misc"
+                libraryFolders={['all', 'branding', 'misc']}
+                previewClassName="h-36"
+                helperText="Selecione uma imagem do acervo do Cloudinary ou envie uma nova para esta seção."
+              />
             </div>
           </div>
         )}

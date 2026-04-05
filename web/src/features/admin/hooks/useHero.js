@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import api from '@/lib/apiServerClient';
 import { sanitizeObject } from '@/lib/sanitizeInput.js';
-import { uploadFile, logAction } from '@/features/admin/utils/adminApi.js';
+import { logAction } from '@/features/admin/utils/adminApi.js';
 
 export function useHero(currentUser) {
   const [heroConfig,    setHeroConfig]    = useState(null);
@@ -28,16 +28,10 @@ export function useHero(currentUser) {
   const handleHeroConfigSubmit = async (data) => {
     setHeroSaving(true);
     try {
-      const input = document.getElementById('imagem_fundo_file');
-      if (input?.files?.[0]) {
-        data.imagem_fundo = await uploadFile(input.files[0], 'misc');
-        input.value = '';
-      } else if (heroConfig?.imagem_fundo) {
-        data.imagem_fundo = heroConfig.imagem_fundo;
-      }
+      const sanitizedData = sanitizeObject(data);
       const method = heroConfig?.id ? 'PUT' : 'POST';
       const url    = heroConfig?.id ? `/hero-config/${heroConfig.id}` : '/hero-config';
-      const res    = await api.fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sanitizeObject(data)) });
+      const res    = await api.fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sanitizedData) });
       if (!res.ok) throw new Error(await res.text());
       const saved = await res.json();
       await logAction(heroConfig?.id ? 'UPDATE' : 'CREATE', 'hero_config', saved.id, 'Updated hero config', currentUser);

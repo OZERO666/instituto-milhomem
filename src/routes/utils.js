@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/index.js';
+import { checkPermission } from '../middleware/checkPermission.js';
+import cloudinary from '../config/cloudinary.js';
 
 const router = Router();
 
@@ -47,6 +49,54 @@ router.get('/resolve-maps', authMiddleware, async (req, res) => {
     return res.json({ ...coords, resolvedUrl: finalUrl });
   } catch (err) {
     return res.status(502).json({ error: 'Failed to resolve URL', detail: err.message });
+  }
+});
+
+router.get('/media', authMiddleware, checkPermission('gallery', 'read'), async (req, res) => {
+  const folder = String(req.query.folder || '').trim().replace(/^\/+|\/+$/g, '');
+  const maxResults = Math.min(Math.max(parseInt(req.query.max_results, 10) || 30, 1), 100);
+  const nextCursor = req.query.next_cursor ? String(req.query.next_cursor) : undefined;
+
+  try {
+    const prefix = folder ? `instituto-milhomem/${folder}` : 'instituto-milhomem/';
+    const response = await cloudinary.api.resources({
+      type: 'upload',
+      resource_type: 'image',
+      prefix,
+      max_results: maxResults,
+      next_cursor: nextCursor,
+    });
+
+    const resources = Array.isArray(response.resources)
+      ? response.resources.map((item) => ({
+          asset_id: item.asset_id,
+          public_id: item.public_id,
+          format: item.format,
+          width: item.width,
+          height: item.height,
+          bytes: item.bytes,
+          created_at: item.created_at,
+          folder: item.folder,
+          secure_url: item.secure_url,
+          thumbnail_url: cloudinary.url(item.public_id, {
+            secure: true,
+            width: 320,
+            height: 240,
+            crop: 'fill',
+            quality: 'auto',
+            fetch_format: 'auto',
+          }),
+        }))
+      : [];
+
+    res.json({
+      resources,
+      next_cursor: response.next_cursor || null,
+      total_count: resources.length,
+      source: 'cloudinary',
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao listar arquivos do Cloudinary', detail: error.message });
   }
 });
 

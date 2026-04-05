@@ -34,10 +34,8 @@ function ServiceIcon({ icon, size = 28, className = '' }) {
 
 const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, index, ctaLabel = 'Saiba mais' }) => {
   const imageUrl = useMemo(() => {
-    if (!imagem) return null;
-    if (imagem.startsWith('http')) return imagem;
-    return api.getFileUrl('servicos', id, imagem);
-  }, [imagem, id]);
+    return api.resolveMediaUrl('servicos', imagem);
+  }, [imagem]);
 
   const benefitsList = useMemo(() => {
     if (!beneficios) return [];
