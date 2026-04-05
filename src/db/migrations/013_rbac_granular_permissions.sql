@@ -5,24 +5,85 @@
 
 START TRANSACTION;
 
+-- Create resources table if it doesn't exist (with UUID primary key and timestamps)
+CREATE TABLE IF NOT EXISTS resources (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  resource_slug VARCHAR(100) NOT NULL UNIQUE,
+  resource_name VARCHAR(255) NOT NULL,
+  created DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_resource_slug (resource_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Alter permissions table to add resource_id foreign key if needed
+ALTER TABLE permissions
+  ADD COLUMN IF NOT EXISTS permission_slug CHAR(36),
+  ADD COLUMN IF NOT EXISTS resource_id CHAR(36),
+  ADD COLUMN IF NOT EXISTS created DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- Add foreign key constraint if it doesn't exist
+SET @fk_exists = (
+  SELECT COUNT(*)
+  FROM information_schema.TABLE_CONSTRAINTS
+  WHERE CONSTRAINT_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'permissions'
+    AND CONSTRAINT_NAME = 'fk_permissions_resource'
+    AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+);
+
+SET @fk_sql = IF(
+  @fk_exists = 0,
+  'ALTER TABLE permissions ADD CONSTRAINT fk_permissions_resource FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE',
+  'SELECT 1'
+);
+PREPARE stmt_fk FROM @fk_sql;
+EXECUTE stmt_fk;
+DEALLOCATE PREPARE stmt_fk;
+
+-- Alter role_permissions table to add timestamps if needed
+ALTER TABLE role_permissions
+  ADD COLUMN IF NOT EXISTS created DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- Alter roles table to add role_slug if needed
+ALTER TABLE roles
+  ADD COLUMN IF NOT EXISTS role_slug VARCHAR(100) UNIQUE,
+  ADD COLUMN IF NOT EXISTS created DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- Set role_slug values based on name for existing roles (idempotent)
+UPDATE roles SET role_slug = LOWER(REPLACE(name, ' ', '_')) WHERE role_slug IS NULL;
+
+-- Insert default role if doesn't exist
+INSERT IGNORE INTO roles (id, name, role_slug, description, created, updated)
+VALUES (
+  '00000000-0000-0000-0000-000000000001',
+  'super_admin',
+  'super_admin',
+  'Acesso total ao sistema',
+  NOW(),
+  NOW()
+);
+
 -- Ensure resources table has core resources
-INSERT IGNORE INTO resources (resource_slug, resource_name, created, updated) VALUES
-  ('dashboard', 'Dashboard & Overview', NOW(), NOW()),
-  ('leads', 'Lead Management', NOW(), NOW()),
-  ('services', 'Services Management', NOW(), NOW()),
-  ('gallery', 'Gallery Management', NOW(), NOW()),
-  ('media', 'Media Library', NOW(), NOW()),
-  ('blog', 'Blog & Articles', NOW(), NOW()),
-  ('testimonials', 'Testimonials', NOW(), NOW()),
-  ('faq', 'FAQ Management', NOW(), NOW()),
-  ('users', 'Users Management', NOW(), NOW()),
-  ('seo', 'SEO Settings', NOW(), NOW()),
-  ('hero', 'Hero Configuration', NOW(), NOW()),
-  ('pages', 'Pages Configuration', NOW(), NOW()),
-  ('branding', 'Branding & Images', NOW(), NOW()),
-  ('translations', 'Translations', NOW(), NOW()),
-  ('audit', 'Audit Logs', NOW(), NOW()),
-  ('settings', 'System Settings', NOW(), NOW());
+INSERT IGNORE INTO resources (id, resource_slug, resource_name, created, updated) VALUES
+  (UUID(), 'dashboard', 'Dashboard & Overview', NOW(), NOW()),
+  (UUID(), 'leads', 'Lead Management', NOW(), NOW()),
+  (UUID(), 'services', 'Services Management', NOW(), NOW()),
+  (UUID(), 'gallery', 'Gallery Management', NOW(), NOW()),
+  (UUID(), 'media', 'Media Library', NOW(), NOW()),
+  (UUID(), 'blog', 'Blog & Articles', NOW(), NOW()),
+  (UUID(), 'testimonials', 'Testimonials', NOW(), NOW()),
+  (UUID(), 'faq', 'FAQ Management', NOW(), NOW()),
+  (UUID(), 'users', 'Users Management', NOW(), NOW()),
+  (UUID(), 'seo', 'SEO Settings', NOW(), NOW()),
+  (UUID(), 'hero', 'Hero Configuration', NOW(), NOW()),
+  (UUID(), 'pages', 'Pages Configuration', NOW(), NOW()),
+  (UUID(), 'branding', 'Branding & Images', NOW(), NOW()),
+  (UUID(), 'translations', 'Translations', NOW(), NOW()),
+  (UUID(), 'audit', 'Audit Logs', NOW(), NOW()),
+  (UUID(), 'settings', 'System Settings', NOW(), NOW());
 
 -- Insert granular permissions for each resource
 -- Dashboard / Overview
