@@ -21,7 +21,7 @@ function normalizeSource(referrer, utmSource) {
   }
 }
 
-export function getLeadTrackingPayload(ctaOrigem = 'contato_form') {
+export function getLeadTrackingPayload(ctaOrigem = 'contato_form', campaignSlug = null, ctaVariant = null) {
   const win = safeWindow();
   if (!win) {
     return {
@@ -34,6 +34,8 @@ export function getLeadTrackingPayload(ctaOrigem = 'contato_form') {
       utm_term: null,
       landing_page: null,
       referrer_url: null,
+      campaign_slug: campaignSlug,
+      cta_variant: ctaVariant,
     };
   }
 
@@ -43,6 +45,8 @@ export function getLeadTrackingPayload(ctaOrigem = 'contato_form') {
   const utm_campaign = params.get('utm_campaign');
   const utm_content = params.get('utm_content');
   const utm_term = params.get('utm_term');
+  const campaign_slug = campaignSlug || params.get('campaign_slug');
+  const cta_variant_param = ctaVariant || params.get('cta_variant');
 
   const currentLanding = `${win.location.pathname}${win.location.search || ''}`;
   const storedLanding = win.sessionStorage.getItem('im_first_landing_page');
@@ -62,5 +66,7 @@ export function getLeadTrackingPayload(ctaOrigem = 'contato_form') {
     utm_term: utm_term || null,
     landing_page: storedLanding || currentLanding,
     referrer_url: referrerUrl,
+    campaign_slug: campaign_slug || null,
+    cta_variant: cta_variant_param || null,
   };
 }

@@ -35,6 +35,8 @@ router.post('/', async (req, res) => {
       utm_term,
       landing_page,
       referrer_url,
+      campaign_slug,
+      cta_variant,
     } = req.body;
 
     // Validação de campos obrigatórios
@@ -61,8 +63,8 @@ router.post('/', async (req, res) => {
       `INSERT INTO agendamentos (
         id, nome, email, telefone, tipo_servico, mensagem,
         origem, cta_origem, utm_source, utm_medium, utm_campaign, utm_content, utm_term,
-        landing_page, referrer_url, lido, created, updated
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
+        landing_page, referrer_url, campaign_slug, cta_variant, lido, created, updated
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
       [
         id,
         nome,
@@ -79,6 +81,8 @@ router.post('/', async (req, res) => {
         normalizeText(utm_term, 180),
         normalizeText(landing_page, 255),
         normalizeText(referrer_url, 512),
+        normalizeText(campaign_slug, 120),
+        normalizeText(cta_variant, 120),
         now,
         now,
       ]
