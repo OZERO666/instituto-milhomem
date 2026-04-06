@@ -26,16 +26,28 @@ const urlEntry = (loc, lastmod, changefreq, priority) => `
     <priority>${priority}</priority>
   </url>`;
 
+const safeQuery = async (query, fallbackLabel) => {
+  try {
+    const [rows] = await pool.execute(query);
+    return Array.isArray(rows) ? rows : [];
+  } catch (error) {
+    logger.warn(`[SITEMAP] ${fallbackLabel}:`, error.message);
+    return [];
+  }
+};
+
 export default async function sitemapRoute(_req, res) {
   try {
-    // Busca serviços ativos
-    const [servicos] = await pool.execute(
-      "SELECT slug, updated FROM servicos WHERE ativo = 1 AND slug IS NOT NULL ORDER BY ordem ASC"
+    // Busca serviços ativos. Seleciona apenas slug para reduzir risco de quebra por diferenças de schema entre ambientes.
+    const servicos = await safeQuery(
+      "SELECT slug FROM servicos WHERE ativo = 1 AND slug IS NOT NULL ORDER BY ordem ASC",
+      'Falha ao consultar servicos para sitemap'
     );
 
-    // Busca artigos publicados
-    const [artigos] = await pool.execute(
-      "SELECT slug, updated FROM artigos WHERE status = 'published' AND slug IS NOT NULL ORDER BY data_publicacao DESC"
+    // Busca artigos publicados com o mesmo critério de resiliência.
+    const artigos = await safeQuery(
+      "SELECT slug FROM artigos WHERE status = 'published' AND slug IS NOT NULL ORDER BY data_publicacao DESC",
+      'Falha ao consultar artigos para sitemap'
     );
 
     const today = toW3CDate();
@@ -45,11 +57,11 @@ export default async function sitemapRoute(_req, res) {
     ).join('');
 
     const servicoEntries = servicos.map(s =>
-      urlEntry(`${BASE_URL}/servicos/${s.slug}`, toW3CDate(s.updated), 'weekly', '0.8')
+      urlEntry(encodeURI(`${BASE_URL}/servicos/${s.slug}`), today, 'weekly', '0.8')
     ).join('');
 
     const artigoEntries = artigos.map(a =>
-      urlEntry(`${BASE_URL}/blog/${a.slug}`, toW3CDate(a.updated), 'monthly', '0.7')
+      urlEntry(encodeURI(`${BASE_URL}/blog/${a.slug}`), today, 'monthly', '0.7')
     ).join('');
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>

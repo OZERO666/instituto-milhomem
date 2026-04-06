@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/apiServerClient.js';
+import api from '@/lib/apiServerClient';
 
 export function useFeaturedSlots() {
   const [slots, setSlots] = useState([]);

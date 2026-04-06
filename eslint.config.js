@@ -2,6 +2,13 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
+	{
+		ignores: [
+			'dist/**',
+			'temp-build/**',
+			'web/**',
+		],
+	},
 	js.configs.recommended,
 	{
 		languageOptions: {
