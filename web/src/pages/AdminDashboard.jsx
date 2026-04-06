@@ -72,7 +72,19 @@ const AdminDashboard = () => {
 
   const { sobreConfig, sobreSaving, sobreSection, setSobreSection, sobreForm, fetchSobre, handleSobreSubmit } = useSobre(currentUser);
   const { pagesConfig, pagesSaving, pagesSection, setPagesSection, pagesForm, fetchPages, handlePagesSubmit } = usePages(currentUser);
-  const { seoList, seoEditing, seoForm, isLoading: loadingSeo, fetchSeo, handleEditSeo, handleCancelSeo, onSeoSubmit } = useSeo();
+  const {
+    seoList,
+    seoEditing,
+    seoForm,
+    isLoading: loadingSeo,
+    fetchSeo,
+    handleEditSeo,
+    handleCancelSeo,
+    onSeoSubmit,
+    regenerateSitemap,
+    isRegeneratingSitemap,
+    sitemapStatus,
+  } = useSeo();
   const { bookings, isLoading: loadingBookings, fetchBookings, handleMarkAsRead } = useBookings();
 
   const { services, isLoading: loadingServicos, serviceForm, editingItem: svcEditing, setEditingItem: setSvcEditing, fetchServicos, handleServicosSubmit, handleReorder } = useServicos(currentUser);
@@ -331,6 +343,9 @@ const AdminDashboard = () => {
                 seoList={seoList} seoEditing={seoEditing} seoForm={seoForm}
                 isLoading={loadingSeo} handleEditSeo={handleEditSeo}
                 handleCancelSeo={handleCancelSeo} onSeoSubmit={onSeoSubmit}
+                onRegenerateSitemap={regenerateSitemap}
+                isRegeneratingSitemap={isRegeneratingSitemap}
+                sitemapStatus={sitemapStatus}
               />
             </TabsContent>
 

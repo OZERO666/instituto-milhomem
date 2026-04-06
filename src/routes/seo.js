@@ -3,6 +3,7 @@ import pool from '../db/mysql.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { checkPermission } from '../middleware/checkPermission.js';
 import logger from '../utils/logger.js';
+import { regenerateSitemap, SITEMAP_CACHE_TTL_MS } from './sitemap.js';
 
 const router = Router();
 
@@ -14,6 +15,23 @@ router.get('/', async (req, res) => {
   } catch (error) {
     logger.error('SEO GET error:', error.message);
     res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// POST /seo-settings/sitemap/regenerate — força nova geração do sitemap (admin)
+router.post('/sitemap/regenerate', authMiddleware, checkPermission('dashboard', 'update'), async (_req, res) => {
+  try {
+    const result = await regenerateSitemap();
+
+    res.json({
+      message: 'Sitemap regenerado com sucesso',
+      generated_at: new Date(result.generatedAt).toISOString(),
+      cache_ttl_ms: SITEMAP_CACHE_TTL_MS,
+      counts: result.stats,
+    });
+  } catch (error) {
+    logger.error('SEO sitemap regenerate error:', error.message);
+    res.status(500).json({ error: 'Erro ao regenerar sitemap' });
   }
 });
 

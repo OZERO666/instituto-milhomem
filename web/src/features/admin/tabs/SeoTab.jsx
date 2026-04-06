@@ -6,7 +6,18 @@ import TabLoader from '@/features/admin/components/TabLoader.jsx';
 const FieldError = ({ error }) =>
   error ? <p className="text-xs text-destructive mt-1">{error.message || 'Campo obrigatório'}</p> : null;
 
-const SeoTab = ({ seoList, seoEditing, seoForm, isLoading, handleEditSeo, handleCancelSeo, onSeoSubmit }) => {
+const SeoTab = ({
+  seoList,
+  seoEditing,
+  seoForm,
+  isLoading,
+  handleEditSeo,
+  handleCancelSeo,
+  onSeoSubmit,
+  onRegenerateSitemap,
+  isRegeneratingSitemap,
+  sitemapStatus,
+}) => {
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = seoForm;
   const titleLen = watch('meta_title')?.length || 0;
   const descLen  = watch('meta_description')?.length || 0;
@@ -20,6 +31,32 @@ const SeoTab = ({ seoList, seoEditing, seoForm, isLoading, handleEditSeo, handle
           Edite o título, descrição e palavras-chave de cada página do site.
         </p>
       </div>
+
+      <div className="bg-card border border-border/60 rounded-xl p-5 space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Sitemap dinâmico</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Gere um novo sitemap após mudanças no conteúdo para atualizar o cache do servidor.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onRegenerateSitemap}
+            disabled={isRegeneratingSitemap}
+            className="px-4 py-2 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest rounded-lg hover:bg-accent transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            {isRegeneratingSitemap && <Loader2 className="w-4 h-4 animate-spin" />}
+            {isRegeneratingSitemap ? 'Gerando sitemap...' : 'Gerar novo sitemap'}
+          </button>
+        </div>
+        {sitemapStatus?.generated_at && (
+          <p className="text-xs text-muted-foreground">
+            Última geração: {new Date(sitemapStatus.generated_at).toLocaleString('pt-BR')} · URLs: {sitemapStatus?.counts?.total || 0}
+          </p>
+        )}
+      </div>
+
       {isLoading ? (
         <TabLoader rows={4} />
       ) : !seoEditing ? (
