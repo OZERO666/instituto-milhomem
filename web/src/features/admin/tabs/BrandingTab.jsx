@@ -6,6 +6,9 @@ import { Switch } from '@/components/ui/switch.jsx';
 import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 
+// Fallback local para evitar regressão de runtime caso o JSX use ImageIcon.
+const ImageIcon = Smartphone;
+
 const SaveStatus = ({ status }) => {
   if (!status) return null;
   const config = {
@@ -233,7 +236,7 @@ const BrandingTab = ({
             {/* ── Logo Sizes (Responsive) ───────────────────────── */}
             <div className="border-t border-border pt-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <Smartphone className="w-4 h-4 text-primary" />
+                <ImageIcon className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">
                   Tamanho da Logo (Responsivo)
                 </h3>
