@@ -164,7 +164,13 @@ const AdminDashboard = () => {
         case 'faq':          return fetchFaq();
         case 'stats':        return fetchEstatisticas();
         case 'contact':      return fetchContato();
-        case 'branding':     return Promise.all([fetchContato(), fetchSettings()]);
+        case 'branding': {
+          // Resiliente a falhas de rede: não quebra a aba se uma chamada falhar
+          const safe = (fn) => fn().catch((e) => console.warn('Branding fetch error:', e?.message || e));
+          await safe(fetchContato);
+          await safe(fetchSettings);
+          return;
+        }
         case 'settings':     return fetchSettings();
         case 'users':        return;
         case 'overview': {

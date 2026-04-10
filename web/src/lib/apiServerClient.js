@@ -58,6 +58,9 @@ const coreFetch = async (url, options = {}, attempt = 0) => {
       await delay(RETRY_DELAY_MS * (attempt + 1));
       return coreFetch(url, options, attempt + 1);
     }
+    if (error instanceof TypeError) {
+      throw new Error(`[API] Falha de rede ao acessar ${url}. Verifique conectividade, CSP e VITE_API_URL.`);
+    }
     throw error;
   }
 };
