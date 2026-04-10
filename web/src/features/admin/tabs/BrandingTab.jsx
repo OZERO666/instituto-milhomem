@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, CheckCircle2, AlertCircle, Smartphone, ImageIcon } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import { Switch } from '@/components/ui/switch.jsx';
@@ -233,7 +233,7 @@ const BrandingTab = ({
             {/* ── Logo Sizes (Responsive) ───────────────────────── */}
             <div className="border-t border-border pt-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <ImageIcon className="w-4 h-4 text-primary" />
+                <Smartphone className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">
                   Tamanho da Logo (Responsivo)
                 </h3>
