@@ -61,8 +61,12 @@ export function useContatoConfig() {
 }
 
 // Helper: monta URL do WhatsApp com telefone + mensagem dinâmicos
-export function buildWhatsappUrl(phone, message) {
-  return `https://api.whatsapp.com/send?l=pt-BR&phone=${phone}&text=${encodeURIComponent(message)}`;
+export function buildWhatsappUrl(phone, message, locale = 'pt-BR') {
+  const normalizedPhone = String(phone || '').replace(/\D/g, '');
+  const lang = String(locale || 'pt-BR').toLowerCase();
+  const waLocale = lang.startsWith('es') ? 'es' : lang.startsWith('en') ? 'en' : 'pt-BR';
+  const normalizedMessage = String(message || '');
+  return `https://api.whatsapp.com/send?l=${waLocale}&phone=${normalizedPhone}&text=${encodeURIComponent(normalizedMessage)}`;
 }
 
 // Helper: remove máscara do telefone para usar em href="tel:"

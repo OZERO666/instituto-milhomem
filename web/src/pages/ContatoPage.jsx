@@ -30,13 +30,13 @@ const WhatsAppIcon = ({ className }) => (
 );
 
 const ContatoPage = () => {
-  const { t }       = useTranslation();
+  const { t, i18n } = useTranslation();
   const pageConfig  = usePagesConfig('contato');
   const config      = useContatoConfig();
   const { apply: applyConfigTrad } = useTraducoes('contato_config', config.id);
   const { applyList: applyServicesTrad } = useTraducoesMulti('servicos');
   const translatedConfig = applyConfigTrad(config);
-  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
+  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header, i18n.resolvedLanguage);
   const mapQuery    = config.latitude && config.longitude ? `${config.latitude},${config.longitude}` : (config.nome_local ? encodeURIComponent(config.nome_local) : '-16.6981381,-49.2703892');
   const mapIframeSrc = config.maps_embed_url || `https://maps.google.com/maps?q=${mapQuery}&z=${config.zoom || '17'}&output=embed`;
   const mapSearchQuery = config.nome_local ? encodeURIComponent(config.nome_local) : (config.endereco ? encodeURIComponent(config.endereco) : 'Instituto+Milhomem+Goiânia');
@@ -88,7 +88,7 @@ const ContatoPage = () => {
       if (isOffline) {
         toast.error(t('contact_form.toast_offline', 'Sem conexão com a internet. Fale conosco pelo WhatsApp.'), {
           action: {
-            label: 'WhatsApp',
+            label: t('common.whatsapp'),
             onClick: () => window.open(whatsappUrl, '_blank', 'noopener'),
           },
           duration: 8000,
@@ -96,7 +96,7 @@ const ContatoPage = () => {
       } else {
         toast.error(t('contact_form.toast_error', 'Erro ao enviar. Por favor, tente novamente ou fale pelo WhatsApp.'), {
           action: {
-            label: 'WhatsApp',
+            label: t('common.whatsapp'),
             onClick: () => window.open(whatsappUrl, '_blank', 'noopener'),
           },
           duration: 8000,
@@ -169,7 +169,7 @@ const ContatoPage = () => {
                         rel="noopener noreferrer"
                         className="flex-1 h-11 rounded-lg bg-[#25D366] text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#1ebe5d] transition-colors"
                       >
-                        <WhatsAppIcon className="w-4 h-4" /> WhatsApp
+                        <WhatsAppIcon className="w-4 h-4" /> {t('common.whatsapp')}
                       </a>
                     </div>
                   </div>

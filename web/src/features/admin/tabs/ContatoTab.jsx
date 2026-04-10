@@ -260,6 +260,8 @@ const ContatoTab = ({ contactForm, contactConfig, isLoading, onContactSubmit }) 
         fields={[
           { name: 'dias_funcionamento', label: 'Dias de Funcionamento', type: 'input' },
           { name: 'horario',            label: 'Horário',               type: 'input' },
+          { name: 'mensagem_header',    label: 'Mensagem Header WhatsApp', type: 'textarea', rows: 2 },
+          { name: 'mensagem_whatsapp',  label: 'Mensagem Padrão WhatsApp', type: 'textarea', rows: 3 },
         ]}
         originalData={contactConfig}
       />

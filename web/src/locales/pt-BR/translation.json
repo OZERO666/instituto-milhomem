@@ -14,6 +14,12 @@
     "open_menu":    "Abrir menu",
     "close_menu":   "Fechar menu"
   },
+  "whatsapp_floating": {
+    "tooltip_title": "💬 Fale conosco agora!",
+    "tooltip_subtitle": "Resposta rápida via WhatsApp",
+    "aria_label": "Contato via WhatsApp",
+    "default_message": "Olá! Gostaria de mais informações sobre o atendimento do Dr. Pablo Milhomem."
+  },
   "footer": {
     "navigation":        "Navegação",
     "contact_section":   "Contato",

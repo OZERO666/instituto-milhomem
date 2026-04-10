@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { useContatoConfig, buildWhatsappUrl } from '@/hooks/useContatoConfig';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -14,6 +15,7 @@ const Header = ({ siteConfig }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled,       setScrolled]       = useState(false);
   const location                            = useLocation();
+  const { i18n }                            = useTranslation();
   const { isAuthenticated }                 = useAuth();
   const config                              = useContatoConfig();
   const { settings }                        = useSiteSettings();
@@ -46,7 +48,7 @@ const Header = ({ siteConfig }) => {
   useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
 
   const isActive    = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
-  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
+  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header, i18n.resolvedLanguage);
   const logoUrl = siteConfig?.logo_url || LOGO_URL;
 
   return (

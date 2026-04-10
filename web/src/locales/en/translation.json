@@ -14,6 +14,12 @@
     "open_menu":    "Open menu",
     "close_menu":   "Close menu"
   },
+  "whatsapp_floating": {
+    "tooltip_title": "💬 Talk to us now!",
+    "tooltip_subtitle": "Fast replies on WhatsApp",
+    "aria_label": "Contact via WhatsApp",
+    "default_message": "Hello! I would like more information about care at Instituto Milhomem."
+  },
   "footer": {
     "navigation":        "Navigation",
     "contact_section":   "Contact",

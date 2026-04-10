@@ -18,7 +18,7 @@ const WhatsAppIcon = ({ className }) => (
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 const Footer = ({ siteConfig }) => {
-  const { t }        = useTranslation();
+  const { t, i18n }  = useTranslation();
   const config       = useContatoConfig();
   const { apply: applyConfigTrad } = useTraducoes('contato_config', config.id);
   const translatedConfig = applyConfigTrad(config);
@@ -29,7 +29,7 @@ const Footer = ({ siteConfig }) => {
   const logoUrl      = siteConfig?.logo_url || LOGO_URL;
   const logoHeight   = Number(settings?.logo_size_footer) || 48;
   const currentYear  = new Date().getFullYear();
-  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
+  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header, i18n.resolvedLanguage);
   const mapSearchQuery = config.nome_local ? encodeURIComponent(config.nome_local) : (config.endereco ? encodeURIComponent(config.endereco) : 'Instituto+Milhomem+Goiânia');
   const mapLink     = config.maps_url || `https://www.google.com/maps/search/?api=1&query=${mapSearchQuery}`;
 

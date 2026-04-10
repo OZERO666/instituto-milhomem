@@ -6,6 +6,7 @@ import SEO from '@/components/SEO.jsx';
 import WhatsAppButton from '@/components/WhatsAppButton.jsx';
 import api from '@/lib/apiServerClient';
 import { useContatoConfig, buildWhatsappUrl } from '@/hooks/useContatoConfig';
+import { useTraducoes } from '@/hooks/useTraducoes';
 
 // ─── Accordion item ───────────────────────────────────────────────────────────
 const FaqItem = ({ item, isOpen, onToggle }) => (
@@ -34,14 +35,17 @@ const FaqItem = ({ item, isOpen, onToggle }) => (
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const FaqPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [faqItems, setFaqItems] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [openIndex, setOpenIndex] = useState(null);
   const config = useContatoConfig();
+  const { apply } = useTraducoes('contato_config', config?.id);
+  const translatedConfig = apply(config);
   const whatsappUrl = buildWhatsappUrl(
-    config.whatsapp,
-    t('faq.whatsapp_msg')
+    translatedConfig?.whatsapp,
+    translatedConfig?.mensagem_header || t('faq.whatsapp_msg'),
+    i18n.resolvedLanguage,
   );
 
   useEffect(() => {

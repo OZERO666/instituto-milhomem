@@ -12,9 +12,10 @@ import WhatsAppButton from '@/components/WhatsAppButton.jsx';
 import api from '@/lib/apiServerClient';
 import { usePagesConfig } from '@/hooks/usePagesConfig';
 import { useTraducoes } from '@/hooks/useTraducoes';
+import { buildWhatsappUrl } from '@/hooks/useContatoConfig';
 
 const ServiceDetailPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const pageConfig = usePagesConfig('service_detail');
   const { slug } = useParams();
   const [service, setService]       = useState(null);
@@ -70,8 +71,8 @@ const ServiceDetailPage = () => {
       ?? t('service_detail.whatsapp_message_fallback', {
         serviceName: displayService?.nome ?? t('service_detail.fallback.service_name'),
       });
-    return `https://api.whatsapp.com/send?l=pt-BR&phone=${num.replace(/\D/g, '')}&text=${encodeURIComponent(msg)}`;
-  }, [contact, displayService, t]);
+    return buildWhatsappUrl(num, msg, i18n.resolvedLanguage);
+  }, [contact, displayService, i18n.resolvedLanguage, t]);
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) return (

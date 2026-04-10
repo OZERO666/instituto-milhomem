@@ -16,21 +16,11 @@ import BeforeAfterCarousel  from '@/components/BeforeAfterCarousel.jsx';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel.jsx';
 import { usePagesConfig } from '@/hooks/usePagesConfig';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { buildWhatsappUrl } from '@/hooks/useContatoConfig';
 import api from '@/lib/apiServerClient';
+import { CONTATO_DEFAULTS } from '@/config/site';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const DEFAULTS = {
-  whatsapp:           '62981070937',
-  mensagem_whatsapp:  'Olá! Gostaria de mais informações sobre o atendimento do Dr. Pablo Milhomem.',
-  telefone:           '(62) 98107-0937',
-  email:              'contato@institutomilhomem.com',
-  endereco:           'Setor Bueno\nGoiânia - GO',
-  dias_funcionamento: 'Segunda a Sexta',
-  horario:            '8h às 18h',
-  latitude:           '-16.6982156',
-  longitude:          '-49.2703605',
-};
-
 const DEFAULT_STATS = {
   procedimentos: 3500,
   satisfacao:    98,
@@ -236,11 +226,11 @@ const HomePage = () => {
   }, []);
 
   const get = useCallback(
-    (field) => (applyContactTrad(contactConfig) ?? {})[field] ?? DEFAULTS[field],
+    (field) => (applyContactTrad(contactConfig) ?? {})[field] ?? CONTATO_DEFAULTS[field],
     [contactConfig, applyContactTrad]
   );
 
-  const whatsappUrl = `https://api.whatsapp.com/send?l=pt-BR&phone=${get('whatsapp').replace(/\D/g, '')}&text=${encodeURIComponent(get('mensagem_whatsapp'))}`;
+  const whatsappUrl = buildWhatsappUrl(get('whatsapp'), get('mensagem_whatsapp'), i18n.resolvedLanguage);
   const homeJourneySteps = homePageConfig?.journey?.steps || [];
   const aboutGalleryImages = homePageConfig?.about?.images || [];
   const aboutCardText = homePageConfig?.about?.card_text || '';

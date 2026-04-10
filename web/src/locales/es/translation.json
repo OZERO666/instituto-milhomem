@@ -9,10 +9,16 @@
     "contact":  "Contacto"
   },
   "header": {
-    "schedule_cta": "Agendar Consulta",
+    "schedule_cta": "Reservar consulta",
     "admin_panel":  "Panel",
     "open_menu":    "Abrir menú",
     "close_menu":   "Cerrar menú"
+  },
+  "whatsapp_floating": {
+    "tooltip_title": "💬 ¡Háblanos ahora!",
+    "tooltip_subtitle": "Respuesta rápida por WhatsApp",
+    "aria_label": "Contacto por WhatsApp",
+    "default_message": "¡Hola! Me gustaría obtener más información sobre la atención en Instituto Milhomem."
   },
   "footer": {
     "navigation":        "Navegación",
@@ -24,7 +30,7 @@
     "schedule_label":    "Horario",
     "privacy_policy":    "Política de Privacidad",
     "terms_of_use":      "Términos de Uso",
-    "schedule_cta":      "Agendar Consulta"
+    "schedule_cta":      "Reservar consulta"
   },
   "hero": {
     "trust_team":    "Equipo médico especializado",

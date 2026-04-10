@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import api from '@/lib/apiServerClient';
-
-const DEFAULTS = {
-  whatsapp:          '62981070937',
-  mensagem_whatsapp: 'Olá! Gostaria de mais informações sobre o atendimento do Dr. Pablo Milhomem.',
-};
+import { useTranslation } from 'react-i18next';
+import { useContatoConfig, buildWhatsappUrl } from '@/hooks/useContatoConfig';
+import { useTraducoes } from '@/hooks/useTraducoes';
 
 // Ícone SVG oficial do WhatsApp
 const WhatsAppIcon = ({ className }) => (
@@ -16,22 +13,14 @@ const WhatsAppIcon = ({ className }) => (
 );
 
 const WhatsAppButton = () => {
-  const [config, setConfig]     = useState(null);
+  const { t, i18n } = useTranslation();
+  const config = useContatoConfig();
+  const { apply } = useTraducoes('contato_config', config?.id);
+  const translatedConfig = apply(config);
   const [tooltip, setTooltip]   = useState(false);
   const [pulse, setPulse]       = useState(false);
 
   useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const res = await api.fetch('/contato-config').then(r => r.json());
-        if (Array.isArray(res) && res.length > 0) setConfig(res[0]);
-        else if (res && !Array.isArray(res)) setConfig(res);
-      } catch (e) {
-        console.error('Error fetching WhatsApp config:', e);
-      }
-    };
-    fetchConfig();
-
     // Pulsa periodicamente para chamar atenção
     const interval = setInterval(() => {
       setPulse(true);
@@ -41,9 +30,11 @@ const WhatsAppButton = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const get = (field) => config?.[field] || DEFAULTS[field];
-
-  const whatsappUrl = `https://api.whatsapp.com/send?l=pt-BR&phone=${get('whatsapp').replace(/\D/g, '')}&text=${encodeURIComponent(get('mensagem_whatsapp'))}`;
+  const whatsappUrl = buildWhatsappUrl(
+    translatedConfig?.whatsapp,
+    translatedConfig?.mensagem_whatsapp || t('whatsapp_floating.default_message'),
+    i18n.resolvedLanguage,
+  );
 
   return (
     <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 flex flex-col items-end gap-3">
@@ -58,8 +49,8 @@ const WhatsAppButton = () => {
             transition={{ duration: 0.2 }}
             className="bg-white text-secondary text-sm font-semibold px-4 py-2.5 rounded-xl shadow-xl border border-border whitespace-nowrap max-w-[220px] text-right leading-snug"
           >
-            💬 Fale conosco agora!
-            <p className="text-xs text-muted-foreground font-normal mt-0.5">Resposta rápida via WhatsApp</p>
+              {t('whatsapp_floating.tooltip_title')}
+              <p className="text-xs text-muted-foreground font-normal mt-0.5">{t('whatsapp_floating.tooltip_subtitle')}</p>
             {/* Seta */}
             <div className="absolute right-3 -bottom-2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white drop-shadow-sm" />
           </motion.div>
@@ -89,7 +80,7 @@ const WhatsAppButton = () => {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Contato via WhatsApp"
+          aria-label={t('whatsapp_floating.aria_label')}
           onMouseEnter={() => setTooltip(true)}
           onMouseLeave={() => setTooltip(false)}
           onFocus={() => setTooltip(true)}

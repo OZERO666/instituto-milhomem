@@ -10,12 +10,12 @@ import { usePagesConfig } from '@/hooks/usePagesConfig';
 import { useContatoConfig, buildWhatsappUrl } from '@/hooks/useContatoConfig';
 
 const ServicosPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { applyList } = useTraducoesMulti('servicos');
   const pageConfig = usePagesConfig('servicos');
   const labelsConfig = usePagesConfig('labels');
   const config = useContatoConfig();
-  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header);
+  const whatsappUrl = buildWhatsappUrl(config.whatsapp, config.mensagem_header, i18n.resolvedLanguage);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
