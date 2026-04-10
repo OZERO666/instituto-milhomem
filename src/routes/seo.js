@@ -73,6 +73,12 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
       twitter_description,
       twitter_image,
       twitter_card,
+      facebook_title,
+      facebook_description,
+      facebook_image,
+      instagram_title,
+      instagram_description,
+      instagram_image,
     } = req.body;
     const now = new Date();
     const safeRobots = normalizeRobots(robots);
@@ -81,7 +87,9 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
     const [result] = await pool.execute(
       `UPDATE seo_settings
        SET meta_title=?, meta_description=?, keywords=?, og_image=?, canonical_url=?, robots=?,
-           twitter_title=?, twitter_description=?, twitter_image=?, twitter_card=?, updated=?
+           twitter_title=?, twitter_description=?, twitter_image=?, twitter_card=?,
+           facebook_title=?, facebook_description=?, facebook_image=?,
+           instagram_title=?, instagram_description=?, instagram_image=?, updated=?
        WHERE id=?`,
       [
         meta_title || null,
@@ -94,6 +102,12 @@ router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async
         twitter_description || null,
         twitter_image || null,
         safeTwitterCard,
+        facebook_title || null,
+        facebook_description || null,
+        facebook_image || null,
+        instagram_title || null,
+        instagram_description || null,
+        instagram_image || null,
         now,
         req.params.id,
       ]

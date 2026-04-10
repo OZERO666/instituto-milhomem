@@ -25,6 +25,12 @@ export function useSeo() {
       twitter_description: '',
       twitter_image: '',
       twitter_card: 'summary_large_image',
+      facebook_title: '',
+      facebook_description: '',
+      facebook_image: '',
+      instagram_title: '',
+      instagram_description: '',
+      instagram_image: '',
     },
   });
 
@@ -50,6 +56,12 @@ export function useSeo() {
       twitter_description: item.twitter_description || '',
       twitter_image:    item.twitter_image    || '',
       twitter_card:     item.twitter_card     || 'summary_large_image',
+      facebook_title:   item.facebook_title   || '',
+      facebook_description: item.facebook_description || '',
+      facebook_image:   item.facebook_image   || '',
+      instagram_title:  item.instagram_title  || '',
+      instagram_description: item.instagram_description || '',
+      instagram_image:  item.instagram_image  || '',
     });
   }, [seoForm]);
 

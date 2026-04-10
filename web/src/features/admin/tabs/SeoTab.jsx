@@ -27,6 +27,12 @@ const SeoTab = ({
   const twitterTitleLen = watch('twitter_title')?.length || 0;
   const twitterDescLen  = watch('twitter_description')?.length || 0;
   const twitterImage = watch('twitter_image');
+  const facebookTitleLen = watch('facebook_title')?.length || 0;
+  const facebookDescLen  = watch('facebook_description')?.length || 0;
+  const facebookImage = watch('facebook_image');
+  const instagramTitleLen = watch('instagram_title')?.length || 0;
+  const instagramDescLen  = watch('instagram_description')?.length || 0;
+  const instagramImage = watch('instagram_image');
 
   return (
     <div className="space-y-6">
@@ -250,6 +256,108 @@ const SeoTab = ({
                 libraryFolders={['all', 'branding', 'artigos', 'misc']}
                 previewClassName="h-24"
                 helperText={t('admin.seo.twitter_image_helper')}
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-border/60 pt-5 space-y-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.facebook_section')}</p>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.facebook_title')}
+              </label>
+              <input
+                type="text"
+                {...register('facebook_title', {
+                  maxLength: { value: 70, message: t('admin.seo.facebook_title_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.facebook_title} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{facebookTitleLen}/70</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.facebook_description')}
+              </label>
+              <textarea
+                rows={3}
+                {...register('facebook_description', {
+                  maxLength: { value: 200, message: t('admin.seo.facebook_description_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.facebook_description} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{facebookDescLen}/200</p>
+              </div>
+            </div>
+
+            <div>
+              <input type="hidden" {...register('facebook_image')} />
+              <MediaSelectorField
+                label={t('admin.seo.facebook_image')}
+                value={facebookImage || ''}
+                onChange={(nextValue) => seoForm.setValue('facebook_image', nextValue, { shouldDirty: true })}
+                folder="branding"
+                libraryFolders={['all', 'branding', 'artigos', 'misc']}
+                previewClassName="h-24"
+                helperText={t('admin.seo.facebook_image_helper')}
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-border/60 pt-5 space-y-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.instagram_section')}</p>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.instagram_title')}
+              </label>
+              <input
+                type="text"
+                {...register('instagram_title', {
+                  maxLength: { value: 70, message: t('admin.seo.instagram_title_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.instagram_title} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{instagramTitleLen}/70</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.instagram_description')}
+              </label>
+              <textarea
+                rows={3}
+                {...register('instagram_description', {
+                  maxLength: { value: 200, message: t('admin.seo.instagram_description_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.instagram_description} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{instagramDescLen}/200</p>
+              </div>
+            </div>
+
+            <div>
+              <input type="hidden" {...register('instagram_image')} />
+              <MediaSelectorField
+                label={t('admin.seo.instagram_image')}
+                value={instagramImage || ''}
+                onChange={(nextValue) => seoForm.setValue('instagram_image', nextValue, { shouldDirty: true })}
+                folder="branding"
+                libraryFolders={['all', 'branding', 'artigos', 'misc']}
+                previewClassName="h-24"
+                helperText={t('admin.seo.instagram_image_helper')}
               />
             </div>
           </div>
