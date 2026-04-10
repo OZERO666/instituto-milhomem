@@ -24,6 +24,9 @@ const SeoTab = ({
   const titleLen = watch('meta_title')?.length || 0;
   const descLen  = watch('meta_description')?.length || 0;
   const ogImage  = watch('og_image');
+  const twitterTitleLen = watch('twitter_title')?.length || 0;
+  const twitterDescLen  = watch('twitter_description')?.length || 0;
+  const twitterImage = watch('twitter_image');
 
   return (
     <div className="space-y-6">
@@ -156,6 +159,40 @@ const SeoTab = ({
           </div>
 
           <div>
+            <label className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.canonical_url')}</label>
+            <input
+              type="url"
+              {...register('canonical_url')}
+              placeholder={t('admin.seo.canonical_placeholder')}
+              className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.robots')}</label>
+              <select
+                {...register('robots')}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="index, follow">{t('admin.seo.robots_index')}</option>
+                <option value="noindex, nofollow">{t('admin.seo.robots_noindex')}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.twitter_card')}</label>
+              <select
+                {...register('twitter_card')}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="summary_large_image">{t('admin.seo.twitter_card_large')}</option>
+                <option value="summary">{t('admin.seo.twitter_card_summary')}</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
             <input type="hidden" {...register('og_image')} />
             <MediaSelectorField
               label={t('admin.seo.og_image')}
@@ -166,6 +203,55 @@ const SeoTab = ({
               previewClassName="h-24"
               helperText={t('admin.seo.og_image_helper')}
             />
+          </div>
+
+          <div className="border-t border-border/60 pt-5 space-y-5">
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.twitter_title')}
+              </label>
+              <input
+                type="text"
+                {...register('twitter_title', {
+                  maxLength: { value: 70, message: t('admin.seo.twitter_title_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.twitter_title} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{twitterTitleLen}/70</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
+                {t('admin.seo.twitter_description')}
+              </label>
+              <textarea
+                rows={3}
+                {...register('twitter_description', {
+                  maxLength: { value: 200, message: t('admin.seo.twitter_description_max') },
+                })}
+                className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              />
+              <div className="flex justify-between items-center mt-1">
+                <FieldError error={errors.twitter_description} fallbackMessage={t('admin.common.required_field')} />
+                <p className="text-[10px] text-muted-foreground ml-auto">{twitterDescLen}/200</p>
+              </div>
+            </div>
+
+            <div>
+              <input type="hidden" {...register('twitter_image')} />
+              <MediaSelectorField
+                label={t('admin.seo.twitter_image')}
+                value={twitterImage || ''}
+                onChange={(nextValue) => seoForm.setValue('twitter_image', nextValue, { shouldDirty: true })}
+                folder="branding"
+                libraryFolders={['all', 'branding', 'artigos', 'misc']}
+                previewClassName="h-24"
+                helperText={t('admin.seo.twitter_image_helper')}
+              />
+            </div>
           </div>
 
           <button

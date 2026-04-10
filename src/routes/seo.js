@@ -7,6 +7,15 @@ import { regenerateSitemap, SITEMAP_CACHE_TTL_MS } from './sitemap.js';
 
 const router = Router();
 
+const normalizeRobots = (value) => {
+  if (typeof value !== 'string') return null;
+
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return null;
+  if (normalized.includes('noindex')) return 'noindex, nofollow';
+  return 'index, follow';
+};
+
 // GET /seo-settings — lista todas as páginas (painel admin)
 router.get('/', async (req, res) => {
   try {
@@ -53,18 +62,38 @@ router.get('/:page_name', async (req, res) => {
 // PUT /seo-settings/:id — atualiza SEO de uma página (admin, autenticado)
 router.put('/:id', authMiddleware, checkPermission('dashboard', 'update'), async (req, res) => {
   try {
-    const { meta_title, meta_description, keywords, og_image } = req.body;
+    const {
+      meta_title,
+      meta_description,
+      keywords,
+      og_image,
+      canonical_url,
+      robots,
+      twitter_title,
+      twitter_description,
+      twitter_image,
+      twitter_card,
+    } = req.body;
     const now = new Date();
+    const safeRobots = normalizeRobots(robots);
+    const safeTwitterCard = twitter_card === 'summary' ? 'summary' : 'summary_large_image';
 
     const [result] = await pool.execute(
       `UPDATE seo_settings
-       SET meta_title=?, meta_description=?, keywords=?, og_image=?, updated=?
+       SET meta_title=?, meta_description=?, keywords=?, og_image=?, canonical_url=?, robots=?,
+           twitter_title=?, twitter_description=?, twitter_image=?, twitter_card=?, updated=?
        WHERE id=?`,
       [
-        meta_title    || null,
+        meta_title || null,
         meta_description || null,
-        keywords      || null,
-        og_image      || null,
+        keywords || null,
+        og_image || null,
+        canonical_url || null,
+        safeRobots,
+        twitter_title || null,
+        twitter_description || null,
+        twitter_image || null,
+        safeTwitterCard,
         now,
         req.params.id,
       ]

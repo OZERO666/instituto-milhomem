@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import api from '@/lib/apiServerClient';
 import { LOGO_URL } from '@/config/site';
-
-const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const ROUTE_MAP = {
   '/':           'home',
@@ -14,6 +13,9 @@ const ROUTE_MAP = {
   '/resultados': 'resultados',
   '/blog':       'blog',
   '/contato':    'contato',
+  '/faq':        'faq',
+  '/politica-de-privacidade': 'politica-de-privacidade',
+  '/termos-de-uso': 'termos-de-uso',
 };
 
 const DEFAULTS = {
@@ -22,6 +24,8 @@ const DEFAULTS = {
   keywords:         'transplante capilar, FUE, Goiânia, clínica capilar',
   og_image:         'https://horizons-cdn.hostinger.com/386178fc-68a2-4ae9-99a1-df6a1385b4b9/1e20c7dbf245fee0e2ca926ad4054327.png',
   canonical:        'https://institutomilhomem.com',
+  robots:           'index, follow',
+  twitter_card:     'summary_large_image',
 };
 
 const SEO = ({ title, description, keywords, ogImage, url, type = 'website', publishedTime, modifiedTime, author, section, articleTags = [], serviceData = null }) => {
@@ -33,7 +37,7 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
   useEffect(() => {
     const page_name = ROUTE_MAP[location.pathname] ?? 'home';
 
-    fetch(`${API_URL}/seo-settings/${page_name}`)
+    api.fetch(`/seo-settings/${page_name}`)
       .then(r => r.json())
       .then(data => {
         if (data?.meta_title) setSeo(data);
@@ -46,7 +50,12 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
   const kBase = keywords  || seo?.keywords         || DEFAULTS.keywords;
   const k   = articleTags.length > 0 ? `${articleTags.join(', ')}, ${kBase}` : kBase;
   const img = ogImage     || seo?.og_image         || DEFAULTS.og_image;
-  const u   = url         || DEFAULTS.canonical + location.pathname;
+  const u   = seo?.canonical_url || url || DEFAULTS.canonical + location.pathname;
+  const pageRobots = seo?.robots || robotsContent || DEFAULTS.robots;
+  const twitterTitle = seo?.twitter_title || t;
+  const twitterDescription = seo?.twitter_description || d;
+  const twitterImage = seo?.twitter_image || img;
+  const twitterCard = seo?.twitter_card === 'summary' ? 'summary' : DEFAULTS.twitter_card;
 
   const isArticle = type === 'article';
 
@@ -158,7 +167,7 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
       <title>{t}</title>
       <meta name="description"  content={d} />
       <meta name="keywords"     content={k} />
-      <meta name="robots"       content={robotsContent} />
+      <meta name="robots"       content={pageRobots} />
       <meta name="author"       content={author || 'Instituto Milhomem'} />
 
       {/* Open Graph */}
@@ -182,10 +191,10 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
       ))}
 
       {/* Twitter */}
-      <meta name="twitter:card"        content="summary_large_image" />
-      <meta name="twitter:title"       content={t} />
-      <meta name="twitter:description" content={d} />
-      <meta name="twitter:image"       content={img} />
+      <meta name="twitter:card"        content={twitterCard} />
+      <meta name="twitter:title"       content={twitterTitle} />
+      <meta name="twitter:description" content={twitterDescription} />
+      <meta name="twitter:image"       content={twitterImage} />
       {isArticle && author && <meta name="twitter:label1"   content="Escrito por" />}
       {isArticle && author && <meta name="twitter:data1"    content={author} />}
       {isArticle && section && <meta name="twitter:label2"  content="Categoria" />}

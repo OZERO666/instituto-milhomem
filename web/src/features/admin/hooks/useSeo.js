@@ -14,7 +14,18 @@ export function useSeo() {
   const [sitemapStatus, setSitemapStatus] = useState(null);
 
   const seoForm = useForm({ mode: 'onBlur',
-    defaultValues: { meta_title: '', meta_description: '', keywords: '', og_image: '' },
+    defaultValues: {
+      meta_title: '',
+      meta_description: '',
+      keywords: '',
+      og_image: '',
+      canonical_url: '',
+      robots: 'index, follow',
+      twitter_title: '',
+      twitter_description: '',
+      twitter_image: '',
+      twitter_card: 'summary_large_image',
+    },
   });
 
   const fetchSeo = useCallback(async () => {
@@ -33,6 +44,12 @@ export function useSeo() {
       meta_description: item.meta_description || '',
       keywords:         item.keywords         || '',
       og_image:         item.og_image         || '',
+      canonical_url:    item.canonical_url    || '',
+      robots:           item.robots           || 'index, follow',
+      twitter_title:    item.twitter_title    || '',
+      twitter_description: item.twitter_description || '',
+      twitter_image:    item.twitter_image    || '',
+      twitter_card:     item.twitter_card     || 'summary_large_image',
     });
   }, [seoForm]);
 
