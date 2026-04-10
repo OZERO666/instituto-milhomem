@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, CheckCircle2, AlertCircle, Smartphone } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Smartphone, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import { Switch } from '@/components/ui/switch.jsx';
