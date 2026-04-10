@@ -229,7 +229,91 @@ const BrandingTab = ({
               </p>
             )}
           </div>
-        </form>
+        
+            {/* ── Logo Sizes (Responsive) ───────────────────────── */}
+            <div className="border-t border-border pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <ImageIcon className="w-4 h-4 text-primary" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">
+                  Tamanho da Logo (Responsivo)
+                </h3>
+              </div>
+
+              {/* HEADER LOGO */}
+              <div className="space-y-4 rounded-xl border border-border p-4 bg-muted/20">
+                <p className="text-xs font-bold uppercase tracking-widest text-secondary">Header</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Mobile (32-64px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={32} max={64} step={2} {...register('logo_size_header_mobile', {min:32,max:64})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_header_mobile')||40}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_header_mobile')||40}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">M</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Tablet (40-72px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={40} max={72} step={2} {...register('logo_size_header_tablet',{min:40,max:72})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_header_tablet')||48}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_header_tablet')||48}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">T</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Desktop (48-120px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={48} max={120} step={4} {...register('logo_size_header',{min:48,max:120})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_header')||56}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_header')||56}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">D</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* FOOTER LOGO */}
+              <div className="space-y-4 rounded-xl border border-border p-4 bg-muted/20">
+                <p className="text-xs font-bold uppercase tracking-widest text-secondary">Footer</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Mobile (24-56px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={24} max={56} step={2} {...register('logo_size_footer_mobile',{min:24,max:56})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_footer_mobile')||36}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_footer_mobile')||36}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">M</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Tablet (32-64px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={32} max={64} step={2} {...register('logo_size_footer_tablet',{min:32,max:64})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_footer_tablet')||40}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_footer_tablet')||40}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">T</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Desktop (40-120px)</Label>
+                    <div className="flex gap-2">
+                      <input type="range" min={40} max={120} step={4} {...register('logo_size_footer',{min:40,max:120})} className="flex-1 accent-primary" />
+                      <span className="w-12 text-xs font-bold text-center bg-white rounded px-2 py-1">{watchSettings('logo_size_footer')||48}px</span>
+                    </div>
+                    <div className="h-12 bg-secondary rounded border border-primary/20 flex items-center justify-center p-1">
+                      <div style={{height:`${watchSettings('logo_size_footer')||48}px`}} className="bg-primary/30 rounded flex items-center justify-center text-[11px] font-bold text-white">D</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+</form>
       </div>
     </div>
   );

@@ -21,6 +21,13 @@
     --hero-min-h-desktop: 980px;
     --mobile-type-scale: 1;
     --mobile-decor-opacity: 1;
+    /* Logo Responsive Sizes */
+    --logo-size-mobile: 40px;
+    --logo-size-tablet: 48px;
+    --logo-size-desktop: 56px;
+    --logo-size-footer-mobile: 36px;
+    --logo-size-footer-tablet: 40px;
+    --logo-size-footer-desktop: 48px;
 
     /* Background / Foreground */
     --background:         0 0% 100%;
