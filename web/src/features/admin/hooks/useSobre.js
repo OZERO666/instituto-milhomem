@@ -6,6 +6,7 @@ import api from '@/lib/apiServerClient';
 import { sanitizeObject } from '@/lib/sanitizeInput.js';
 import { logAction } from '@/features/admin/utils/adminApi.js';
 import { normalizeSobreConfig } from '@/features/admin/utils/sobreConfig.js';
+import { SOBRE_DEFAULTS } from '@/config/site';
 
 export function useSobre(currentUser) {
   const [sobreConfig,  setSobreConfig]  = useState(null);
@@ -39,6 +40,10 @@ export function useSobre(currentUser) {
       sanitizedData.values             = data.values             || [];
       sanitizedData.team               = team;
       sanitizedData.doctor_credentials = data.doctor_credentials || [];
+      sanitizedData.sections = {
+        ...SOBRE_DEFAULTS.sections,
+        ...(data.sections || {}),
+      };
 
       const method = sobreConfig?.id ? 'PUT' : 'POST';
       const url    = sobreConfig?.id ? `/sobre-config/${sobreConfig.id}` : '/sobre-config';

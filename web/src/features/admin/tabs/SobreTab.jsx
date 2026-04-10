@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
 import { Label } from '@/components/ui/label.jsx';
+import { Switch } from '@/components/ui/switch.jsx';
 import AdminSectionSwitch from '@/features/admin/components/AdminSectionSwitch.jsx';
 import { SOBRE_SECTION_OPTIONS } from '@/features/admin/constants/navigation.js';
 import { parseJsonArray } from '@/features/admin/utils/sobreConfig.js';
@@ -99,6 +100,13 @@ const IconPicker = ({ selected, onChange }) => {
   );
 };
 
+const SectionToggle = ({ checked, onChange }) => (
+  <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2">
+    <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Seção ativa</span>
+    <Switch checked={checked} onCheckedChange={onChange} />
+  </div>
+);
+
 const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobreSaving, onSobreSubmit }) => (
   <div className="space-y-6">
     <AdminSectionSwitch
@@ -114,7 +122,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* HERO SECTION */}
         {sobreSection === 'hero' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção Hero</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção Hero</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.hero.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.hero.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Badge (etiqueta topo)</Label>
               <Input {...sobreForm.register('hero_badge')} placeholder="Ex: Padrão Internacional" className="mt-2 focus-visible:ring-primary" />
@@ -145,7 +159,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* DOCTOR SECTION */}
         {sobreSection === 'doctor' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção do Doutor</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção do Doutor</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.doctor.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.doctor.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="font-bold">Nome</Label>
@@ -229,7 +249,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* WFI SECTION */}
         {sobreSection === 'wfi' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção WFI (World FUE Institute)</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção WFI (World FUE Institute)</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.wfi.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.wfi.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Badge</Label>
               <Input {...sobreForm.register('wfi_badge')} placeholder="Ex: Reconhecimento Global" className="mt-2 focus-visible:ring-primary" />
@@ -252,7 +278,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* ABOUT SECTION */}
         {sobreSection === 'about' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção Sobre a Clínica</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção Sobre a Clínica</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.about.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.about.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Título</Label>
               <Input {...sobreForm.register('about_title')} className="mt-2 focus-visible:ring-primary" />
@@ -283,7 +315,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* VALUES SECTION */}
         {sobreSection === 'values' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção Valores / Filosofia</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção Valores / Filosofia</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.values.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.values.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Título da Seção</Label>
               <Input {...sobreForm.register('values_title')} className="mt-2 focus-visible:ring-primary" />
@@ -362,7 +400,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* TEAM SECTION */}
         {sobreSection === 'team' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção Equipe</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção Equipe</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.team.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.team.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Título da Seção</Label>
               <Input {...sobreForm.register('team_title')} className="mt-2 focus-visible:ring-primary" />
@@ -468,7 +512,13 @@ const SobreTab = ({ sobreForm, sobreSection, setSobreSection, sobreConfig, sobre
         {/* TECHNOLOGY SECTION */}
         {sobreSection === 'technology' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-5">
-            <h3 className="text-lg font-bold text-secondary border-b pb-3">Seção Tecnologia</h3>
+            <div className="flex items-center justify-between gap-4 border-b pb-3">
+              <h3 className="text-lg font-bold text-secondary">Seção Tecnologia</h3>
+              <SectionToggle
+                checked={sobreForm.watch('sections.technology.enabled') !== false}
+                onChange={(checked) => sobreForm.setValue('sections.technology.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <div>
               <Label className="font-bold">Título</Label>
               <Input {...sobreForm.register('technology_title')} className="mt-2 focus-visible:ring-primary" />

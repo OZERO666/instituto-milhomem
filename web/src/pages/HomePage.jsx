@@ -254,6 +254,7 @@ const HomePage = () => {
   const heroCtaText    = translatedHero?.cta_texto?.trim() || t('home.hero_cta_fallback');
   const heroCtaLink    = heroConfig?.cta_link?.trim() || whatsappUrl;
   const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || 'pt-BR');
+  const sectionEnabled = (key) => homePageConfig?.sections?.[key]?.enabled !== false;
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
@@ -412,6 +413,7 @@ const HomePage = () => {
         {/* ══════════════════════════════════════════════════════════════════
             SERVIÇOS
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('services') && (
         <section className="section-padding bg-background">
           <div className="container-custom">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -455,10 +457,12 @@ const HomePage = () => {
             )}
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             JORNADA DO PACIENTE
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('journey') && (
         <section className="section-padding bg-muted border-t border-border/40 relative overflow-hidden">
           <div className="container-custom">
             <motion.div className="text-center mb-14" {...fadeUp()}>
@@ -508,10 +512,12 @@ const HomePage = () => {
             </motion.div>
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             SOBRE
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('about') && (
         <section className="section-padding bg-background relative overflow-hidden">
           <div
             aria-hidden
@@ -638,10 +644,12 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             RESULTADOS
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('results') && (
         <section id="resultados" className="section-padding bg-muted relative overflow-hidden">
           <div
             aria-hidden
@@ -675,10 +683,12 @@ const HomePage = () => {
             </motion.div>
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             DEPOIMENTOS
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('testimonials') && (
         <section className="section-padding bg-background overflow-hidden relative">
           <div
             aria-hidden
@@ -701,11 +711,12 @@ const HomePage = () => {
           <TestimonialsCarousel testimonials={applyTestimonials(testimonials)} emptyMessage={labelsConfig.testimonials_empty} />
           )}
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             BLOG
         ══════════════════════════════════════════════════════════════════ */}
-        {!blogDisabled && (
+        {sectionEnabled('blog') && !blogDisabled && (
         <section className="section-padding bg-muted border-t border-border/40">
           <div className="container-custom">
             <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
@@ -750,7 +761,7 @@ const HomePage = () => {
         {/* ══════════════════════════════════════════════════════════════════
             FAQ
         ══════════════════════════════════════════════════════════════════ */}
-        {faqItems.length > 0 && (
+        {sectionEnabled('faq') && faqItems.length > 0 && (
         <section className="section-padding bg-muted relative overflow-hidden">
           <div
             aria-hidden
@@ -815,6 +826,7 @@ const HomePage = () => {
         {/* ══════════════════════════════════════════════════════════════════
             CTA FINAL — CONTATO SIMPLIFICADO
         ══════════════════════════════════════════════════════════════════ */}
+        {sectionEnabled('final_cta') && (
         <section className="section-padding bg-background border-t border-border/40">
           <div className="container-custom">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
@@ -888,6 +900,7 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+        )}
 
       </main>
     </div>

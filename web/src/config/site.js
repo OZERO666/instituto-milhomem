@@ -33,6 +33,16 @@ export const CONTATO_DEFAULTS = {
 };
 
 export const SOBRE_DEFAULTS = {
+  sections: {
+    hero: { enabled: true },
+    doctor: { enabled: true },
+    wfi: { enabled: true },
+    about: { enabled: true },
+    values: { enabled: true },
+    team: { enabled: true },
+    technology: { enabled: true },
+  },
+
   // Hero
   hero_title: 'Conheça Nossa Clínica',
   hero_subtitle: 'Um ambiente onde a equipe especializada une tecnologia de ponta e acolhimento premium para resultados naturais.',
@@ -91,6 +101,16 @@ export const SOBRE_DEFAULTS = {
 
 export const PAGE_CONFIG_DEFAULTS = {
   home: {
+    sections: {
+      services: { enabled: true },
+      journey: { enabled: true },
+      about: { enabled: true },
+      results: { enabled: true },
+      testimonials: { enabled: true },
+      blog: { enabled: true },
+      faq: { enabled: true },
+      final_cta: { enabled: true },
+    },
     services: {
       badge: 'Especialidades',
       title: 'Tratamentos capilares de alta performance',
@@ -168,6 +188,12 @@ export const PAGE_CONFIG_DEFAULTS = {
     info_title: 'Informações de Contato',
   },
   resultados: {
+    sections: {
+      header: { enabled: true },
+      gallery: { enabled: true },
+      testimonials: { enabled: true },
+      instagram_cta: { enabled: true },
+    },
     header_badge: 'Galeria',
     header_title: 'Resultados Reais',
     header_subtitle: 'Acompanhe a transformação de nossos pacientes através de fotos antes e depois e depoimentos autênticos.',

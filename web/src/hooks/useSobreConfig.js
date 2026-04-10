@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SOBRE_DEFAULTS } from '@/config/site';
-import { parseJsonArray } from '@/features/admin/utils/sobreConfig.js';
+import { parseJsonArray, parseJsonObject } from '@/features/admin/utils/sobreConfig.js';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -12,6 +12,10 @@ const normalizeSobreConfig = (data = {}) => ({
   doctor_credentials: parseJsonArray(data.doctor_credentials).length
     ? parseJsonArray(data.doctor_credentials)
     : SOBRE_DEFAULTS.doctor_credentials,
+  sections: {
+    ...SOBRE_DEFAULTS.sections,
+    ...parseJsonObject(data.sections || data.sections_config),
+  },
 });
 
 export function useSobreConfig() {

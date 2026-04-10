@@ -64,6 +64,7 @@ const ResultadosPage = () => {
     { id: 'all', label: 'Todos' },
     ...themes.map(t => ({ id: t.id, label: t.nome })),
   ];
+  const sectionEnabled = (key) => pageConfig?.sections?.[key]?.enabled !== false;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -81,6 +82,7 @@ const ResultadosPage = () => {
           <div className="container-custom">
 
             {/* HEADER */}
+            {sectionEnabled('header') && (
             <div className="max-w-3xl mx-auto text-center mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-8 h-px bg-primary" />
@@ -94,8 +96,11 @@ const ResultadosPage = () => {
                 {pageConfig.header_subtitle}
               </p>
             </div>
+            )}
 
             {/* FILTROS DINÂMICOS */}
+            {sectionEnabled('gallery') && (
+            <>
             <div className="flex flex-wrap justify-center gap-4 mb-16">
               {filters.map((filter) => (
                 <button
@@ -136,9 +141,11 @@ const ResultadosPage = () => {
                 </p>
               </div>
             )}
+            </>
+            )}
 
             {/* DEPOIMENTOS */}
-            {testimonials.length > 0 && (
+            {sectionEnabled('testimonials') && testimonials.length > 0 && (
               <div className="mt-24 pt-20 border-t border-primary/30">
                 <div className="text-center mb-16">
                   <div className="flex items-center justify-center gap-3 mb-4">
@@ -159,6 +166,7 @@ const ResultadosPage = () => {
             )}
 
             {/* CTA INSTAGRAM */}
+            {sectionEnabled('instagram_cta') && (
             <div className="mt-14 bg-secondary rounded-2xl p-8 sm:p-12 text-center border border-primary/20">
               <div>
                 <h3 className="text-3xl font-bold mb-4 text-white">{t('resultados.videos_title', 'Vídeos de Depoimentos')}</h3>
@@ -175,6 +183,7 @@ const ResultadosPage = () => {
                 </a>
               </div>
             </div>
+            )}
 
           </div>
         </section>

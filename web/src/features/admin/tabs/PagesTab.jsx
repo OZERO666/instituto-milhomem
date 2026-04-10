@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
+import { Switch } from '@/components/ui/switch.jsx';
 import AdminSectionSwitch from '@/features/admin/components/AdminSectionSwitch.jsx';
 import { PAGES_SECTION_OPTIONS } from '@/features/admin/constants/navigation.js';
 import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
@@ -97,6 +98,13 @@ const Field = ({ label, children }) => (
   </div>
 );
 
+const SectionToggleRow = ({ label, checked, onChange }) => (
+  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2">
+    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
+    <Switch checked={checked} onCheckedChange={onChange} />
+  </div>
+);
+
 const PagesTab = ({ pagesForm, pagesSection, setPagesSection, pagesConfig, pagesSaving, onPagesSubmit }) => (
   <div className="space-y-6">
     <AdminSectionSwitch
@@ -111,6 +119,50 @@ const PagesTab = ({ pagesForm, pagesSection, setPagesSection, pagesConfig, pages
         {pagesSection === 'home' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-6">
             <h3 className="text-lg font-bold text-secondary border-b pb-3">Home</h3>
+
+            <div className="p-4 border border-border rounded-lg space-y-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Visibilidade das Seções</p>
+              <SectionToggleRow
+                label="Serviços"
+                checked={pagesForm.watch('home.sections.services.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.services.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Jornada"
+                checked={pagesForm.watch('home.sections.journey.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.journey.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Sobre"
+                checked={pagesForm.watch('home.sections.about.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.about.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Resultados"
+                checked={pagesForm.watch('home.sections.results.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.results.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Depoimentos"
+                checked={pagesForm.watch('home.sections.testimonials.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.testimonials.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Blog"
+                checked={pagesForm.watch('home.sections.blog.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.blog.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="FAQ"
+                checked={pagesForm.watch('home.sections.faq.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.faq.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="CTA Final"
+                checked={pagesForm.watch('home.sections.final_cta.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('home.sections.final_cta.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
 
             <div className="p-4 border border-border rounded-lg space-y-3">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Seção Serviços</p>
@@ -349,6 +401,29 @@ const PagesTab = ({ pagesForm, pagesSection, setPagesSection, pagesConfig, pages
         {pagesSection === 'resultados' && (
           <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-4">
             <h3 className="text-lg font-bold text-secondary border-b pb-3">Página Resultados</h3>
+            <div className="p-4 border border-border rounded-lg space-y-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Visibilidade das Seções</p>
+              <SectionToggleRow
+                label="Header"
+                checked={pagesForm.watch('resultados.sections.header.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('resultados.sections.header.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Galeria"
+                checked={pagesForm.watch('resultados.sections.gallery.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('resultados.sections.gallery.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="Depoimentos"
+                checked={pagesForm.watch('resultados.sections.testimonials.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('resultados.sections.testimonials.enabled', checked, { shouldDirty: true })}
+              />
+              <SectionToggleRow
+                label="CTA Instagram"
+                checked={pagesForm.watch('resultados.sections.instagram_cta.enabled') !== false}
+                onChange={(checked) => pagesForm.setValue('resultados.sections.instagram_cta.enabled', checked, { shouldDirty: true })}
+              />
+            </div>
             <Input {...pagesForm.register('resultados.header_badge')} placeholder="Badge" className="focus-visible:ring-primary" />
             <Input {...pagesForm.register('resultados.header_title')} placeholder="Título" className="focus-visible:ring-primary" />
             <Textarea {...pagesForm.register('resultados.header_subtitle')} rows={3} className="resize-none focus-visible:ring-primary" placeholder="Subtítulo" />

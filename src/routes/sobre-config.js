@@ -16,7 +16,7 @@ const FIELDS = [
   'team_title', 'team_subtitle',
   'technology_title', 'technology_text', 'technology_image',
 ];
-const JSON_FIELDS = ['`values`', '`team`', 'doctor_credentials'];
+const JSON_FIELDS = ['`values`', '`team`', 'doctor_credentials', 'sections_config'];
 
 const parseJsonArray = (value) => {
   if (Array.isArray(value)) return value;
@@ -31,13 +31,29 @@ const parseJsonArray = (value) => {
   return [];
 };
 
+const parseJsonObject = (value) => {
+  if (!value) return {};
+  if (typeof value === 'object' && !Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  return {};
+};
+
 const normalizeRow = (row) => {
   if (!row) return {};
+  const sections = parseJsonObject(row.sections_config);
   return {
     ...row,
     values: parseJsonArray(row.values),
     team: parseJsonArray(row.team),
     doctor_credentials: parseJsonArray(row.doctor_credentials),
+    sections,
   };
 };
 
@@ -73,6 +89,7 @@ const ensureTable = async () => {
       technology_title TEXT,
       technology_text TEXT,
       technology_image TEXT,
+      sections_config JSON,
       created DATETIME,
       updated DATETIME
     )
@@ -85,7 +102,7 @@ const ensureTable = async () => {
     ['doctor_experience_number', 'TEXT'], ['doctor_experience_label', 'TEXT'],
     ['about_detail_text', 'TEXT'], ['wfi_badge', 'TEXT'], ['wfi_title', 'TEXT'],
     ['wfi_text', 'TEXT'], ['wfi_link', 'TEXT'], ['values_title', 'TEXT'],
-    ['values_subtitle', 'TEXT'], ['team_title', 'TEXT'], ['team_subtitle', 'TEXT'],
+    ['values_subtitle', 'TEXT'], ['team_title', 'TEXT'], ['team_subtitle', 'TEXT'], ['sections_config', 'JSON'],
   ];
   for (const [col, type] of newCols) {
     try {
@@ -102,6 +119,7 @@ const pick = (body) => {
   data.values = JSON.stringify(body.values || []);
   data.team = JSON.stringify(body.team || []);
   data.doctor_credentials = JSON.stringify(body.doctor_credentials || []);
+  data.sections_config = JSON.stringify(body.sections || body.sections_config || {});
   return data;
 };
 

@@ -29,6 +29,7 @@ const SobrePage = () => {
   const credentials = parseJsonArray(config.doctor_credentials);
   const bioParagraphs = (config.doctor_bio || '').split('\n').filter(Boolean);
   const techParagraphs = (config.technology_text || '').split('\n').filter(Boolean);
+  const sectionEnabled = (key) => config?.sections?.[key]?.enabled !== false;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -42,6 +43,7 @@ const SobrePage = () => {
 
       <main className="flex-grow">
         {/* HERO SECTION */}
+        {sectionEnabled('hero') && (
         <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
@@ -72,8 +74,10 @@ const SobrePage = () => {
             </motion.div>
           </div>
         </section>
+        )}
 
         {/* DOCTOR SECTION */}
+        {sectionEnabled('doctor') && (
         <section className="section-padding bg-background">
           <div className="container-custom">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -135,8 +139,10 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* WORLD FUE INSTITUTE SECTION */}
+        {sectionEnabled('wfi') && (
         <section className="section-padding bg-secondary text-white border-y-4 border-primary relative overflow-hidden">
 
           <div className="container-custom relative z-10">
@@ -169,8 +175,10 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* ABOUT INTRO SECTION */}
+        {sectionEnabled('about') && (
         <section className="section-padding bg-muted">
           <div className="container-custom">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -192,8 +200,10 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* VALUES SECTION */}
+        {sectionEnabled('values') && (
         <section className="section-padding bg-background">
           <div className="container-custom">
             <div className="text-center mb-16">
@@ -225,8 +235,10 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* TEAM SECTION */}
+        {sectionEnabled('team') && (
         <section className="section-padding bg-muted">
           <div className="container-custom">
             <div className="text-center mb-16">
@@ -259,8 +271,10 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* TECHNOLOGY SECTION */}
+        {sectionEnabled('technology') && (
         <section className="section-padding bg-background border-t border-border">
           <div className="container-custom">
             <div className="bg-card rounded-2xl p-8 md:p-12 shadow-xl border border-border flex flex-col md:flex-row items-center gap-12">
@@ -283,6 +297,7 @@ const SobrePage = () => {
             </div>
           </div>
         </section>
+        )}
       </main>
 
     </div>
