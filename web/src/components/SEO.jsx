@@ -56,12 +56,6 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
   const twitterDescription = seo?.twitter_description || d;
   const twitterImage = seo?.twitter_image || img;
   const twitterCard = seo?.twitter_card === 'summary' ? 'summary' : DEFAULTS.twitter_card;
-  const facebookTitle = seo?.facebook_title || t;
-  const facebookDescription = seo?.facebook_description || d;
-  const facebookImage = seo?.facebook_image || img;
-  const instagramTitle = seo?.instagram_title || facebookTitle;
-  const instagramDescription = seo?.instagram_description || facebookDescription;
-  const instagramImage = seo?.instagram_image || facebookImage;
 
   const isArticle = type === 'article';
 
@@ -179,18 +173,13 @@ const SEO = ({ title, description, keywords, ogImage, url, type = 'website', pub
       {/* Open Graph */}
       <meta property="og:type"        content={isArticle ? 'article' : 'website'} />
       <meta property="og:url"         content={u} />
-      <meta property="og:title"       content={facebookTitle} />
-      <meta property="og:description" content={facebookDescription} />
-      <meta property="og:image"       content={facebookImage} />
+      <meta property="og:title"       content={t} />
+      <meta property="og:description" content={d} />
+      <meta property="og:image"       content={img} />
       <meta property="og:image:width"  content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:locale"      content="pt_BR" />
       <meta property="og:site_name"   content="Instituto Milhomem" />
-
-      {/* Instagram helper metadata */}
-      <meta name="instagram:title"       content={instagramTitle} />
-      <meta name="instagram:description" content={instagramDescription} />
-      <meta name="instagram:image"       content={instagramImage} />
 
       {/* Article-specific Open Graph */}
       {isArticle && publishedTime && <meta property="article:published_time" content={publishedTime} />}
