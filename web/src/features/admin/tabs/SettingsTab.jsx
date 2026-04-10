@@ -1,6 +1,6 @@
 // src/features/admin/tabs/SettingsTab.jsx
 import React from 'react';
-import { CheckCircle2, AlertCircle, Loader2, Palette, Type, ImageIcon, Search, LayoutList, Smartphone } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Loader2, Palette, Type, ImageIcon, Search, LayoutList } from 'lucide-react';
 import { Button }   from '@/components/ui/button.jsx';
 import { Input }    from '@/components/ui/input.jsx';
 import { Label }    from '@/components/ui/label.jsx';
@@ -85,7 +85,6 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
   const { register, handleSubmit, watch, setValue, formState: { isDirty } } = settingsForm;
   const robotsNoindex  = watch('robots_noindex');
   const blogDisabled   = watch('blog_disabled');
-  const showDecorationsMobile = watch('show_decorations_mobile');
 
   return (
     <div className="space-y-6">
@@ -308,132 +307,6 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                   </div>
                 </div>
 
-              </div>
-            </div>
-
-            {/* ── Responsividade ─────────────────────────────────────── */}
-            <div className="border-t border-border pt-6 space-y-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Smartphone className="w-4 h-4 text-primary" />
-                <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">
-                  Responsividade
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4 rounded-xl border border-border p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Container</p>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Largura máxima do conteúdo</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={960} max={1680} step={20} {...register('container_max_width', { min: 960, max: 1680 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('container_max_width') || 1280}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Padding horizontal mobile</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={8} max={48} step={2} {...register('container_padding_mobile', { min: 8, max: 48 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('container_padding_mobile') || 16}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Padding horizontal tablet</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={12} max={64} step={2} {...register('container_padding_tablet', { min: 12, max: 64 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('container_padding_tablet') || 24}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Padding horizontal desktop</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={16} max={80} step={2} {...register('container_padding_desktop', { min: 16, max: 80 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('container_padding_desktop') || 32}px</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4 rounded-xl border border-border p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Seções e tipografia</p>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Espaçamento vertical mobile</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={24} max={120} step={4} {...register('section_padding_mobile', { min: 24, max: 120 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('section_padding_mobile') || 48}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Espaçamento vertical tablet</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={32} max={140} step={4} {...register('section_padding_tablet', { min: 32, max: 140 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('section_padding_tablet') || 64}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Espaçamento vertical desktop</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={40} max={180} step={4} {...register('section_padding_desktop', { min: 40, max: 180 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('section_padding_desktop') || 80}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Escala tipográfica mobile</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={85} max={120} step={1} {...register('mobile_type_scale', { min: 85, max: 120 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('mobile_type_scale') || 100}%</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Hero mínimo mobile</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={420} max={900} step={10} {...register('hero_min_height_mobile', { min: 420, max: 900 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('hero_min_height_mobile') || 560}px</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold">Hero alvo desktop</Label>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={640} max={1200} step={10} {...register('hero_min_height_desktop', { min: 640, max: 1200 })} className="flex-1 accent-primary" />
-                      <span className="w-16 text-center text-xs font-bold tabular-nums bg-muted rounded-lg px-2 py-1">{watch('hero_min_height_desktop') || 980}px</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
-                <div className="space-y-1 flex-1">
-                  <Label className="text-sm font-semibold">
-                    Exibir elementos decorativos no mobile
-                  </Label>
-                  <p className="text-[12px] text-muted-foreground">
-                    Controla brilhos, linhas e formas ornamentais em telas pequenas para reduzir ruído visual e melhorar foco no conteúdo.
-                  </p>
-                  {showDecorationsMobile === 'false' ? (
-                    <p className="text-[12px] font-semibold text-amber-600 mt-2">
-                      Elementos decorativos ocultos no mobile.
-                    </p>
-                  ) : (
-                    <p className="text-[12px] font-semibold text-green-600 mt-2">
-                      ✓ Elementos decorativos visíveis no mobile.
-                    </p>
-                  )}
-                </div>
-                <Switch
-                  checked={showDecorationsMobile !== 'false'}
-                  onCheckedChange={(checked) =>
-                    setValue('show_decorations_mobile', checked ? 'true' : 'false', { shouldDirty: true })
-                  }
-                />
               </div>
             </div>
 
