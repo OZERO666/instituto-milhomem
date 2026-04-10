@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function AdminSectionSwitch({
   options = [],
@@ -7,11 +8,13 @@ export default function AdminSectionSwitch({
   className = 'flex flex-wrap gap-2',
   buttonClassName = 'px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors',
 }) {
+  const { t } = useTranslation();
   return (
     <div className={className}>
       {options.map((option) => {
         const Icon = option.icon;
         const isActive = activeKey === option.key;
+        const label = option.labelKey ? t(option.labelKey) : option.label;
 
         return (
           <button
@@ -26,7 +29,7 @@ export default function AdminSectionSwitch({
           >
             <span className="inline-flex items-center gap-2">
               {Icon ? <Icon className="w-4 h-4" /> : null}
-              {option.label}
+              {label}
             </span>
           </button>
         );

@@ -153,7 +153,7 @@ const TestimonialsSkeleton = () => (
 
 // ─── Componente Principal ─────────────────────────────────────────────────────
 const HomePage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const homePageConfig = usePagesConfig('home');
   const labelsConfig = usePagesConfig('labels');
   const { settings } = useSiteSettings();
@@ -247,19 +247,20 @@ const HomePage = () => {
 
   // ─── Helpers do Hero dinâmico ─────────────────────────────────────────────
   const translatedHero = applyHeroTrad(heroConfig);
-  const heroBadge      = translatedHero?.badge?.trim() || 'Referência em Transplante Capilar — Goiânia';
-  const heroTitle      = translatedHero?.titulo?.trim() || 'Transplante capilar natural e definitivo em Goiânia';
+  const heroBadge      = translatedHero?.badge?.trim() || t('home.hero_badge_fallback');
+  const heroTitle      = translatedHero?.titulo?.trim() || t('home.hero_title_fallback');
   const heroSubtitle   = translatedHero?.subtitulo?.trim()
-    || 'Técnica FUE de última geração, sem cicatriz linear, com planejamento personalizado para cada paciente.';
-  const heroCtaText    = translatedHero?.cta_texto?.trim() || 'Agendar Avaliação';
+    || t('home.hero_subtitle_fallback');
+  const heroCtaText    = translatedHero?.cta_texto?.trim() || t('home.hero_cta_fallback');
   const heroCtaLink    = heroConfig?.cta_link?.trim() || whatsappUrl;
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || 'pt-BR');
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
       <SEO
-        title="Transplante Capilar FUE em Goiânia | Dr. Pablo Milhomem | Instituto Milhomem"
-        description="Clínica premium de transplante capilar em Goiânia. Técnica FUE sem cicatriz, resultados naturais e definitivos. Consulta gratuita com Dr. Pablo Milhomem."
-        keywords="transplante capilar Goiânia, FUE, Dr Pablo Milhomem, clínica capilar, restauração capilar, Instituto Milhomem"
+        title={t('home.seo_title')}
+        description={t('home.seo_description')}
+        keywords={t('home.seo_keywords')}
         ogImage={heroConfig?.imagem_fundo}
       />
       <WhatsAppButton />
@@ -278,7 +279,7 @@ const HomePage = () => {
           <div className="absolute inset-0 z-0">
             <img
               src={heroConfig?.imagem_fundo?.trim() || ''}
-              alt="Homem confiante após transplante capilar"
+              alt={t('home.hero_image_alt')}
               className="w-full h-full object-cover object-top scale-[1.03]"
               fetchPriority="high"
             />
@@ -540,16 +541,16 @@ const HomePage = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-10">
                   {[
                     {
-                      num:   stats.procedimentos ? `+${Number(stats.procedimentos).toLocaleString('pt-BR')}` : '+3.500',
-                      label: 'Procedimentos realizados',
+                      num:   stats.procedimentos ? `+${numberFormatter.format(Number(stats.procedimentos))}` : '+3.500',
+                      label: t('home.stats.procedures'),
                     },
                     {
                       num:   stats.satisfacao ? `${stats.satisfacao}%` : '98%',
-                      label: 'Pacientes satisfeitos',
+                      label: t('home.stats.satisfaction'),
                     },
                     {
                       num:   stats.experiencia ? `+${stats.experiencia}` : '+15',
-                      label: 'Anos de experiência',
+                      label: t('home.stats.experience'),
                     },
                   ].map(({ num, label }) => (
                     <div
@@ -659,7 +660,7 @@ const HomePage = () => {
             </motion.div>
 
             <BeforeAfterCarousel
-              allLabel="Todos"
+              allLabel={t('home.results_all_label')}
               emptyMessage={labelsConfig.before_after_empty}
             />
 
@@ -764,11 +765,11 @@ const HomePage = () => {
           />
           <div className="container-custom relative z-10">
             <motion.div className="text-center mb-14" {...fadeUp()}>
-              <SectionBadge label="Tire suas Dúvidas" center />
-              <h2 className="heading-lg text-foreground mb-4">Perguntas Frequentes</h2>
+              <SectionBadge label={t('home.faq.badge')} center />
+              <h2 className="heading-lg text-foreground mb-4">{t('home.faq.title')}</h2>
               <GoldDivider className="mb-5 max-w-[140px] mx-auto" />
               <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
-                Tudo o que você precisa saber antes de dar o primeiro passo.
+                {t('home.faq.subtitle')}
               </p>
             </motion.div>
 
@@ -803,7 +804,7 @@ const HomePage = () => {
                            hover:text-primary/70 transition-colors duration-300
                            uppercase tracking-widest text-xs group"
               >
-                Ver todas as perguntas
+                {t('home.faq.view_all')}
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </motion.div>
@@ -852,7 +853,7 @@ const HomePage = () => {
 
               <motion.div {...fadeRight(0.2)}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <ContactInfoCard icon={MapPin} title="Endereço">
+                  <ContactInfoCard icon={MapPin} title={t('home.contact.address')}>
                     <a
                       href={get('maps_url') || `https://www.google.com/maps/search/?api=1&query=${get('nome_local') ? encodeURIComponent(get('nome_local')) : encodeURIComponent(get('endereco'))}`}
                       target="_blank" rel="noopener noreferrer"
@@ -861,11 +862,11 @@ const HomePage = () => {
                       {get('endereco')}
                     </a>
                   </ContactInfoCard>
-                  <ContactInfoCard icon={Clock} title="Horário">
+                  <ContactInfoCard icon={Clock} title={t('home.contact.hours')}>
                     <p className="text-sm text-muted-foreground font-medium">{get('dias_funcionamento')}</p>
                     <p className="text-sm text-foreground font-bold">{get('horario')}</p>
                   </ContactInfoCard>
-                  <ContactInfoCard icon={Phone} title="Telefone">
+                  <ContactInfoCard icon={Phone} title={t('home.contact.phone')}>
                     <a
                       href={`tel:${get('telefone').replace(/\D/g, '')}`}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium"
@@ -873,7 +874,7 @@ const HomePage = () => {
                       {get('telefone')}
                     </a>
                   </ContactInfoCard>
-                  <ContactInfoCard icon={Mail} title="E-mail">
+                  <ContactInfoCard icon={Mail} title={t('home.contact.email')}>
                     <a
                       href={`mailto:${get('email')}`}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium break-all"

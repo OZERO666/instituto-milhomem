@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { AlertCircle, CheckCircle2, Loader2, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { useContatoConfig } from '@/hooks/useContatoConfig.js';
@@ -34,6 +35,7 @@ const STATUS_STYLES = {
 };
 
 export default function AdminShellHeader({ currentUserEmail, onLogout, canAccess, onSelectTab, status }) {
+  const { t } = useTranslation();
   const config = useContatoConfig();
   const logoUrl = config?.logo_url || LOGO_URL;
   const tone = STATUS_STYLES[status?.tone] ? status.tone : 'idle';
@@ -48,16 +50,16 @@ export default function AdminShellHeader({ currentUserEmail, onLogout, canAccess
         <div className="flex items-center gap-4">
           <img src={logoUrl} alt="Instituto Milhomem" className="h-10 w-auto object-contain" />
           <div className="hidden sm:block">
-            <p className="text-[10px] text-primary/60 uppercase tracking-[0.2em] leading-none mb-0.5">Painel</p>
+            <p className="text-[10px] text-primary/60 uppercase tracking-[0.2em] leading-none mb-0.5">{t('admin.header.panel')}</p>
             <h1 className="text-base font-bold leading-tight text-white/90 tracking-wide">
-              Área Administrativa
+              {t('admin.header.admin_title')}
             </h1>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className={`hidden xl:flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] ${statusStyle.wrapper}`}>
             <StatusIcon className={`w-3.5 h-3.5 shrink-0 ${statusStyle.iconClass} ${tone === 'saving' ? 'animate-spin' : ''}`} />
-            <span className="font-semibold whitespace-nowrap">{status?.label || 'Painel pronto'}</span>
+            <span className="font-semibold whitespace-nowrap">{status?.label || t('admin.status.panel_ready')}</span>
           </div>
           <AdminGlobalSearch canAccess={canAccess} onSelectTab={onSelectTab} />
           <div className="hidden md:flex items-center gap-1.5 text-[11px] text-white/50">
@@ -71,7 +73,7 @@ export default function AdminShellHeader({ currentUserEmail, onLogout, canAccess
             className="text-white/70 hover:text-white hover:bg-white/10 gap-2 border border-white/10 hover:border-white/20"
           >
             <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Sair</span>
+            <span className="hidden sm:inline">{t('admin.header.logout')}</span>
           </Button>
         </div>
       </div>

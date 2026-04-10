@@ -5,6 +5,7 @@ import { CheckCircle } from '@phosphor-icons/react/dist/csr/CheckCircle';
 import { Sparkle } from '@phosphor-icons/react/dist/csr/Sparkle';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import api from '@/lib/apiServerClient';
 import { ICON_MAP } from '@/features/admin/tabs/ServicosTab.jsx';
 
@@ -32,10 +33,12 @@ function ServiceIcon({ icon, size = 28, className = '' }) {
   return <FallbackIcon size={size} />;
 }
 
-const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, index, ctaLabel = 'Saiba mais' }) => {
+const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, index, ctaLabel }) => {
+  const { t } = useTranslation();
   const imageUrl = useMemo(() => {
     return api.resolveMediaUrl('servicos', imagem);
   }, [imagem]);
+  const resolvedCtaLabel = ctaLabel ?? t('service_detail.related.learn_more');
 
   const benefitsList = useMemo(() => {
     if (!beneficios) return [];
@@ -143,7 +146,7 @@ const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, inde
                      active:scale-[0.97]
                      transition-all duration-300 mt-auto w-full"
         >
-          {ctaLabel}
+          {resolvedCtaLabel}
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

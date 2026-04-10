@@ -36,9 +36,9 @@ const ServicosPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO
-        title="Serviços de Transplante Capilar | Instituto Milhomem – Goiânia"
-        description="Transplante FUE, transplante de barba e tratamentos complementares com o Dr. Pablo Milhomem em Goiânia. Técnica avançada e resultados naturais."
-        keywords="transplante capilar, FUE, mesoterapia capilar, PRP, Goiânia, restauração capilar, clínica capilar"
+        title={t('services_page.seo_title')}
+        description={t('services_page.seo_description')}
+        keywords={t('services_page.seo_keywords')}
       />
 
       <WhatsAppButton />
@@ -89,17 +89,17 @@ const ServicosPage = () => {
             {/* CTA */}
             <div className="mt-14 bg-secondary rounded-2xl p-8 sm:p-12 text-center border border-primary/20">
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-                Pronto para dar o <span className="text-primary">primeiro passo?</span>
+                {t('services_page.cta.heading')} <span className="text-primary">{t('services_page.cta.highlight')}</span>
               </h2>
               <p className="text-white/60 text-base mb-8 max-w-xl mx-auto">
-                Agende sua consulta gratuita e descubra o plano ideal para você com o Dr. Pablo Milhomem.
+                {t('services_page.cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   to="/contato"
                   className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary text-secondary font-bold text-sm uppercase tracking-widest hover:bg-primary/90 transition-colors shadow-lg"
                 >
-                  Agendar Consulta Gratuita
+                  {t('services_page.cta.schedule')}
                 </Link>
                 <a
                   href={whatsappUrl}
@@ -107,7 +107,7 @@ const ServicosPage = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-white/20 text-white font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-colors"
                 >
-                  Falar pelo WhatsApp
+                  {t('services_page.cta.whatsapp')}
                 </a>
               </div>
             </div>

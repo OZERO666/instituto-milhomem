@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -23,31 +24,30 @@ const ConfirmDeleteDialog = ({
   description,
   onConfirm,
   onCancel,
-}) => (
-  <AlertDialog open={open} onOpenChange={(v) => { if (!v) onCancel?.(); }}>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Excluir permanentemente?</AlertDialogTitle>
-        <AlertDialogDescription>
-          {description ?? (
-            <>
-              Esta ação não pode ser desfeita.{' '}
-              {title && <><strong>{title}</strong> será excluído.</>}
-            </>
-          )}
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
-        <AlertDialogAction
-          onClick={onConfirm}
-          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-        >
-          Excluir
-        </AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <AlertDialog open={open} onOpenChange={(v) => { if (!v) onCancel?.(); }}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t('admin.dialog.delete_title')}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {description ?? t('admin.dialog.delete_description', { title: title || '' })}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={onCancel}>{t('admin.dialog.cancel')}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {t('admin.dialog.delete')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
 
 export default ConfirmDeleteDialog;

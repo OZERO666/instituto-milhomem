@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { WhatsappLogo } from '@phosphor-icons/react/dist/csr/WhatsappLogo';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import SEO from '@/components/SEO.jsx';
 import WhatsAppButton from '@/components/WhatsAppButton.jsx';
 import api from '@/lib/apiServerClient';
@@ -13,6 +14,7 @@ import { usePagesConfig } from '@/hooks/usePagesConfig';
 import { useTraducoes } from '@/hooks/useTraducoes';
 
 const ServiceDetailPage = () => {
+  const { t } = useTranslation();
   const pageConfig = usePagesConfig('service_detail');
   const { slug } = useParams();
   const [service, setService]       = useState(null);
@@ -65,9 +67,11 @@ const ServiceDetailPage = () => {
   const whatsappUrl = useMemo(() => {
     const num = contact?.whatsapp ?? '62981070937';
     const msg = contact?.mensagem_whatsapp
-      ?? `Olá! Gostaria de mais informações sobre ${displayService?.nome ?? 'o serviço'}.`;
+      ?? t('service_detail.whatsapp_message_fallback', {
+        serviceName: displayService?.nome ?? t('service_detail.fallback.service_name'),
+      });
     return `https://api.whatsapp.com/send?l=pt-BR&phone=${num.replace(/\D/g, '')}&text=${encodeURIComponent(msg)}`;
-  }, [contact, displayService]);
+  }, [contact, displayService, t]);
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) return (
@@ -93,7 +97,7 @@ const ServiceDetailPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO
-        title={`${displayService.nome} em Goiânia | Instituto Milhomem`}
+        title={t('service_detail.seo_title', { serviceName: displayService.nome })}
         description={displayService.descricao}
         keywords={[
           displayService.nome,
@@ -199,7 +203,7 @@ const ServiceDetailPage = () => {
                     <p>{displayService.descricao}</p>
                     {displayService.processo && (
                       <>
-                        <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">Como funciona</h2>
+                        <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">{t('service_detail.fallback.how_it_works')}</h2>
                         <p>{displayService.processo}</p>
                       </>
                     )}
@@ -284,7 +288,7 @@ const ServiceDetailPage = () => {
                     <h3 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{s.nome}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">{s.descricao}</p>
                     <span className="inline-flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider mt-3">
-                      Saiba mais <ArrowRight className="w-3 h-3" />
+                      {t('service_detail.related.learn_more')} <ArrowRight className="w-3 h-3" />
                     </span>
                   </Link>
                 ))}

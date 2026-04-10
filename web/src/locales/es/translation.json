@@ -79,6 +79,57 @@
     "videos_subtitle":  "Siga a nuestros pacientes en Instagram y vea testimonios en video sobre la experiencia en el Instituto Milhomem.",
     "instagram_cta":    "Ver en Instagram"
   },
+  "home": {
+    "seo_title": "Trasplante Capilar FUE en Goiânia | Dr. Pablo Milhomem | Instituto Milhomem",
+    "seo_description": "Clínica premium de trasplante capilar en Goiânia. Técnica FUE sin cicatriz, resultados naturales y definitivos. Consulta gratuita con el Dr. Pablo Milhomem.",
+    "seo_keywords": "trasplante capilar Goiânia, FUE, Dr Pablo Milhomem, clínica capilar, restauración capilar, Instituto Milhomem",
+    "hero_badge_fallback": "Referencia en Trasplante Capilar — Goiânia",
+    "hero_title_fallback": "Trasplante capilar natural y definitivo en Goiânia",
+    "hero_subtitle_fallback": "Técnica FUE de última generación, sin cicatriz lineal, con planificación personalizada para cada paciente.",
+    "hero_cta_fallback": "Agendar Evaluación",
+    "hero_image_alt": "Hombre confiado después de un trasplante capilar",
+    "results_all_label": "Todos",
+    "stats": {
+      "procedures": "Procedimientos realizados",
+      "satisfaction": "Pacientes satisfechos",
+      "experience": "Años de experiencia"
+    },
+    "faq": {
+      "badge": "Resuelva Sus Dudas",
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Todo lo que necesita saber antes de dar el primer paso.",
+      "view_all": "Ver todas las preguntas"
+    },
+    "contact": {
+      "address": "Dirección",
+      "hours": "Horario",
+      "phone": "Teléfono",
+      "email": "Correo"
+    }
+  },
+  "services_page": {
+    "seo_title": "Servicios de Trasplante Capilar | Instituto Milhomem – Goiânia",
+    "seo_description": "Trasplante FUE, trasplante de barba y tratamientos complementarios con el Dr. Pablo Milhomem en Goiânia. Técnica avanzada y resultados naturales.",
+    "seo_keywords": "trasplante capilar, FUE, mesoterapia capilar, PRP, Goiânia, restauración capilar, clínica capilar",
+    "cta": {
+      "heading": "¿Listo para dar el",
+      "highlight": "primer paso?",
+      "subtitle": "Agende su consulta gratuita y descubra el plan ideal para usted con el Dr. Pablo Milhomem.",
+      "schedule": "Agendar Consulta Gratuita",
+      "whatsapp": "Hablar por WhatsApp"
+    }
+  },
+  "service_detail": {
+    "seo_title": "{{serviceName}} en Goiânia | Instituto Milhomem",
+    "whatsapp_message_fallback": "¡Hola! Me gustaría obtener más información sobre {{serviceName}}.",
+    "fallback": {
+      "service_name": "el servicio",
+      "how_it_works": "Cómo funciona"
+    },
+    "related": {
+      "learn_more": "Más información"
+    }
+  },
   "privacy": {
     "page_title":       "Política de Privacidad | Instituto Milhomem",
     "meta_desc":        "Política de privacidad y protección de datos del Instituto Milhomem, de conformidad con la LGPD.",
@@ -189,8 +240,105 @@
     "see_privacy":      "Ver Política de Privacidad →"
   },
   "admin": {
+    "nav": {
+      "overview": "Resumen",
+      "bookings": "Leads",
+      "services": "Servicios",
+      "gallery": "Galería",
+      "media": "Medios",
+      "blog": "Blog",
+      "testimonials": "Testimonios",
+      "faq": "FAQ",
+      "stats": "Estadísticas",
+      "users": "Usuarios",
+      "contact": "Contacto",
+      "branding": "Branding",
+      "seo": "SEO",
+      "hero": "Hero",
+      "pages": "Páginas",
+      "sobre": "Sobre nosotros",
+      "settings": "Configuración"
+    },
+    "pages_sections": {
+      "home": "Inicio",
+      "servicos": "Servicios",
+      "blog": "Blog",
+      "contato": "Contacto",
+      "resultados": "Resultados",
+      "footer": "Footer",
+      "service_detail": "Detalle del Servicio",
+      "blog_post": "Post del Blog",
+      "labels": "Etiquetas Globales"
+    },
+    "sobre_sections": {
+      "hero": "Hero",
+      "doctor": "Doctor",
+      "wfi": "WFI",
+      "about": "Sobre nosotros",
+      "values": "Valores",
+      "team": "Equipo",
+      "technology": "Tecnología"
+    },
+    "header": {
+      "panel": "Panel",
+      "admin_title": "Área Administrativa",
+      "logout": "Salir"
+    },
+    "status": {
+      "panel_ready": "Panel listo",
+      "saving": "Guardando {{tab}}...",
+      "save_error": "Error al guardar la configuración",
+      "saved": "Cambios guardados con éxito",
+      "dirty": "Cambios pendientes en {{tab}}",
+      "ready": "{{tab}} listo para editar"
+    },
+    "dialog": {
+      "delete_title": "¿Eliminar permanentemente?",
+      "delete_description": "Esta acción no se puede deshacer. Se eliminará {{title}}.",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "unsaved_title": "Cambios no guardados",
+      "unsaved_description": "Tiene cambios no guardados en esta pestaña. Si sale ahora, se perderán.",
+      "continue_editing": "Seguir editando",
+      "leave_without_saving": "Salir sin guardar"
+    },
     "common": {
-      "not_informed": "No informado"
+      "not_informed": "No informado",
+      "required_field": "Campo obligatorio",
+      "edit": "Editar",
+      "back": "Volver"
+    },
+    "seo": {
+      "title": "Configuración SEO",
+      "description": "Edite el título, la descripción y las palabras clave de cada página del sitio.",
+      "sitemap_title": "Sitemap dinámico",
+      "sitemap_description": "Genere un nuevo sitemap después de cambios en el contenido para actualizar la caché del servidor.",
+      "regenerating": "Generando sitemap...",
+      "regenerate": "Generar nuevo sitemap",
+      "last_generated": "Última generación",
+      "urls": "URLs",
+      "empty": "No hay páginas SEO configuradas.",
+      "editing": "Editando",
+      "page_title": "Título de la Página",
+      "page_title_hint": "(máx. 60 caracteres)",
+      "page_title_required": "Informe el título",
+      "page_title_max": "Máximo 60 caracteres",
+      "description_label": "Descripción",
+      "description_hint": "(máx. 160 caracteres)",
+      "description_required": "Informe la descripción",
+      "description_max": "Máximo 160 caracteres",
+      "keywords": "Palabras clave",
+      "keywords_placeholder": "palabra1, palabra2, palabra3",
+      "og_image": "Imagen OG (Open Graph)",
+      "og_image_helper": "Use una imagen de la biblioteca de Cloudinary para compartir en redes o suba una nueva ahora.",
+      "save": "Guardar Configuración SEO",
+      "saving": "Guardando...",
+      "load_error": "Error al cargar los datos de SEO",
+      "save_success": "¡SEO actualizado con éxito!",
+      "save_error": "Error al guardar SEO: {{message}}",
+      "regenerate_success": "¡Sitemap regenerado con éxito!",
+      "regenerate_error": "Error al regenerar sitemap: {{message}}",
+      "regenerate_failure": "Error al regenerar el sitemap"
     },
     "bookings": {
       "title": "Leads / Citas",

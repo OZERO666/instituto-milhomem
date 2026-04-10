@@ -1,10 +1,12 @@
 // src/features/admin/hooks/useSeo.js
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import api from '@/lib/apiServerClient';
 
 export function useSeo() {
+  const { t } = useTranslation();
   const [seoList,    setSeoList]    = useState([]);
   const [seoEditing, setSeoEditing] = useState(null); // selected item { id, page_name }
   const [isLoading,  setIsLoading]  = useState(false);
@@ -20,9 +22,9 @@ export function useSeo() {
     try {
       const res = await api.fetch('/seo-settings').then(r => r.json());
       setSeoList(Array.isArray(res) ? res : []);
-    } catch (err) { console.error('Error fetching SEO:', err); toast.error('Erro ao carregar dados de SEO'); }
+    } catch (err) { console.error('Error fetching SEO:', err); toast.error(t('admin.seo.load_error')); }
     finally { setIsLoading(false); }
-  }, []);
+  }, [t]);
 
   const handleEditSeo = useCallback((item) => {
     setSeoEditing(item);
@@ -46,14 +48,14 @@ export function useSeo() {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(data),
       });
-      toast.success('SEO atualizado com sucesso!');
+      toast.success(t('admin.seo.save_success'));
       setSeoEditing(null);
       seoForm.reset();
       fetchSeo();
     } catch (err) {
-      toast.error(`Erro ao salvar SEO: ${err.message}`);
+      toast.error(t('admin.seo.save_error', { message: err.message }));
     }
-  }, [seoEditing, seoForm, fetchSeo]);
+  }, [seoEditing, seoForm, fetchSeo, t]);
 
   const regenerateSitemap = useCallback(async () => {
     setIsRegeneratingSitemap(true);
@@ -64,17 +66,17 @@ export function useSeo() {
 
       const payload = await response.json();
       if (!response.ok) {
-        throw new Error(payload?.error || 'Falha ao regenerar sitemap');
+        throw new Error(payload?.error || t('admin.seo.regenerate_failure'));
       }
 
       setSitemapStatus(payload);
-      toast.success('Sitemap regenerado com sucesso!');
+      toast.success(t('admin.seo.regenerate_success'));
     } catch (err) {
-      toast.error(`Erro ao regenerar sitemap: ${err.message}`);
+      toast.error(t('admin.seo.regenerate_error', { message: err.message }));
     } finally {
       setIsRegeneratingSitemap(false);
     }
-  }, []);
+  }, [t]);
 
   return {
     seoList,

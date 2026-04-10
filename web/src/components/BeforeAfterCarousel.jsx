@@ -2,10 +2,12 @@ import React, { useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import api from '@/lib/apiServerClient';
 import BeforeAfterCard from './BeforeAfterCard.jsx';
 
-const BeforeAfterCarousel = ({ allLabel = 'Todos', emptyMessage = 'Nenhum resultado encontrado para este tema.' }) => {
+const BeforeAfterCarousel = ({ allLabel, emptyMessage }) => {
+  const { t } = useTranslation();
   const [items, setItems] = useState([]);
   const [themes, setThemes] = useState([]);
   const [activeThemeId, setActiveThemeId] = useState('all');
@@ -100,7 +102,7 @@ const BeforeAfterCarousel = ({ allLabel = 'Todos', emptyMessage = 'Nenhum result
 
   // Filtros: "Todos" + temas vindos da API
   const filters = [
-    { id: 'all', label: allLabel },
+    { id: 'all', label: allLabel ?? t('home.results_all_label') },
     ...themes.map(t => ({ id: t.id, label: t.nome })),
   ];
 
@@ -169,7 +171,7 @@ const BeforeAfterCarousel = ({ allLabel = 'Todos', emptyMessage = 'Nenhum result
       ) : (
         /* EMPTY */
         <div className="text-center py-12 bg-muted rounded-2xl">
-          <p className="text-muted-foreground">{emptyMessage}</p>
+          <p className="text-muted-foreground">{emptyMessage ?? t('resultados.empty_text')}</p>
         </div>
       )}
     </div>

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import MediaSelectorField from '@/features/admin/components/MediaSelectorField.jsx';
 import TabLoader from '@/features/admin/components/TabLoader.jsx';
 
-const FieldError = ({ error }) =>
-  error ? <p className="text-xs text-destructive mt-1">{error.message || 'Campo obrigatório'}</p> : null;
+const FieldError = ({ error, fallbackMessage }) =>
+  error ? <p className="text-xs text-destructive mt-1">{error.message || fallbackMessage}</p> : null;
 
 const SeoTab = ({
   seoList,
@@ -18,6 +19,7 @@ const SeoTab = ({
   isRegeneratingSitemap,
   sitemapStatus,
 }) => {
+  const { t, i18n } = useTranslation();
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = seoForm;
   const titleLen = watch('meta_title')?.length || 0;
   const descLen  = watch('meta_description')?.length || 0;
@@ -26,18 +28,18 @@ const SeoTab = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-foreground">Configurações de SEO</h2>
+        <h2 className="text-xl font-bold text-foreground">{t('admin.seo.title')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Edite o título, descrição e palavras-chave de cada página do site.
+          {t('admin.seo.description')}
         </p>
       </div>
 
       <div className="bg-card border border-border/60 rounded-xl p-5 space-y-3">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Sitemap dinâmico</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('admin.seo.sitemap_title')}</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Gere um novo sitemap após mudanças no conteúdo para atualizar o cache do servidor.
+              {t('admin.seo.sitemap_description')}
             </p>
           </div>
           <button
@@ -47,12 +49,12 @@ const SeoTab = ({
             className="px-4 py-2 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest rounded-lg hover:bg-accent transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {isRegeneratingSitemap && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isRegeneratingSitemap ? 'Gerando sitemap...' : 'Gerar novo sitemap'}
+            {isRegeneratingSitemap ? t('admin.seo.regenerating') : t('admin.seo.regenerate')}
           </button>
         </div>
         {sitemapStatus?.generated_at && (
           <p className="text-xs text-muted-foreground">
-            Última geração: {new Date(sitemapStatus.generated_at).toLocaleString('pt-BR')} · URLs: {sitemapStatus?.counts?.total || 0}
+            {t('admin.seo.last_generated')}: {new Date(sitemapStatus.generated_at).toLocaleString(i18n.resolvedLanguage || 'pt-BR')} · {t('admin.seo.urls')}: {sitemapStatus?.counts?.total || 0}
           </p>
         )}
       </div>
@@ -74,7 +76,7 @@ const SeoTab = ({
                   onClick={() => handleEditSeo(s)}
                   className="text-xs font-bold text-primary hover:text-primary/70 uppercase tracking-wider transition-colors"
                 >
-                  Editar
+                  {t('admin.common.edit')}
                 </button>
               </div>
               <p className="text-sm font-semibold text-foreground truncate">{s.meta_title}</p>
@@ -83,7 +85,7 @@ const SeoTab = ({
           ))}
           {seoList.length === 0 && (
             <p className="text-muted-foreground text-center py-8 col-span-2">
-              Nenhuma página SEO configurada.
+              {t('admin.seo.empty')}
             </p>
           )}
         </div>
@@ -94,61 +96,61 @@ const SeoTab = ({
         >
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-bold text-foreground uppercase tracking-wide">
-              Editando: <span className="text-primary">{seoEditing.page_name}</span>
+              {t('admin.seo.editing')}: <span className="text-primary">{seoEditing.page_name}</span>
             </h3>
             <button
               type="button"
               onClick={handleCancelSeo}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← Voltar
+              ← {t('admin.common.back')}
             </button>
           </div>
 
           <div>
             <label className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Título da Página *{' '}
-              <span className="ml-2 font-normal text-muted-foreground normal-case tracking-normal">(max 60 caracteres)</span>
+              {t('admin.seo.page_title')} *{' '}
+              <span className="ml-2 font-normal text-muted-foreground normal-case tracking-normal">{t('admin.seo.page_title_hint')}</span>
             </label>
             <input
               type="text"
               {...register('meta_title', {
-                required: 'Informe o título',
-                maxLength: { value: 60, message: 'Máximo 60 caracteres' },
+                required: t('admin.seo.page_title_required'),
+                maxLength: { value: 60, message: t('admin.seo.page_title_max') },
               })}
               className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <div className="flex justify-between items-center mt-1">
-              <FieldError error={errors.meta_title} />
+              <FieldError error={errors.meta_title} fallbackMessage={t('admin.common.required_field')} />
               <p className="text-[10px] text-muted-foreground ml-auto">{titleLen}/60</p>
             </div>
           </div>
 
           <div>
             <label className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Descrição *{' '}
-              <span className="ml-2 font-normal text-muted-foreground normal-case tracking-normal">(max 160 caracteres)</span>
+              {t('admin.seo.description_label')} *{' '}
+              <span className="ml-2 font-normal text-muted-foreground normal-case tracking-normal">{t('admin.seo.description_hint')}</span>
             </label>
             <textarea
               rows={3}
               {...register('meta_description', {
-                required: 'Informe a descrição',
-                maxLength: { value: 160, message: 'Máximo 160 caracteres' },
+                required: t('admin.seo.description_required'),
+                maxLength: { value: 160, message: t('admin.seo.description_max') },
               })}
               className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
             <div className="flex justify-between items-center mt-1">
-              <FieldError error={errors.meta_description} />
+              <FieldError error={errors.meta_description} fallbackMessage={t('admin.common.required_field')} />
               <p className="text-[10px] text-muted-foreground ml-auto">{descLen}/160</p>
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-foreground">Palavras-chave</label>
+            <label className="text-xs font-bold uppercase tracking-wider text-foreground">{t('admin.seo.keywords')}</label>
             <input
               type="text"
               {...register('keywords')}
-              placeholder="palavra1, palavra2, palavra3"
+              placeholder={t('admin.seo.keywords_placeholder')}
               className="mt-2 w-full bg-input border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
@@ -156,13 +158,13 @@ const SeoTab = ({
           <div>
             <input type="hidden" {...register('og_image')} />
             <MediaSelectorField
-              label="Imagem OG (Open Graph)"
+              label={t('admin.seo.og_image')}
               value={ogImage || ''}
               onChange={(nextValue) => seoForm.setValue('og_image', nextValue, { shouldDirty: true })}
               folder="branding"
               libraryFolders={['all', 'branding', 'artigos', 'misc']}
               previewClassName="h-24"
-              helperText="Use uma imagem do acervo do Cloudinary para compartilhamento social ou envie uma nova agora."
+              helperText={t('admin.seo.og_image_helper')}
             />
           </div>
 
@@ -172,7 +174,7 @@ const SeoTab = ({
             className="w-full py-3 bg-primary text-primary-foreground font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-accent transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isSubmitting ? 'Salvando...' : 'Salvar Configurações de SEO'}
+            {isSubmitting ? t('admin.seo.saving') : t('admin.seo.save')}
           </button>
         </form>
       )}

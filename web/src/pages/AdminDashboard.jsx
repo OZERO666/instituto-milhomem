@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Tabs, TabsContent } from '@/components/ui/tabs.jsx';
@@ -34,6 +35,7 @@ import {
 } from '@/features/admin/tabs';
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { logout, currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
@@ -114,24 +116,28 @@ const AdminDashboard = () => {
   }, [guardTab]);
 
   const headerStatus = useMemo(() => {
+    const activeTabLabel = activeTabMeta?.labelKey
+      ? t(activeTabMeta.labelKey).toLowerCase()
+      : (activeTabMeta?.label || t('admin.header.panel')).toLowerCase();
+
     if (heroSaving || sobreSaving || pagesSaving || settingsSaveStatus === 'saving') {
-      return { tone: 'saving', label: `Salvando em ${activeTabMeta?.label || 'configuracoes'}...` };
+      return { tone: 'saving', label: t('admin.status.saving', { tab: activeTabLabel }) };
     }
 
     if (settingsSaveStatus === 'error') {
-      return { tone: 'error', label: 'Erro ao salvar configuracoes' };
+      return { tone: 'error', label: t('admin.status.save_error') };
     }
 
     if (settingsSaveStatus === 'saved') {
-      return { tone: 'saved', label: 'Alteracoes salvas com sucesso' };
+      return { tone: 'saved', label: t('admin.status.saved') };
     }
 
     if (anyDirty) {
-      return { tone: 'dirty', label: `Alteracoes pendentes em ${activeTabMeta?.label || 'uma aba'}` };
+      return { tone: 'dirty', label: t('admin.status.dirty', { tab: activeTabLabel }) };
     }
 
-    return { tone: 'idle', label: `${activeTabMeta?.label || 'Painel'} pronto para edicao` };
-  }, [activeTabMeta, anyDirty, heroSaving, pagesSaving, settingsSaveStatus, sobreSaving]);
+    return { tone: 'idle', label: t('admin.status.ready', { tab: activeTabLabel }) };
+  }, [activeTabMeta, anyDirty, heroSaving, pagesSaving, settingsSaveStatus, sobreSaving, t]);
 
   // ─── Audit logs (overview only) ───────────────────────────────────────────
   const fetchAuditLogs = useCallback(async () => {
