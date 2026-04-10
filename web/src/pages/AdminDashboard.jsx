@@ -163,8 +163,8 @@ const AdminDashboard = () => {
         case 'testimonials': return fetchDepoimentos();
         case 'faq':          return fetchFaq();
         case 'stats':        return fetchEstatisticas();
-        case 'contact':
-        case 'branding':     return fetchContato();
+        case 'contact':      return fetchContato();
+        case 'branding':     return Promise.all([fetchContato(), fetchSettings()]);
         case 'settings':     return fetchSettings();
         case 'users':        return;
         case 'overview': {
@@ -341,6 +341,9 @@ const AdminDashboard = () => {
               <BrandingTab
                 contactForm={contactForm} contactConfig={contactConfig} isLoading={loadingContato}
                 onContactSubmit={(data) => handleContactSubmit(data, fetchData)}
+                settingsForm={settingsForm}
+                saveStatus={settingsSaveStatus}
+                onSettingsSubmit={handleSettingsSubmit}
               />
             </TabsContent>
 
