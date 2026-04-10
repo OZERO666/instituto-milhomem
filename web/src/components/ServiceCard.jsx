@@ -88,7 +88,7 @@ const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, inde
       )}
 
       {/* ── Corpo ─────────────────────────────────────────────────────── */}
-      <div className="p-7 flex flex-col flex-grow relative z-10">
+      <div className="p-4 sm:p-6 lg:p-7 flex flex-col flex-grow relative z-10">
 
         {/* Cabeçalho: ícone + nome (sem imagem) */}
         {!imageUrl && (

@@ -274,7 +274,7 @@ const HomePage = () => {
         <section
           className="relative flex flex-col overflow-hidden"
           style={{
-            height: 'clamp(560px, calc(100dvh - var(--header-h, 88px)), 980px)',
+            height: 'clamp(var(--hero-min-h-mobile, 560px), calc(100dvh - var(--header-h, 88px)), var(--hero-min-h-desktop, 980px))',
           }}
         >
           <div className="absolute inset-0 z-0">
@@ -289,12 +289,12 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-secondary/95 via-secondary/30 to-transparent" />
           <div
             aria-hidden
-            className="absolute left-[52%] top-0 bottom-0 w-px opacity-[0.08]"
+            className="absolute left-[52%] top-0 bottom-0 w-px opacity-[0.08] mobile-decor"
             style={{ background: 'linear-gradient(to bottom, transparent, hsl(var(--primary)), transparent)' }}
           />
           <div
             aria-hidden
-            className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-[0.06] border border-primary"
+            className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-[0.06] border border-primary mobile-decor"
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }}
           />
 
@@ -653,7 +653,7 @@ const HomePage = () => {
         <section id="resultados" className="section-padding bg-muted relative overflow-hidden">
           <div
             aria-hidden
-            className="absolute right-0 top-0 w-72 h-72 rounded-full opacity-[0.03]
+            className="absolute right-0 top-0 w-72 h-72 rounded-full opacity-[0.03] mobile-decor
                        -translate-y-16 translate-x-16 border border-primary"
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.2), transparent 70%)' }}
           />
@@ -765,12 +765,12 @@ const HomePage = () => {
         <section className="section-padding bg-muted relative overflow-hidden">
           <div
             aria-hidden
-            className="absolute left-0 top-0 w-full h-px
+            className="absolute left-0 top-0 w-full h-px mobile-decor
                        bg-gradient-to-r from-transparent via-primary/20 to-transparent"
           />
           <div
             aria-hidden
-            className="absolute right-0 bottom-0 w-72 h-72 rounded-full opacity-[0.03]
+            className="absolute right-0 bottom-0 w-72 h-72 rounded-full opacity-[0.03] mobile-decor
                        translate-y-16 -translate-x-16 border border-primary"
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.2), transparent 70%)' }}
           />

@@ -52,6 +52,26 @@ const COLOR_VAR_MAP = {
   border_color:     '--border',
 };
 
+const RESPONSIVE_DEFAULTS = {
+  container_max_width: 1280,
+  container_padding_mobile: 16,
+  container_padding_tablet: 24,
+  container_padding_desktop: 32,
+  section_padding_mobile: 48,
+  section_padding_tablet: 64,
+  section_padding_desktop: 80,
+  hero_min_height_mobile: 560,
+  hero_min_height_desktop: 980,
+  mobile_type_scale: 100,
+  show_decorations_mobile: 'true',
+};
+
+const clampNumber = (value, fallback, min, max) => {
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) return fallback;
+  return Math.min(max, Math.max(min, parsed));
+};
+
 export function useTheme() {
   const { settings } = useSiteSettings();
 
@@ -65,5 +85,78 @@ export function useTheme() {
       const hsl = hexToHslString(hex);
       if (hsl) root.style.setProperty(cssVar, hsl);
     }
+
+    const containerMaxWidth = clampNumber(
+      settings.container_max_width,
+      RESPONSIVE_DEFAULTS.container_max_width,
+      960,
+      1680,
+    );
+    const containerPaddingMobile = clampNumber(
+      settings.container_padding_mobile,
+      RESPONSIVE_DEFAULTS.container_padding_mobile,
+      8,
+      48,
+    );
+    const containerPaddingTablet = clampNumber(
+      settings.container_padding_tablet,
+      RESPONSIVE_DEFAULTS.container_padding_tablet,
+      12,
+      64,
+    );
+    const containerPaddingDesktop = clampNumber(
+      settings.container_padding_desktop,
+      RESPONSIVE_DEFAULTS.container_padding_desktop,
+      16,
+      80,
+    );
+    const sectionPaddingMobile = clampNumber(
+      settings.section_padding_mobile,
+      RESPONSIVE_DEFAULTS.section_padding_mobile,
+      24,
+      120,
+    );
+    const sectionPaddingTablet = clampNumber(
+      settings.section_padding_tablet,
+      RESPONSIVE_DEFAULTS.section_padding_tablet,
+      32,
+      140,
+    );
+    const sectionPaddingDesktop = clampNumber(
+      settings.section_padding_desktop,
+      RESPONSIVE_DEFAULTS.section_padding_desktop,
+      40,
+      180,
+    );
+    const heroMinHeightMobile = clampNumber(
+      settings.hero_min_height_mobile,
+      RESPONSIVE_DEFAULTS.hero_min_height_mobile,
+      420,
+      900,
+    );
+    const heroMinHeightDesktop = clampNumber(
+      settings.hero_min_height_desktop,
+      RESPONSIVE_DEFAULTS.hero_min_height_desktop,
+      640,
+      1200,
+    );
+    const mobileTypeScale = clampNumber(
+      settings.mobile_type_scale,
+      RESPONSIVE_DEFAULTS.mobile_type_scale,
+      85,
+      120,
+    );
+
+    root.style.setProperty('--container-max-w', `${containerMaxWidth}px`);
+    root.style.setProperty('--container-pad-x-mobile', `${containerPaddingMobile}px`);
+    root.style.setProperty('--container-pad-x-tablet', `${containerPaddingTablet}px`);
+    root.style.setProperty('--container-pad-x-desktop', `${containerPaddingDesktop}px`);
+    root.style.setProperty('--section-pad-y-mobile', `${sectionPaddingMobile}px`);
+    root.style.setProperty('--section-pad-y-tablet', `${sectionPaddingTablet}px`);
+    root.style.setProperty('--section-pad-y-desktop', `${sectionPaddingDesktop}px`);
+    root.style.setProperty('--hero-min-h-mobile', `${heroMinHeightMobile}px`);
+    root.style.setProperty('--hero-min-h-desktop', `${heroMinHeightDesktop}px`);
+    root.style.setProperty('--mobile-type-scale', `${mobileTypeScale / 100}`);
+    root.style.setProperty('--mobile-decor-opacity', settings.show_decorations_mobile === 'false' ? '0' : '1');
   }, [settings]);
 }

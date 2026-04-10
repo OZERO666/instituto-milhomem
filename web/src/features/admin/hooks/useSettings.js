@@ -17,9 +17,47 @@ const DEFAULTS = {
   site_name:        'Instituto Milhomem',
   logo_size_header: '56',
   logo_size_footer: '48',
+  container_max_width: '1280',
+  container_padding_mobile: '16',
+  container_padding_tablet: '24',
+  container_padding_desktop: '32',
+  section_padding_mobile: '48',
+  section_padding_tablet: '64',
+  section_padding_desktop: '80',
+  hero_min_height_mobile: '560',
+  hero_min_height_desktop: '980',
+  mobile_type_scale: '100',
+  show_decorations_mobile: 'true',
   robots_noindex:   'false',
   blog_disabled:    'false',
 };
+
+const normalizeSettings = (source = {}) => ({
+  primary_color: source.primary_color || DEFAULTS.primary_color,
+  secondary_color: source.secondary_color || DEFAULTS.secondary_color,
+  accent_color: source.accent_color || DEFAULTS.accent_color,
+  background_color: source.background_color || DEFAULTS.background_color,
+  foreground_color: source.foreground_color || DEFAULTS.foreground_color,
+  muted_color: source.muted_color || DEFAULTS.muted_color,
+  card_color: source.card_color || DEFAULTS.card_color,
+  border_color: source.border_color || DEFAULTS.border_color,
+  site_name: source.site_name || DEFAULTS.site_name,
+  logo_size_header: source.logo_size_header || DEFAULTS.logo_size_header,
+  logo_size_footer: source.logo_size_footer || DEFAULTS.logo_size_footer,
+  container_max_width: source.container_max_width || DEFAULTS.container_max_width,
+  container_padding_mobile: source.container_padding_mobile || DEFAULTS.container_padding_mobile,
+  container_padding_tablet: source.container_padding_tablet || DEFAULTS.container_padding_tablet,
+  container_padding_desktop: source.container_padding_desktop || DEFAULTS.container_padding_desktop,
+  section_padding_mobile: source.section_padding_mobile || DEFAULTS.section_padding_mobile,
+  section_padding_tablet: source.section_padding_tablet || DEFAULTS.section_padding_tablet,
+  section_padding_desktop: source.section_padding_desktop || DEFAULTS.section_padding_desktop,
+  hero_min_height_mobile: source.hero_min_height_mobile || DEFAULTS.hero_min_height_mobile,
+  hero_min_height_desktop: source.hero_min_height_desktop || DEFAULTS.hero_min_height_desktop,
+  mobile_type_scale: source.mobile_type_scale || DEFAULTS.mobile_type_scale,
+  show_decorations_mobile: source.show_decorations_mobile ?? DEFAULTS.show_decorations_mobile,
+  robots_noindex: source.robots_noindex ?? DEFAULTS.robots_noindex,
+  blog_disabled: source.blog_disabled ?? DEFAULTS.blog_disabled,
+});
 
 export function useSettings() {
   const { refetch } = useSiteSettings();
@@ -35,21 +73,7 @@ export function useSettings() {
       const res  = await api.fetch('/settings');
       const data = await res.json();
       if (data && typeof data === 'object') {
-        settingsForm.reset({
-          primary_color:    data.primary_color    || DEFAULTS.primary_color,
-          secondary_color:  data.secondary_color  || DEFAULTS.secondary_color,
-          accent_color:     data.accent_color     || DEFAULTS.accent_color,
-          background_color: data.background_color || DEFAULTS.background_color,
-          foreground_color: data.foreground_color || DEFAULTS.foreground_color,
-          muted_color:      data.muted_color      || DEFAULTS.muted_color,
-          card_color:       data.card_color       || DEFAULTS.card_color,
-          border_color:     data.border_color     || DEFAULTS.border_color,
-          site_name:        data.site_name        || DEFAULTS.site_name,
-          logo_size_header: data.logo_size_header || DEFAULTS.logo_size_header,
-          logo_size_footer: data.logo_size_footer || DEFAULTS.logo_size_footer,
-          robots_noindex:   data.robots_noindex   ?? DEFAULTS.robots_noindex,
-          blog_disabled:    data.blog_disabled    ?? DEFAULTS.blog_disabled,
-        });
+        settingsForm.reset(normalizeSettings(data));
       }
     } catch (err) {
       console.error('Error fetching settings:', err);
@@ -70,21 +94,7 @@ export function useSettings() {
         throw new Error(err.error || `Erro ${res.status}`);
       }
       const updated = await res.json();
-      settingsForm.reset({
-        primary_color:    updated.primary_color    || data.primary_color,
-        secondary_color:  updated.secondary_color  || data.secondary_color,
-        accent_color:     updated.accent_color     || data.accent_color,
-        background_color: updated.background_color || data.background_color,
-        foreground_color: updated.foreground_color || data.foreground_color,
-        muted_color:      updated.muted_color      || data.muted_color,
-        card_color:       updated.card_color       || data.card_color,
-        border_color:     updated.border_color     || data.border_color,
-        site_name:        updated.site_name        || data.site_name,
-        logo_size_header: updated.logo_size_header || data.logo_size_header,
-        logo_size_footer: updated.logo_size_footer || data.logo_size_footer,
-        robots_noindex:   updated.robots_noindex   ?? data.robots_noindex,
-        blog_disabled:    updated.blog_disabled    ?? data.blog_disabled,
-      });
+      settingsForm.reset(normalizeSettings({ ...data, ...updated }));
       refetch(); // atualiza useTheme → aplica cores imediatamente
       setSaveStatus('saved');
       toast.success('Configurações salvas! As cores foram aplicadas. Recarregue o site para que os visitantes vejam as mudanças.');

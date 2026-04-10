@@ -89,7 +89,7 @@ const ResultadosPage = () => {
                 <span className="text-primary font-bold uppercase tracking-widest text-sm">{pageConfig.header_badge}</span>
                 <div className="w-8 h-px bg-primary" />
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-foreground">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-foreground">
                 {pageConfig.header_title}
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
@@ -106,7 +106,7 @@ const ResultadosPage = () => {
                 <button
                   key={filter.id}
                   onClick={() => setActiveThemeId(filter.id)}
-                  className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all duration-300 active:scale-95 border ${
+                  className={`px-3 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-full font-bold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 active:scale-95 border ${
                     activeThemeId === filter.id
                       ? 'bg-primary text-secondary border-primary shadow-lg'
                       : 'bg-card text-foreground border-border hover:border-primary hover:text-primary'
@@ -119,7 +119,7 @@ const ResultadosPage = () => {
 
             {/* GALERIA */}
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="bg-card rounded-xl p-4 border border-border shadow-sm">
                     <div className="aspect-[4/3] bg-muted rounded-lg animate-pulse mb-4" />
@@ -129,7 +129,7 @@ const ResultadosPage = () => {
                 ))}
               </div>
             ) : galleryItems.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-24">
                 {galleryItems.map((item) => (
                   <BeforeAfterCard key={item.id} item={item} />
                 ))}
