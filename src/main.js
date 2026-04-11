@@ -18,8 +18,15 @@ import logger from './utils/logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR   = path.join(__dirname, '../dist');
+const ONE_YEAR_SECONDS = 31536000;
+const ONE_HOUR_SECONDS = 3600;
 
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+  // Confia no proxy da hospedagem/CDN para cabeçalhos X-Forwarded-*
+  app.set('trust proxy', 1);
+}
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception:', error);
@@ -96,6 +103,7 @@ app.use((req, res, next) => {
 
 // robots.txt — permite indexação de páginas públicas, bloqueia admin/api
 app.get('/robots.txt', (_req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60');
   const baseUrl = process.env.SITE_URL || 'https://institutomilhomem.com';
   res.type('text/plain').send(
     `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nDisallow: /login\nSitemap: ${baseUrl}/sitemap.xml\n`
@@ -115,19 +123,69 @@ app.use((req, res, next) => {
 });
 app.use(sanitizeMiddleware);
 
+// Evita cache em rotas dinâmicas/sensíveis (API, admin, login)
+app.use((req, res, next) => {
+  if (
+    !['GET', 'HEAD'].includes(req.method)
+    || req.path.startsWith('/api')
+    || req.path.startsWith('/admin')
+    || req.path === '/login'
+    || req.path.startsWith('/login/')
+  ) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  if (
+    req.path.startsWith('/api')
+    || req.path.startsWith('/admin')
+    || req.path === '/login'
+    || req.path.startsWith('/login/')
+  ) {
+    res.setHeader('CDN-Cache-Control', 'no-store');
+    res.setHeader('Surrogate-Control', 'no-store');
+  }
+  next();
+});
+
 // Rotas da API — prefixadas com /api
 app.use('/api', routes());
 app.use('/api', uploadRoutes);
 app.use('/api/hero-config', heroConfigRoutes);
 
 // Sitemap dinâmico
-app.get('/sitemap.xml', sitemapRoute);
+app.get('/sitemap.xml', (req, res, next) => {
+  res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60');
+  return sitemapRoute(req, res, next);
+});
 
 // Serve o build do frontend (React SPA)
-app.use(express.static(DIST_DIR));
+app.use(express.static(DIST_DIR, {
+  setHeaders: (res, filePath) => {
+    // Assets com hash podem ser cacheados por longo prazo sem risco de stale
+    if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+      res.setHeader('Cache-Control', `public, max-age=${ONE_YEAR_SECONDS}, immutable`);
+      return;
+    }
+
+    // index.html deve sempre revalidar para evitar shell antigo em deploy
+    if (filePath.endsWith(`${path.sep}index.html`)) {
+      res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate');
+      return;
+    }
+
+    // Outros estáticos (manifest, favicon, etc.) com cache moderado
+    res.setHeader('Cache-Control', `public, max-age=${ONE_HOUR_SECONDS}, s-maxage=${ONE_HOUR_SECONDS}`);
+  },
+}));
 
 // SPA fallback — qualquer rota não-API devolve o index.html
 app.get(/^(?!\/api).*$/, (_req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate');
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
