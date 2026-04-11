@@ -65,7 +65,7 @@ app.use(helmet({
       imgSrc:                  ["'self'", 'data:', 'blob:', 'https://horizons-cdn.hostinger.com', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
       objectSrc:               ["'none'"],
       // Allow Google Maps embeds used in ContatoPage
-      frameSrc:                ["'none'", 'https://maps.google.com', 'https://www.google.com'],
+      frameSrc:                ['https://maps.google.com', 'https://www.google.com'],
       frameAncestors:          ["'none'"],
       connectSrc:              ["'self'"],
       formAction:              ["'self'"],
