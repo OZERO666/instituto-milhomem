@@ -25,6 +25,13 @@ const BeforeAfterCard = ({ item }) => {
     crop: 'fill',
     gravity: 'auto',
   });
+
+  const syncContainerRect = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    containerRectRef.current = { left: rect.left, width: rect.width };
+  };
   const afterProps = getCloudinaryResponsiveImageProps(afterUrl, {
     widths: [320, 480, 640, 800],
     sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
@@ -34,9 +41,8 @@ const BeforeAfterCard = ({ item }) => {
   });
 
   const updatePosition = (clientX) => {
-    const container = containerRef.current;
-    if (!container) return;
-    const rect = containerRectRef.current || container.getBoundingClientRect();
+    const rect = containerRectRef.current;
+    if (!rect || rect.width <= 0) return;
     const newPosition = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
     setSliderPosition(newPosition);
   };
@@ -65,14 +71,32 @@ const BeforeAfterCard = ({ item }) => {
   };
 
   const handlePointerDown = (event) => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    containerRectRef.current = container.getBoundingClientRect();
+    if (!containerRef.current) return;
     setIsDragging(true);
     schedulePositionUpdate(event.clientX);
     event.currentTarget.setPointerCapture(event.pointerId);
   };
+
+  useEffect(() => {
+    syncContainerRect();
+
+    const container = containerRef.current;
+    if (!container) return undefined;
+
+    const ro = new ResizeObserver(() => {
+      syncContainerRect();
+    });
+
+    ro.observe(container);
+    window.addEventListener('resize', syncContainerRect, { passive: true });
+    window.addEventListener('scroll', syncContainerRect, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', syncContainerRect);
+      window.removeEventListener('scroll', syncContainerRect);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isDragging) return undefined;

@@ -22,29 +22,59 @@ const Header = ({ siteConfig }) => {
   const logoHeight                          = Number(settings?.logo_size_header) || 56;
   const useResizeObserver                   = settings?.perf_header_resize_observer !== 'false';
   const headerRef                           = useRef(null);
+  const headerHeightRafRef                  = useRef(null);
+  const lastHeaderHeightRef                 = useRef(null);
 
   // Publica a altura real do header como CSS var --header-h
   // Usado pelo spacer no AppShell para evitar sobreposição do conteúdo
   useLayoutEffect(() => {
-    const update = () => {
-      if (headerRef.current) {
-        document.documentElement.style.setProperty(
-          '--header-h',
-          headerRef.current.offsetHeight + 'px'
-        );
+    const publishHeaderHeight = (rawHeight) => {
+      const roundedHeight = Math.max(0, Math.round(rawHeight || 0));
+      if (!roundedHeight || roundedHeight === lastHeaderHeightRef.current) return;
+      lastHeaderHeightRef.current = roundedHeight;
+
+      if (headerHeightRafRef.current !== null) {
+        cancelAnimationFrame(headerHeightRafRef.current);
       }
+
+      headerHeightRafRef.current = requestAnimationFrame(() => {
+        headerHeightRafRef.current = null;
+        document.documentElement.style.setProperty('--header-h', `${roundedHeight}px`);
+      });
     };
 
-    update();
+    const measureAndPublish = () => {
+      const header = headerRef.current;
+      if (!header) return;
+      publishHeaderHeight(header.getBoundingClientRect().height);
+    };
+
+    measureAndPublish();
 
     if (!useResizeObserver) {
-      window.addEventListener('resize', update, { passive: true });
-      return () => window.removeEventListener('resize', update);
+      window.addEventListener('resize', measureAndPublish, { passive: true });
+      return () => {
+        window.removeEventListener('resize', measureAndPublish);
+        if (headerHeightRafRef.current !== null) {
+          cancelAnimationFrame(headerHeightRafRef.current);
+          headerHeightRafRef.current = null;
+        }
+      };
     }
 
-    const ro = new ResizeObserver(update);
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      publishHeaderHeight(entry.contentRect.height);
+    });
     if (headerRef.current) ro.observe(headerRef.current);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      if (headerHeightRafRef.current !== null) {
+        cancelAnimationFrame(headerHeightRafRef.current);
+        headerHeightRafRef.current = null;
+      }
+    };
   }, [logoHeight, useResizeObserver]);
 
   useEffect(() => {
