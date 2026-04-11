@@ -1,11 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import api from '@/lib/apiServerClient';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const BeforeAfterCard = ({ item }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
+  const rafRef = useRef(null);
+  const pendingClientXRef = useRef(null);
+  const containerRectRef = useRef(null);
+  const { settings } = useSiteSettings();
+  const useRafThrottle = settings?.perf_before_after_throttle !== 'false';
 
   const getImageUrl = (filename) => api.resolveMediaUrl('galeria', filename);
 
@@ -15,9 +21,26 @@ const BeforeAfterCard = ({ item }) => {
   const updatePosition = (clientX) => {
     const container = containerRef.current;
     if (!container) return;
-    const rect = container.getBoundingClientRect();
+    const rect = containerRectRef.current || container.getBoundingClientRect();
     const newPosition = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
     setSliderPosition(newPosition);
+  };
+
+  const schedulePositionUpdate = (clientX) => {
+    if (!useRafThrottle) {
+      updatePosition(clientX);
+      return;
+    }
+
+    pendingClientXRef.current = clientX;
+    if (rafRef.current !== null) return;
+
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      if (pendingClientXRef.current !== null) {
+        updatePosition(pendingClientXRef.current);
+      }
+    });
   };
 
   const capturePointer = (event) => {
@@ -27,9 +50,12 @@ const BeforeAfterCard = ({ item }) => {
   };
 
   const handlePointerDown = (event) => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    containerRectRef.current = container.getBoundingClientRect();
     setIsDragging(true);
-    updatePosition(event.clientX);
+    schedulePositionUpdate(event.clientX);
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
@@ -37,11 +63,12 @@ const BeforeAfterCard = ({ item }) => {
     if (!isDragging) return undefined;
 
     const handlePointerMove = (event) => {
-      updatePosition(event.clientX);
+      schedulePositionUpdate(event.clientX);
     };
 
     const handlePointerUp = () => {
       setIsDragging(false);
+      containerRectRef.current = null;
     };
 
     window.addEventListener('pointermove', handlePointerMove);
@@ -51,7 +78,13 @@ const BeforeAfterCard = ({ item }) => {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [isDragging]);
+  }, [isDragging, useRafThrottle]);
+
+  useEffect(() => () => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
+  }, []);
 
   return (
     <motion.div

@@ -407,3 +407,24 @@
   animation: shimmer 1.5s linear infinite;
   @apply rounded-md;
 }
+
+/* ─── Runtime Performance Flags (Admin) ─────────────────────────────────── */
+@media (max-width: 767px) {
+  .perf-reduce-motion-mobile *,
+  .perf-reduce-motion-mobile *::before,
+  .perf-reduce-motion-mobile *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.perf-limit-transition-all .transition-all {
+  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+}
+
+.perf-content-visibility-sections .section-padding {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}

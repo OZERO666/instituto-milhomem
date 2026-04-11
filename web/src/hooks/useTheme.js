@@ -66,6 +66,14 @@ const RESPONSIVE_DEFAULTS = {
   show_decorations_mobile: 'true',
 };
 
+const PERFORMANCE_DEFAULTS = {
+  perf_reduce_motion_mobile: 'false',
+  perf_before_after_throttle: 'true',
+  perf_header_resize_observer: 'true',
+  perf_use_content_visibility_sections: 'false',
+  perf_limit_transition_all: 'false',
+};
+
 const clampNumber = (value, fallback, min, max) => {
   const parsed = Number(value);
   if (Number.isNaN(parsed)) return fallback;
@@ -158,5 +166,18 @@ export function useTheme() {
     root.style.setProperty('--hero-min-h-desktop', `${heroMinHeightDesktop}px`);
     root.style.setProperty('--mobile-type-scale', `${mobileTypeScale / 100}`);
     root.style.setProperty('--mobile-decor-opacity', settings.show_decorations_mobile === 'false' ? '0' : '1');
+
+    const reduceMotionMobile = (settings.perf_reduce_motion_mobile ?? PERFORMANCE_DEFAULTS.perf_reduce_motion_mobile) === 'true';
+    const beforeAfterThrottle = (settings.perf_before_after_throttle ?? PERFORMANCE_DEFAULTS.perf_before_after_throttle) !== 'false';
+    const headerResizeObserver = (settings.perf_header_resize_observer ?? PERFORMANCE_DEFAULTS.perf_header_resize_observer) !== 'false';
+    const useContentVisibilitySections = (settings.perf_use_content_visibility_sections ?? PERFORMANCE_DEFAULTS.perf_use_content_visibility_sections) === 'true';
+    const limitTransitionAll = (settings.perf_limit_transition_all ?? PERFORMANCE_DEFAULTS.perf_limit_transition_all) === 'true';
+
+    root.classList.toggle('perf-reduce-motion-mobile', reduceMotionMobile);
+    root.classList.toggle('perf-content-visibility-sections', useContentVisibilitySections);
+    root.classList.toggle('perf-limit-transition-all', limitTransitionAll);
+
+    root.dataset.perfBeforeAfterThrottle = beforeAfterThrottle ? 'true' : 'false';
+    root.dataset.perfHeaderResizeObserver = headerResizeObserver ? 'true' : 'false';
   }, [settings]);
 }

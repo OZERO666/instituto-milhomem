@@ -20,6 +20,7 @@ const Header = ({ siteConfig }) => {
   const config                              = useContatoConfig();
   const { settings }                        = useSiteSettings();
   const logoHeight                          = Number(settings?.logo_size_header) || 56;
+  const useResizeObserver                   = settings?.perf_header_resize_observer !== 'false';
   const headerRef                           = useRef(null);
 
   // Publica a altura real do header como CSS var --header-h
@@ -33,11 +34,18 @@ const Header = ({ siteConfig }) => {
         );
       }
     };
+
     update();
+
+    if (!useResizeObserver) {
+      window.addEventListener('resize', update, { passive: true });
+      return () => window.removeEventListener('resize', update);
+    }
+
     const ro = new ResizeObserver(update);
     if (headerRef.current) ro.observe(headerRef.current);
     return () => ro.disconnect();
-  }, [logoHeight]);
+  }, [logoHeight, useResizeObserver]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);

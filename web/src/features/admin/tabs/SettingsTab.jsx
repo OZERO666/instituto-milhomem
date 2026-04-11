@@ -1,6 +1,6 @@
 // src/features/admin/tabs/SettingsTab.jsx
 import React from 'react';
-import { CheckCircle2, AlertCircle, Loader2, Palette, Type, ImageIcon, Search, LayoutList } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Loader2, Palette, Type, ImageIcon, Search, LayoutList, Gauge } from 'lucide-react';
 import { Button }   from '@/components/ui/button.jsx';
 import { Input }    from '@/components/ui/input.jsx';
 import { Label }    from '@/components/ui/label.jsx';
@@ -85,6 +85,11 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
   const { register, handleSubmit, watch, setValue, formState: { isDirty } } = settingsForm;
   const robotsNoindex  = watch('robots_noindex');
   const blogDisabled   = watch('blog_disabled');
+  const perfReduceMotionMobile = watch('perf_reduce_motion_mobile');
+  const perfBeforeAfterThrottle = watch('perf_before_after_throttle');
+  const perfHeaderResizeObserver = watch('perf_header_resize_observer');
+  const perfUseContentVisibilitySections = watch('perf_use_content_visibility_sections');
+  const perfLimitTransitionAll = watch('perf_limit_transition_all');
 
   return (
     <div className="space-y-6">
@@ -385,6 +390,108 @@ const SettingsTab = ({ settingsForm, saveStatus, onSettingsSubmit }) => {
                     setValue('blog_disabled', checked ? 'true' : 'false', { shouldDirty: true })
                   }
                 />
+              </div>
+            </div>
+
+            {/* ── Performance e Interatividade ─────────────────────────── */}
+            <div className="border-t border-border pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Gauge className="w-4 h-4 text-primary" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">
+                  Performance e Interatividade
+                </h3>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
+                  <div className="space-y-1 flex-1">
+                    <Label className="text-sm font-semibold">Reduzir animações no mobile</Label>
+                    <p className="text-[12px] text-muted-foreground">
+                      Diminui duração de animações e transições em telas pequenas para reduzir custo de pintura e melhorar resposta em aparelhos de entrada.
+                    </p>
+                    <p className="text-[12px] font-semibold mt-1">
+                      {perfReduceMotionMobile === 'true' ? 'Ativo: mobile com movimento reduzido.' : 'Inativo: comportamento visual completo no mobile.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={perfReduceMotionMobile === 'true'}
+                    onCheckedChange={(checked) =>
+                      setValue('perf_reduce_motion_mobile', checked ? 'true' : 'false', { shouldDirty: true })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
+                  <div className="space-y-1 flex-1">
+                    <Label className="text-sm font-semibold">Otimizar slider Antes/Depois</Label>
+                    <p className="text-[12px] text-muted-foreground">
+                      Agrupa atualizações de arraste por frame com requestAnimationFrame para reduzir recalculo de layout durante o gesto.
+                    </p>
+                    <p className="text-[12px] font-semibold mt-1">
+                      {perfBeforeAfterThrottle === 'true' ? 'Ativo: arraste com throttle por frame.' : 'Inativo: atualização em todos os eventos de ponteiro.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={perfBeforeAfterThrottle !== 'false'}
+                    onCheckedChange={(checked) =>
+                      setValue('perf_before_after_throttle', checked ? 'true' : 'false', { shouldDirty: true })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
+                  <div className="space-y-1 flex-1">
+                    <Label className="text-sm font-semibold">Header com ResizeObserver</Label>
+                    <p className="text-[12px] text-muted-foreground">
+                      Mantém a altura do header sincronizada em tempo real. Desative para usar atualização simplificada e reduzir observação contínua de layout.
+                    </p>
+                    <p className="text-[12px] font-semibold mt-1">
+                      {perfHeaderResizeObserver !== 'false' ? 'Ativo: sincronização automática por observer.' : 'Inativo: atualização simplificada.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={perfHeaderResizeObserver !== 'false'}
+                    onCheckedChange={(checked) =>
+                      setValue('perf_header_resize_observer', checked ? 'true' : 'false', { shouldDirty: true })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
+                  <div className="space-y-1 flex-1">
+                    <Label className="text-sm font-semibold">Usar content-visibility em seções</Label>
+                    <p className="text-[12px] text-muted-foreground">
+                      Adia o custo de layout e pintura de seções fora da tela, melhorando a rolagem em páginas longas.
+                    </p>
+                    <p className="text-[12px] font-semibold mt-1">
+                      {perfUseContentVisibilitySections === 'true' ? 'Ativo: seções fora da tela renderizam sob demanda.' : 'Inativo: renderização padrão para todas as seções.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={perfUseContentVisibilitySections === 'true'}
+                    onCheckedChange={(checked) =>
+                      setValue('perf_use_content_visibility_sections', checked ? 'true' : 'false', { shouldDirty: true })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-start justify-between gap-6 rounded-xl border border-border p-5">
+                  <div className="space-y-1 flex-1">
+                    <Label className="text-sm font-semibold">Limitar transition-all</Label>
+                    <p className="text-[12px] text-muted-foreground">
+                      Restringe transition-all para propriedades mais leves (opacidade, transform e cores), reduzindo layouts desnecessários.
+                    </p>
+                    <p className="text-[12px] font-semibold mt-1">
+                      {perfLimitTransitionAll === 'true' ? 'Ativo: transições mais previsíveis e leves.' : 'Inativo: comportamento atual com transition-all completo.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={perfLimitTransitionAll === 'true'}
+                    onCheckedChange={(checked) =>
+                      setValue('perf_limit_transition_all', checked ? 'true' : 'false', { shouldDirty: true })
+                    }
+                  />
+                </div>
               </div>
             </div>
 
