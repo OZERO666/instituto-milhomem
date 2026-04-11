@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import api from '@/lib/apiServerClient';
+import { getCloudinaryResponsiveImageProps } from '@/lib/cloudinaryImage';
 
 const BlogCard = ({ article, ctaLabel = 'Ler artigo' }) => {
   const imageUrl = api.resolveMediaUrl('artigos', article.imagem_destaque);
+  const imageProps = useMemo(() => getCloudinaryResponsiveImageProps(imageUrl, {
+    widths: [320, 480, 640, 800, 960],
+    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+    aspectRatio: '16:9',
+    crop: 'fill',
+    gravity: 'auto',
+  }), [imageUrl]);
 
   return (
     <Link
@@ -16,7 +24,9 @@ const BlogCard = ({ article, ctaLabel = 'Ler artigo' }) => {
       {imageUrl && (
         <div className="aspect-video bg-muted overflow-hidden relative">
           <img
-            src={imageUrl}
+            src={imageProps.src}
+            srcSet={imageProps.srcSet}
+            sizes={imageProps.sizes}
             alt={article.titulo}
             width="800"
             height="450"

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import api from '@/lib/apiServerClient';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { getCloudinaryResponsiveImageProps } from '@/lib/cloudinaryImage';
 
 const BeforeAfterCard = ({ item }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -17,6 +18,20 @@ const BeforeAfterCard = ({ item }) => {
 
   const beforeUrl = getImageUrl(item.foto_antes);
   const afterUrl = getImageUrl(item.foto_depois);
+  const beforeProps = getCloudinaryResponsiveImageProps(beforeUrl, {
+    widths: [320, 480, 640, 800],
+    sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
+    aspectRatio: '4:3',
+    crop: 'fill',
+    gravity: 'auto',
+  });
+  const afterProps = getCloudinaryResponsiveImageProps(afterUrl, {
+    widths: [320, 480, 640, 800],
+    sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
+    aspectRatio: '4:3',
+    crop: 'fill',
+    gravity: 'auto',
+  });
 
   const updatePosition = (clientX) => {
     const container = containerRef.current;
@@ -99,8 +114,12 @@ const BeforeAfterCard = ({ item }) => {
       >
         {beforeUrl && (
           <img
-            src={beforeUrl}
+            src={beforeProps.src}
+            srcSet={beforeProps.srcSet}
+            sizes={beforeProps.sizes}
             alt={`${item.titulo} - Antes`}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
@@ -113,8 +132,12 @@ const BeforeAfterCard = ({ item }) => {
             }}
           >
             <img
-              src={afterUrl}
+              src={afterProps.src}
+              srcSet={afterProps.srcSet}
+              sizes={afterProps.sizes}
               alt={`${item.titulo} - Depois`}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>

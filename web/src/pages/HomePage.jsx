@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, CheckCircle2, MapPin, Phone, Mail, Clock,
@@ -19,6 +19,7 @@ import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { buildWhatsappUrl } from '@/hooks/useContatoConfig';
 import api from '@/lib/apiServerClient';
 import { CONTATO_DEFAULTS } from '@/config/site';
+import { getCloudinaryResponsiveImageProps } from '@/lib/cloudinaryImage';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const DEFAULT_STATS = {
@@ -245,6 +246,14 @@ const HomePage = () => {
   const heroCtaLink    = heroConfig?.cta_link?.trim() || whatsappUrl;
   const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || 'pt-BR');
   const sectionEnabled = (key) => homePageConfig?.sections?.[key]?.enabled !== false;
+  const heroImageProps = useMemo(() => getCloudinaryResponsiveImageProps(heroConfig?.imagem_fundo?.trim() || '', {
+    widths: [640, 960, 1280, 1600, 1920, 2560],
+    sizes: '100vw',
+    aspectRatio: '16:9',
+    crop: 'fill',
+    gravity: 'auto',
+    fallbackWidth: 1920,
+  }), [heroConfig?.imagem_fundo]);
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
@@ -269,10 +278,13 @@ const HomePage = () => {
         >
           <div className="absolute inset-0 z-0">
             <img
-              src={heroConfig?.imagem_fundo?.trim() || ''}
+              src={heroImageProps.src}
+              srcSet={heroImageProps.srcSet}
+              sizes={heroImageProps.sizes}
               alt={t('home.hero_image_alt')}
               className="w-full h-full object-cover object-top scale-[1.03]"
               fetchPriority="high"
+              decoding="async"
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/90 to-transparent" />

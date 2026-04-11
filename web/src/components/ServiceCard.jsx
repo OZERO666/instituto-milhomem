@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import api from '@/lib/apiServerClient';
+import { getCloudinaryResponsiveImageProps } from '@/lib/cloudinaryImage';
 import { ICON_MAP } from '@/features/admin/tabs/ServicosTab.jsx';
 
 // Lazy-load PhosphorIcon para manter o glob de módulos num chunk separado
@@ -38,6 +39,13 @@ const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, inde
   const imageUrl = useMemo(() => {
     return api.resolveMediaUrl('servicos', imagem);
   }, [imagem]);
+  const imageProps = useMemo(() => getCloudinaryResponsiveImageProps(imageUrl, {
+    widths: [320, 480, 640, 800],
+    sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw',
+    aspectRatio: '25:8',
+    crop: 'fill',
+    gravity: 'auto',
+  }), [imageUrl]);
   const resolvedCtaLabel = ctaLabel ?? t('service_detail.related.learn_more');
 
   const benefitsList = useMemo(() => {
@@ -68,7 +76,9 @@ const ServiceCard = ({ id, nome, descricao, beneficios, imagem, icon, slug, inde
       {imageUrl && (
         <div className="relative w-full h-48 overflow-hidden rounded-t-2xl">
           <img
-            src={imageUrl}
+            src={imageProps.src}
+            srcSet={imageProps.srcSet}
+            sizes={imageProps.sizes}
             alt={nome}
             width="600"
             height="192"
