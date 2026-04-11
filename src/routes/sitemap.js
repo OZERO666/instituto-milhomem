@@ -63,9 +63,9 @@ const buildSitemapPayload = async () => {
     ? STATIC_ROUTES_BASE
     : [...STATIC_ROUTES_BASE, BLOG_STATIC_ROUTE];
 
-  // Busca serviços ativos. Seleciona apenas slug para reduzir risco de quebra por diferenças de schema entre ambientes.
+  // Busca serviços com slug válido. Evita dependência de colunas opcionais entre ambientes.
   const servicos = await safeQuery(
-    "SELECT slug FROM servicos WHERE ativo = 1 AND slug IS NOT NULL ORDER BY ordem ASC",
+    "SELECT slug FROM servicos WHERE slug IS NOT NULL AND TRIM(slug) <> '' ORDER BY ordem ASC",
     'Falha ao consultar servicos para sitemap'
   );
 
@@ -83,21 +83,27 @@ const buildSitemapPayload = async () => {
     urlEntry(`${BASE_URL}${path}`, today, changefreq, priority)
   ).join('');
 
-  const servicoEntries = servicos
-    .filter((s) => typeof s?.slug === 'string' && s.slug.trim())
-    .map((s) => urlEntry(encodeURI(`${BASE_URL}/servicos/${s.slug}`), today, 'weekly', '0.8'))
+  const serviceSlugs = servicos
+    .map((s) => (typeof s?.slug === 'string' ? s.slug.trim() : ''))
+    .filter(Boolean);
+
+  const articleSlugs = artigos
+    .map((a) => (typeof a?.slug === 'string' ? a.slug.trim() : ''))
+    .filter(Boolean);
+
+  const servicoEntries = serviceSlugs
+    .map((slug) => urlEntry(encodeURI(`${BASE_URL}/servicos/${slug}`), today, 'weekly', '0.8'))
     .join('');
 
-  const artigoEntries = artigos
-    .filter((a) => typeof a?.slug === 'string' && a.slug.trim())
-    .map((a) => urlEntry(encodeURI(`${BASE_URL}/blog/${a.slug}`), today, 'monthly', '0.7'))
+  const artigoEntries = articleSlugs
+    .map((slug) => urlEntry(encodeURI(`${BASE_URL}/blog/${slug}`), today, 'monthly', '0.7'))
     .join('');
 
   const stats = {
     static: staticRoutes.length,
-    services: servicos.length,
-    articles: artigos.length,
-    total: staticRoutes.length + servicos.length + artigos.length,
+    services: serviceSlugs.length,
+    articles: articleSlugs.length,
+    total: staticRoutes.length + serviceSlugs.length + articleSlugs.length,
   };
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
