@@ -116,8 +116,8 @@ const BeforeAfterCarousel = ({ allLabel, emptyMessage }) => {
             onClick={() => setActiveThemeId(filter.id)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               activeThemeId === filter.id
-                ? 'bg-primary text-white shadow-md'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground'
+                ? 'bg-primary text-secondary shadow-md'
+                : 'bg-muted text-foreground hover:bg-muted/80 hover:text-secondary'
             }`}
           >
             {filter.label}

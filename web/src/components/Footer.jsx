@@ -72,7 +72,7 @@ const Footer = ({ siteConfig }) => {
           <Link to="/">
             <img src={logoUrl} alt="Instituto Milhomem" style={{ height: logoHeight }} className="object-contain" />
           </Link>
-          <p className="text-white/50 text-sm leading-relaxed">
+          <p className="text-white/80 text-sm leading-relaxed">
             {footerConfig.description}
           </p>
           {/* Redes sociais */}
@@ -85,7 +85,7 @@ const Footer = ({ siteConfig }) => {
                 rel="noopener noreferrer"
                 aria-label={label}
                 className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center
-                           text-white/50 hover:text-primary hover:border-primary/50 transition-all duration-200"
+                           text-white/80 hover:text-primary hover:border-primary/50 transition-all duration-200"
               >
                 <Icon className="w-4 h-4" />
               </a>
@@ -103,7 +103,7 @@ const Footer = ({ siteConfig }) => {
               <li key={path}>
                 <Link
                   to={path}
-                  className="text-sm text-white/50 hover:text-primary transition-colors flex items-center gap-1 group"
+                  className="text-sm text-white/80 hover:text-primary transition-colors flex items-center gap-1 group"
                 >
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   {t(`nav.${key}`)}
@@ -124,7 +124,7 @@ const Footer = ({ siteConfig }) => {
                 <a
                   href={href}
                   {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="flex items-start gap-3 text-sm text-white/50 hover:text-primary transition-colors group"
+                  className="flex items-start gap-3 text-sm text-white/80 hover:text-primary transition-colors group"
                 >
                   <Icon className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                   <span>{content}</span>
@@ -139,7 +139,7 @@ const Footer = ({ siteConfig }) => {
           <h4 className="text-xs font-bold uppercase tracking-widest text-primary mb-5">
             {t('footer.schedule_section', 'Atendimento')}
           </h4>
-          <p className="text-sm text-white/50 mb-1">{translatedConfig.dias_funcionamento}</p>
+          <p className="text-sm text-white/80 mb-1">{translatedConfig.dias_funcionamento}</p>
           <p className="text-sm font-bold text-white mb-6">{translatedConfig.horario}</p>
 
           <a
@@ -159,14 +159,14 @@ const Footer = ({ siteConfig }) => {
 
       {/* ── RODAPÉ ── */}
       <div className="border-t border-white/5">
-        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
+        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/80">
           <span>© {currentYear} {footerConfig.rights_text}</span>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <Link to="/politica-de-privacidade" className="hover:text-primary transition-colors">
+            <Link to="/politica-de-privacidade" className="text-white/80 hover:text-primary transition-colors">
               {t('footer.privacy_policy', 'Política de Privacidade')}
             </Link>
-            <span className="text-white/10">|</span>
-            <Link to="/termos-de-uso" className="hover:text-primary transition-colors">
+            <span className="text-white/40">|</span>
+            <Link to="/termos-de-uso" className="text-white/80 hover:text-primary transition-colors">
               {t('footer.terms_of_use', 'Termos de Uso')}
             </Link>
           </div>
