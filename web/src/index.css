@@ -1,5 +1,5 @@
 /* src/index.css */
-/* Fonte carregada via <link> no index.html para não bloquear renderização */
+/* Montserrat carregada localmente via @fontsource no bootstrap da aplicacao */
 
 @tailwind base;
 @tailwind components;
@@ -139,7 +139,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
