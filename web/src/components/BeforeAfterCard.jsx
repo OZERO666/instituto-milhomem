@@ -70,8 +70,15 @@ const BeforeAfterCard = ({ item }) => {
     handlePointerDown(event);
   };
 
+  const endDrag = () => {
+    setIsDragging(false);
+    pendingClientXRef.current = null;
+    syncContainerRect();
+  };
+
   const handlePointerDown = (event) => {
     if (!containerRef.current) return;
+    syncContainerRect();
     setIsDragging(true);
     schedulePositionUpdate(event.clientX);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -105,17 +112,18 @@ const BeforeAfterCard = ({ item }) => {
       schedulePositionUpdate(event.clientX);
     };
 
-    const handlePointerUp = () => {
-      setIsDragging(false);
-      containerRectRef.current = null;
+    const handlePointerEnd = () => {
+      endDrag();
     };
 
     window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointerup', handlePointerEnd);
+    window.addEventListener('pointercancel', handlePointerEnd);
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointerup', handlePointerEnd);
+      window.removeEventListener('pointercancel', handlePointerEnd);
     };
   }, [isDragging, useRafThrottle]);
 
@@ -180,6 +188,7 @@ const BeforeAfterCard = ({ item }) => {
             cursor: 'ew-resize',
           }}
           onPointerDown={capturePointer}
+          onLostPointerCapture={endDrag}
         >
           <div className="h-full w-px bg-white/60" />
         </div>
