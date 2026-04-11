@@ -1,5 +1,5 @@
 // src/pages/AdminDashboard.jsx
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,10 +29,21 @@ import { useContato }      from '@/features/admin/hooks/useContato.js';
 import { useSettings }     from '@/features/admin/hooks/useSettings.js';
 import { useFaq }          from '@/features/admin/hooks/useFaq.js';
 import {
-  OverviewTab, BookingsTab, ServicosTab, GaleriaTab, BlogTab,
-  DepoimentosTab, EstatisticasTab, ContatoTab, BrandingTab,
+  OverviewTab, BookingsTab, ServicosTab, GaleriaTab,
+  DepoimentosTab, ContatoTab, BrandingTab,
   SeoTab, PagesTab, SobreTab, HeroTab, MediaLibraryTab, UsersRolesTab, SettingsTab, FaqTab,
 } from '@/features/admin/tabs';
+
+// Lazy-loaded tabs (large dependencies: Recharts, react-quill)
+const EstatisticasTab = lazy(() => import('@/features/admin/tabs/EstatisticasTab.jsx'));
+const BlogTab         = lazy(() => import('@/features/admin/tabs/BlogTab.jsx'));
+
+// Minimal fallback for tab loading
+const TabLoader = () => (
+  <div className="flex items-center justify-center py-24">
+    <div className="w-8 h-8 rounded-full border-4 border-muted border-t-primary animate-spin" />
+  </div>
+);
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -295,16 +306,18 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="blog">
-              <BlogTab
-                articles={articles} blogCategories={blogCategories} isLoading={loadingBlog}
-                categoryForm={categoryForm}
-                onGenericSubmit={handleGenericSubmit} onDelete={handleDelete}
-                openArticleEditor={openArticleEditor} isArticleEditorOpen={isArticleEditorOpen}
-                closeArticleEditor={closeArticleEditor} currentArticle={currentArticle}
-                onArticleStatusChange={(article, status, overrides) => handleArticleStatusChange(article, status, fetchData, overrides)}
-                onDuplicateArticle={(article) => handleDuplicateArticle(article, fetchData)}
-                onArticleSuccess={() => handleArticleSuccess(fetchData)}
-              />
+              <Suspense fallback={<TabLoader />}>
+                <BlogTab
+                  articles={articles} blogCategories={blogCategories} isLoading={loadingBlog}
+                  categoryForm={categoryForm}
+                  onGenericSubmit={handleGenericSubmit} onDelete={handleDelete}
+                  openArticleEditor={openArticleEditor} isArticleEditorOpen={isArticleEditorOpen}
+                  closeArticleEditor={closeArticleEditor} currentArticle={currentArticle}
+                  onArticleStatusChange={(article, status, overrides) => handleArticleStatusChange(article, status, fetchData, overrides)}
+                  onDuplicateArticle={(article) => handleDuplicateArticle(article, fetchData)}
+                  onArticleSuccess={() => handleArticleSuccess(fetchData)}
+                />
+              </Suspense>
             </TabsContent>
 
             <TabsContent value="testimonials">
@@ -326,10 +339,12 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="stats">
-              <EstatisticasTab
-                statsForm={statsForm} isLoading={loadingEstatisticas}
-                onStatsSubmit={(data) => handleStatsSubmit(data, fetchData)}
-              />
+              <Suspense fallback={<TabLoader />}>
+                <EstatisticasTab
+                  statsForm={statsForm} isLoading={loadingEstatisticas}
+                  onStatsSubmit={(data) => handleStatsSubmit(data, fetchData)}
+                />
+              </Suspense>
             </TabsContent>
 
             <TabsContent value="users">

@@ -10,7 +10,6 @@ import { AuthProvider } from '@/contexts/AuthContext.jsx';
 import ScrollToTop from '@/components/ScrollToTop.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 import CookieBanner from '@/components/CookieBanner.jsx';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Home, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -38,12 +37,7 @@ const MainLayout = ({ children }) => <main>{children}</main>;
 // ─── Page Loader ──────────────────────────────────────────────────────────────
 const PageLoader = ({ logoUrl }) => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      className="flex flex-col items-center gap-6"
-    >
+    <div className="flex flex-col items-center gap-6">
       <img
         src={logoUrl || LOGO_URL}
         alt="Instituto Milhomem"
@@ -62,7 +56,7 @@ const PageLoader = ({ logoUrl }) => (
       <p className="text-secondary font-bold uppercase tracking-widest text-xs">
         Carregando...
       </p>
-    </motion.div>
+    </div>
   </div>
 );
 
@@ -72,12 +66,7 @@ const NotFoundPage = ({ logoUrl }) => (
 
     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--primary)/0.07_0%,transparent_60%)]" />
 
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative z-10 space-y-8 max-w-lg"
-    >
+    <div className="relative z-10 space-y-8 max-w-lg">
       <img
         src={logoUrl || LOGO_URL}
         alt="Instituto Milhomem"
@@ -85,14 +74,9 @@ const NotFoundPage = ({ logoUrl }) => (
       />
 
       <div>
-        <motion.h1
-          className="text-[8rem] md:text-[10rem] font-extrabold text-primary/20 leading-none select-none"
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-        >
+        <h1 className="text-[8rem] md:text-[10rem] font-extrabold text-primary/20 leading-none select-none">
           404
-        </motion.h1>
+        </h1>
         <h2 className="text-2xl md:text-3xl font-bold text-secondary -mt-6">
           Página não encontrada
         </h2>
@@ -118,19 +102,18 @@ const NotFoundPage = ({ logoUrl }) => (
           Página Anterior
         </button>
       </div>
-    </motion.div>
+    </div>
   </div>
 );
 
-// ─── Animated Routes ──────────────────────────────────────────────────────────
+// ─── Routes ──────────────────────────────────────────────────────────────────
 const AnimatedRoutes = ({ siteConfig }) => {
   const location = useLocation();
   const { settings } = useSiteSettings();
   const blogDisabled  = settings?.blog_disabled === 'true';
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+    <Routes location={location} key={location.pathname}>
 
         {/* Públicas */}
         <Route path="/"                        element={<MainLayout><HomePage /></MainLayout>} />
@@ -161,11 +144,10 @@ const AnimatedRoutes = ({ siteConfig }) => {
         <Route path="*" element={<NotFoundPage logoUrl={siteConfig?.logo_url} />} />
 
       </Routes>
-    </AnimatePresence>
   );
 };
 
-// ─── AppShell — Header e Footer persistentes FORA do AnimatePresence ──────────
+// ─── AppShell — Header e Footer persistentes fora das rotas ──────────────────
 const AppShell = ({ siteConfig }) => {
   const location = useLocation();
   const { i18n } = useTranslation();

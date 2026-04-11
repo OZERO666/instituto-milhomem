@@ -313,8 +313,10 @@ export default defineConfig({
 			],
 			output: {
 				manualChunks: {
-					'vendor-react':  ['react', 'react-dom', 'react-router-dom'],
-					'vendor-ui':     ['framer-motion', 'embla-carousel-react', 'embla-carousel-autoplay', 'recharts'],
+					'vendor-react':    ['react', 'react-dom', 'react-router-dom'],
+					'vendor-motion':   ['framer-motion'],
+					'vendor-recharts': ['recharts'],
+					'vendor-carousel': ['embla-carousel-react', 'embla-carousel-autoplay'],
 					'vendor-radix':  [
 						'@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu',
 						'@radix-ui/react-select', '@radix-ui/react-tabs',
