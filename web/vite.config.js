@@ -332,7 +332,7 @@ export default defineConfig({
 					'vendor-form':   ['react-hook-form', '@hookform/resolvers'],
 					'vendor-icons':  ['lucide-react'],
 					'vendor-editor': ['react-quill'],
-					'vendor-misc':   ['date-fns', 'clsx', 'tailwind-merge', 'class-variance-authority', 'sonner', 'next-themes'],
+					'vendor-misc':   ['date-fns', 'clsx', 'tailwind-merge', 'class-variance-authority', 'sonner'],
 				}
 			}
 		}
