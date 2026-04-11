@@ -69,7 +69,7 @@ app.use(helmet({
       scriptSrc:               ["'self'", "'unsafe-inline'"],
       styleSrc:                ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc:                 ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc:                  ["'self'", 'data:', 'blob:', 'https://horizons-cdn.hostinger.com', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
+      imgSrc:                  ["'self'", 'data:', 'blob:', 'https://images.unsplash.com', 'https://res.cloudinary.com'],
       objectSrc:               ["'none'"],
       // Allow Google Maps embeds used in ContatoPage
       frameSrc:                ['https://maps.google.com', 'https://www.google.com'],
