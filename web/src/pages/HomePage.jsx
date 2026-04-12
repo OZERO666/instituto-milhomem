@@ -244,25 +244,6 @@ const HomePage = () => {
     || t('home.hero_subtitle_fallback');
   const heroCtaText    = translatedHero?.cta_texto?.trim() || t('home.hero_cta_fallback');
   const heroCtaLink    = heroConfig?.cta_link?.trim() || whatsappUrl;
-  const heroTitleLength = heroTitle.length;
-  const heroSubtitleLength = heroSubtitle.length;
-  const heroTitleSizeClass = useMemo(() => {
-    if (heroTitleLength > 140) {
-      return 'text-lg sm:text-2xl md:text-3xl lg:text-[2.8rem] xl:text-[3.4rem] 2xl:text-[3.9rem]';
-    }
-    if (heroTitleLength > 95) {
-      return 'text-xl sm:text-3xl md:text-4xl lg:text-[3.1rem] xl:text-[3.9rem] 2xl:text-[4.4rem]';
-    }
-    return 'text-xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.5rem] 2xl:text-[5rem]';
-  }, [heroTitleLength]);
-  const heroTitleClampClass = heroTitleLength > 110 ? 'line-clamp-4 md:line-clamp-3' : 'line-clamp-3 md:line-clamp-2';
-  const heroSubtitleSizeClass = useMemo(() => {
-    if (heroSubtitleLength > 220) {
-      return 'text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl';
-    }
-    return 'text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl';
-  }, [heroSubtitleLength]);
-  const heroSubtitleClampClass = heroSubtitleLength > 220 ? 'line-clamp-5 md:line-clamp-4' : 'line-clamp-4 md:line-clamp-3';
   const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || 'pt-BR');
   const sectionEnabled = (key) => homePageConfig?.sections?.[key]?.enabled !== false;
   const heroImageProps = useMemo(() => getCloudinaryResponsiveImageProps(heroConfig?.imagem_fundo?.trim() || '', {
@@ -359,9 +340,9 @@ const HomePage = () => {
                 </motion.div>
 
                 {/* Título */}
-                <h1 className={`${heroTitleSizeClass} ${heroTitleClampClass} font-extrabold text-white
-                               mb-4 md:mb-6 xl:mb-7 leading-[1.18] md:leading-[1.14] tracking-[0.01em] uppercase`}
-                    title={heroTitle}
+                <h1
+                  className="font-extrabold text-white mb-4 md:mb-6 xl:mb-7 tracking-[0.01em] uppercase"
+                  style={{ fontSize: 'clamp(1.75rem, 4.5vw, 4.5rem)', lineHeight: 1.14 }}
                 >
                   {heroTitle}
                 </h1>
@@ -371,8 +352,9 @@ const HomePage = () => {
                   <Gem className="w-3.5 h-3.5 text-primary/70" />
                 </div>
 
-                <p className={`${heroSubtitleSizeClass} ${heroSubtitleClampClass} text-white/80 mb-5 md:mb-7 xl:mb-9 leading-relaxed max-w-xl xl:max-w-2xl font-light`}
-                   title={heroSubtitle}
+                <p
+                  className="text-white/80 mb-5 md:mb-7 xl:mb-9 leading-relaxed max-w-xl xl:max-w-2xl font-light"
+                  style={{ fontSize: 'clamp(0.875rem, calc(0.4rem + 1.2vw), 1.35rem)' }}
                 >
                   {heroSubtitle}
                 </p>
