@@ -154,7 +154,7 @@ const ServiceDetailPage = () => {
                 <span className="text-primary font-bold uppercase tracking-[0.18em] text-[10px]">{pageConfig.hero_badge}</span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.15] tracking-normal">
                 {displayService.nome}
               </h1>
 

@@ -152,7 +152,7 @@ const BlogPostPage = () => {
                 </span>
               )}
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-secondary leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-secondary leading-[1.15] tracking-normal">
                 {displayArticle.titulo}
               </h1>
 

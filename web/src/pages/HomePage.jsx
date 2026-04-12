@@ -341,7 +341,7 @@ const HomePage = () => {
 
                 {/* Título */}
                 <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.5rem] 2xl:text-[5rem] font-extrabold text-white
-                               mb-3 md:mb-4 xl:mb-5 leading-tight tracking-tight uppercase">
+                               mb-3 md:mb-4 xl:mb-5 leading-[1.14] tracking-normal uppercase">
                   {heroTitle}
                 </h1>
 

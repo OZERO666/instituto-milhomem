@@ -126,7 +126,13 @@
     color: hsl(var(--secondary));
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
+    @apply font-bold tracking-normal;
+    text-wrap: balance;
+    line-height: 1.24;
+  }
+
+  h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
     text-wrap: balance;
     line-height: 1.2;
