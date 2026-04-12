@@ -303,8 +303,8 @@ const HomePage = () => {
           <div className="container-custom relative z-10 h-full flex flex-col justify-center py-6 md:py-10 lg:py-12 xl:py-14">
             {heroLoading ? (
               /* ── Skeleton enquanto carrega ── */
-              <div className="max-w-3xl space-y-6 animate-pulse">
-                <div className="h-8 w-80 bg-white/10 rounded-full" />
+              <div className="max-w-3xl mx-auto text-center space-y-6 animate-pulse">
+                <div className="h-8 w-80 mx-auto bg-white/10 rounded-full" />
                 <div className="space-y-3">
                   <div className="h-14 w-full bg-white/10 rounded-xl" />
                   <div className="h-14 w-4/5 bg-white/10 rounded-xl" />
@@ -321,7 +321,7 @@ const HomePage = () => {
               </div>
             ) : (
               <motion.div
-                className="max-w-3xl xl:max-w-4xl"
+                className="max-w-3xl xl:max-w-4xl mx-auto text-center"
                 initial={{ opacity: 0, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: 'easeOut' }}
@@ -347,7 +347,7 @@ const HomePage = () => {
                   {heroTitle}
                 </h1>
 
-                <div className="flex items-center gap-4 mb-4 md:mb-5 xl:mb-6 max-w-xs">
+                <div className="flex items-center gap-4 mb-4 md:mb-5 xl:mb-6 max-w-xs mx-auto">
                   <div className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
                   <Gem className="w-3.5 h-3.5 text-primary/70" />
                 </div>
@@ -374,7 +374,7 @@ const HomePage = () => {
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <a
                     href={heroCtaLink}
                     target="_blank" rel="noopener noreferrer"
