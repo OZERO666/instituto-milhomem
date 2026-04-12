@@ -231,7 +231,7 @@
     @apply text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-tight;
   }
   .heading-lg {
-    @apply text-3xl sm:text-4xl font-extrabold tracking-tight;
+    @apply text-3xl sm:text-4xl font-extrabold tracking-normal leading-[1.2] sm:leading-[1.15];
   }
   .heading-md {
     @apply text-2xl sm:text-3xl font-bold;

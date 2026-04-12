@@ -50,7 +50,7 @@ const fadeRight = (delay = 0) => ({
 
 // ─── Sub-componentes ──────────────────────────────────────────────────────────
 const SectionBadge = ({ label, center = false }) => (
-  <div className={`flex items-center gap-3 mb-4 ${center ? 'justify-center' : ''}`}>
+  <div className={`flex items-center gap-3 mb-5 md:mb-6 ${center ? 'justify-center' : ''}`}>
     <div className="w-8 h-px bg-primary" />
     <span className="text-primary font-bold uppercase tracking-[0.18em] text-[10px]">
       {label}
@@ -421,7 +421,7 @@ const HomePage = () => {
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
               <motion.div className="max-w-2xl" {...fadeLeft()}>
                 <SectionBadge label={homePageConfig.services.badge} />
-                <h2 className="heading-lg text-foreground mb-2">
+                <h2 className="heading-lg text-foreground mb-4 md:mb-5">
                   {homePageConfig.services.title}
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-md mt-2">
@@ -469,7 +469,7 @@ const HomePage = () => {
           <div className="container-custom">
             <motion.div className="text-center mb-14" {...fadeUp()}>
               <SectionBadge label={homePageConfig.journey.badge} center />
-              <h2 className="heading-lg text-foreground mb-3">{homePageConfig.journey.title}</h2>
+              <h2 className="heading-lg text-foreground mb-4 md:mb-5">{homePageConfig.journey.title}</h2>
               <GoldDivider className="max-w-[160px] mx-auto" />
             </motion.div>
 
@@ -532,7 +532,7 @@ const HomePage = () => {
 
               <motion.div {...fadeLeft()}>
                 <SectionBadge label={homePageConfig.about.badge} />
-                <h2 className="heading-lg text-foreground mb-3">
+                <h2 className="heading-lg text-foreground mb-4 md:mb-5">
                   {homePageConfig.about.title}<br />
                   <span className="text-primary">{homePageConfig.about.highlight}</span>
                 </h2>
@@ -662,7 +662,7 @@ const HomePage = () => {
           <div className="container-custom relative z-10">
             <motion.div className="text-center mb-16" {...fadeUp()}>
               <SectionBadge label={homePageConfig.results.badge} center />
-              <h2 className="heading-lg text-foreground mb-4">{homePageConfig.results.title}</h2>
+              <h2 className="heading-lg text-foreground mb-4 md:mb-5">{homePageConfig.results.title}</h2>
               <GoldDivider className="mb-6 max-w-[160px] mx-auto" />
               <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
                 {homePageConfig.results.subtitle}
@@ -700,7 +700,7 @@ const HomePage = () => {
           <div className="container-custom mb-14">
             <motion.div className="text-center" {...fadeUp()}>
               <SectionBadge label={homePageConfig.testimonials.badge} center />
-              <h2 className="heading-lg text-foreground mb-3">{homePageConfig.testimonials.title}</h2>
+              <h2 className="heading-lg text-foreground mb-4 md:mb-5">{homePageConfig.testimonials.title}</h2>
               <GoldDivider className="mb-5 max-w-[140px] mx-auto" />
               <p className="text-muted-foreground text-base max-w-md mx-auto leading-relaxed">
                 {homePageConfig.testimonials.subtitle}
@@ -724,7 +724,7 @@ const HomePage = () => {
             <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
               <motion.div className="max-w-xl" {...fadeLeft()}>
                 <SectionBadge label={homePageConfig.blog.badge} />
-                <h2 className="heading-lg text-foreground">{homePageConfig.blog.title}</h2>
+                <h2 className="heading-lg text-foreground mb-4 md:mb-5">{homePageConfig.blog.title}</h2>
                 <GoldDivider className="mt-4 max-w-[160px]" />
               </motion.div>
               <motion.div {...fadeRight(0.2)}>
@@ -779,7 +779,7 @@ const HomePage = () => {
           <div className="container-custom relative z-10">
             <motion.div className="text-center mb-14" {...fadeUp()}>
               <SectionBadge label={t('home.faq.badge')} center />
-              <h2 className="heading-lg text-foreground mb-4">{t('home.faq.title')}</h2>
+              <h2 className="heading-lg text-foreground mb-4 md:mb-5">{t('home.faq.title')}</h2>
               <GoldDivider className="mb-5 max-w-[140px] mx-auto" />
               <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
                 {t('home.faq.subtitle')}
@@ -835,7 +835,7 @@ const HomePage = () => {
 
               <motion.div {...fadeLeft()}>
                 <SectionBadge label={homePageConfig.final_cta.badge} />
-                <h2 className="heading-lg text-foreground mb-3">
+                <h2 className="heading-lg text-foreground mb-4 md:mb-5">
                   {homePageConfig.final_cta.title}
                 </h2>
                 <GoldDivider className="mb-6 max-w-[160px]" />
