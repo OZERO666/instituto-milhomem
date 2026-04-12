@@ -273,7 +273,7 @@ const HomePage = () => {
         <section
           className="relative flex flex-col overflow-hidden"
           style={{
-            height: 'clamp(var(--hero-min-h-mobile, 560px), calc(100dvh - var(--header-h, 88px)), var(--hero-min-h-desktop, 980px))',
+            minHeight: 'clamp(var(--hero-min-h-mobile, 560px), calc(100dvh - var(--header-h, 88px)), var(--hero-min-h-desktop, 980px))',
           }}
         >
           <div className="absolute inset-0 z-0">
@@ -300,7 +300,7 @@ const HomePage = () => {
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }}
           />
 
-          <div className="container-custom relative z-10 h-full flex flex-col justify-center py-8 md:py-12 lg:py-16 xl:py-24 overflow-y-auto">
+          <div className="container-custom relative z-10 h-full flex flex-col justify-center py-6 md:py-10 lg:py-12 xl:py-14">
             {heroLoading ? (
               /* ── Skeleton enquanto carrega ── */
               <div className="max-w-3xl space-y-6 animate-pulse">
@@ -342,7 +342,7 @@ const HomePage = () => {
                 {/* Título */}
                 <h1
                   className="font-extrabold text-white mb-4 md:mb-6 xl:mb-7 tracking-[0.01em] uppercase"
-                  style={{ fontSize: 'clamp(1.75rem, 4.5vw, 4.5rem)', lineHeight: 1.14 }}
+                  style={{ fontSize: 'clamp(1.5rem, calc(0.95rem + 2.6vw), 3.8rem)', lineHeight: 1.14 }}
                 >
                   {heroTitle}
                 </h1>
@@ -354,7 +354,7 @@ const HomePage = () => {
 
                 <p
                   className="text-white/80 mb-5 md:mb-7 xl:mb-9 leading-relaxed max-w-xl xl:max-w-2xl font-light"
-                  style={{ fontSize: 'clamp(0.875rem, calc(0.4rem + 1.2vw), 1.35rem)' }}
+                  style={{ fontSize: 'clamp(0.9rem, calc(0.7rem + 0.6vw), 1.2rem)' }}
                 >
                   {heroSubtitle}
                 </p>
