@@ -330,7 +330,7 @@ const HomePage = () => {
                 <motion.div
                   className="inline-flex items-center gap-2 bg-primary/10 border border-primary/25
                              text-primary px-3 py-1.5 rounded-full text-[9px] font-bold uppercase
-                             tracking-[0.08em] mb-4 md:mb-5 xl:mb-8 backdrop-blur-sm"
+                             tracking-[0.08em] mb-5 md:mb-6 xl:mb-8 backdrop-blur-sm"
                   initial={{ opacity: 0, y: -12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
@@ -341,16 +341,16 @@ const HomePage = () => {
 
                 {/* Título */}
                 <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.5rem] 2xl:text-[5rem] font-extrabold text-white
-                               mb-3 md:mb-4 xl:mb-5 leading-[1.14] tracking-normal uppercase">
+                               mb-4 md:mb-6 xl:mb-7 leading-[1.18] md:leading-[1.14] tracking-[0.01em] uppercase">
                   {heroTitle}
                 </h1>
 
-                <div className="flex items-center gap-4 mb-3 md:mb-4 xl:mb-6 max-w-xs">
+                <div className="flex items-center gap-4 mb-4 md:mb-5 xl:mb-6 max-w-xs">
                   <div className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
                   <Gem className="w-3.5 h-3.5 text-primary/70" />
                 </div>
 
-                <p className="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl text-white/80 mb-3 md:mb-5 xl:mb-8 leading-relaxed max-w-xl xl:max-w-2xl font-light">
+                <p className="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl text-white/80 mb-5 md:mb-7 xl:mb-9 leading-relaxed max-w-xl xl:max-w-2xl font-light">
                   {heroSubtitle}
                 </p>
 
