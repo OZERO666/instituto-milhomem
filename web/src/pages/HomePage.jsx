@@ -300,7 +300,7 @@ const HomePage = () => {
             style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }}
           />
 
-          <div className="container-custom relative z-10 h-full flex flex-col justify-center py-8 md:py-16 lg:py-20 overflow-y-auto">
+          <div className="container-custom relative z-10 h-full flex flex-col justify-center py-8 md:py-12 lg:py-16 xl:py-24 overflow-y-auto">
             {heroLoading ? (
               /* ── Skeleton enquanto carrega ── */
               <div className="max-w-3xl space-y-6 animate-pulse">
@@ -321,7 +321,7 @@ const HomePage = () => {
               </div>
             ) : (
               <motion.div
-                className="max-w-3xl"
+                className="max-w-3xl xl:max-w-4xl"
                 initial={{ opacity: 0, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: 'easeOut' }}
@@ -330,7 +330,7 @@ const HomePage = () => {
                 <motion.div
                   className="inline-flex items-center gap-2 bg-primary/10 border border-primary/25
                              text-primary px-3 py-1.5 rounded-full text-[9px] font-bold uppercase
-                             tracking-[0.08em] mb-3 md:mb-8 backdrop-blur-sm"
+                             tracking-[0.08em] mb-4 md:mb-5 xl:mb-8 backdrop-blur-sm"
                   initial={{ opacity: 0, y: -12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
@@ -340,23 +340,23 @@ const HomePage = () => {
                 </motion.div>
 
                 {/* Título */}
-                <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-[4.5rem] font-extrabold text-white
-                               mb-3 md:mb-5 leading-tight tracking-tight uppercase">
+                <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.5rem] 2xl:text-[5rem] font-extrabold text-white
+                               mb-3 md:mb-4 xl:mb-5 leading-tight tracking-tight uppercase">
                   {heroTitle}
                 </h1>
 
-                <div className="flex items-center gap-4 mb-3 md:mb-6 max-w-xs">
+                <div className="flex items-center gap-4 mb-3 md:mb-4 xl:mb-6 max-w-xs">
                   <div className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
                   <Gem className="w-3.5 h-3.5 text-primary/70" />
                 </div>
 
-                <p className="text-xs sm:text-sm md:text-xl text-white/80 mb-3 md:mb-8 leading-relaxed max-w-xl font-light">
+                <p className="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl text-white/80 mb-3 md:mb-5 xl:mb-8 leading-relaxed max-w-xl xl:max-w-2xl font-light">
                   {heroSubtitle}
                 </p>
 
                 {/* Trust badges */}
-                <div className="hidden sm:flex flex-wrap items-center gap-x-8 gap-y-2 mb-3 md:mb-8
-                                text-white/70 text-[10px] font-bold uppercase tracking-[0.15em]">
+                <div className="hidden sm:flex flex-wrap items-center gap-x-8 gap-y-2 mb-3 md:mb-5 xl:mb-8
+                                text-white/70 text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.15em]">
                   {[
                     { icon: Shield, label: t('hero.trust_team',    'Equipe médica especializada')  },
                     { icon: Award,  label: t('hero.trust_results', 'Resultados naturais comprovados') },

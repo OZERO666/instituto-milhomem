@@ -19,6 +19,8 @@
     --section-pad-y-desktop: 80px;
     --hero-min-h-mobile: 560px;
     --hero-min-h-desktop: 980px;
+    --section-pad-y-xl: 96px;
+    --section-pad-y-2xl: 112px;
     --mobile-type-scale: 1;
     --mobile-decor-opacity: 1;
     /* Logo Responsive Sizes */
@@ -201,6 +203,20 @@
     }
   }
 
+  @media (min-width: 1280px) {
+    .section-padding {
+      padding-top: var(--section-pad-y-xl);
+      padding-bottom: var(--section-pad-y-xl);
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .section-padding {
+      padding-top: var(--section-pad-y-2xl);
+      padding-bottom: var(--section-pad-y-2xl);
+    }
+  }
+
   @media (max-width: 767px) {
     .mobile-decor {
       opacity: var(--mobile-decor-opacity);
@@ -219,6 +235,16 @@
   }
   .heading-md {
     @apply text-2xl sm:text-3xl font-bold;
+  }
+
+  @media (min-width: 1280px) {
+    .heading-xl { font-size: clamp(3.75rem, 5vw, 5rem); }
+    .heading-lg { font-size: clamp(2.75rem, 4vw, 3.5rem); }
+  }
+
+  @media (min-width: 1536px) {
+    .heading-xl { font-size: clamp(5rem, 5.5vw, 6rem); }
+    .heading-lg { font-size: clamp(3.5rem, 4vw, 4.25rem); }
   }
 
   /* Transições */
